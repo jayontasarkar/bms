@@ -1,0 +1,31 @@
+@import "loading";
+.btn-xs {
+	padding: 1px 3px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.close {
+	display: none;
+}
+
+.full-width {
+	width: 100%;
+}
+.bg-light-grey {
+	background-color: #f9f9f9;
+}
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+/* Webkit browsers like Safari and Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+@media (min-width: 992px) {
+	.modal-lg {
+	    max-width: 980px;
+	}
+}	
