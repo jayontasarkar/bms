@@ -29,10 +29,10 @@ Vue.component('create-outlet', require('./components/Outlet/CreateOutlet'));
 Vue.component('edit-outlet', require('./components/Outlet/EditOutlet'));
 Vue.component('outlet-memo', require('./components/Outlet/OutletMemo'));
 
-// Vendor
-Vue.component('create-vendor', require('./components/Vendor/CreateVendor'));
-Vue.component('edit-vendor', require('./components/Vendor/EditVendor'));
-Vue.component('vendor-memo', require('./components/Vendor/VendorMemo'));
+// Vendors
+Vue.component('create-vendor', require('./components/Vendors/CreateVendor'));
+Vue.component('edit-vendor', require('./components/Vendors/EditVendor'));
+Vue.component('vendor-memo', require('./components/Vendors/VendorMemo'));
 
 //Products
 Vue.component('create-product', require('./components/Product/CreateProduct'));
