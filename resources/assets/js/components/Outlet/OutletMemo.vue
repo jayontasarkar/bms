@@ -1,7 +1,7 @@
 <template>
 	<span>
     	<a href="#" class="btn btn-link" @click.prevent="show">
-			{{ sales.memo }}
+			{{ title ? title : sales.memo }}
 		</a>
     	<b-modal ref="outletMemoModal"
              title="Sales Report for Sales Order "
@@ -85,7 +85,20 @@
 <script>
 	var moment = require('moment');
 	export default {
-		props: ['sales', 'records', 'transactions'],
+		props: {
+			sales: {
+				default: null
+			}, 
+			records: {
+				default: null
+			}, 
+			transactions: {
+				default: null
+			},
+			title: {
+				default: false
+			}
+		},
 		computed: {
 			total() {
 	    		let list = this.records.map(function(item){ return item.unit_price * item.qty });

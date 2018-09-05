@@ -158,7 +158,7 @@
 											</td>
 											<td>
 												<outlet-memo 
-														:sales="{{ json_encode($result->load('outlet')) }}"
+														:sales="{{ json_encode($result) }}"
 														:records="{{ json_encode($result->records) }}"
 														:transactions="{{ json_encode($result->transactions) }}"
 												></outlet-memo>
@@ -183,7 +183,7 @@
 												) }}/=
 											</td>
 											<td>
-												<collection :sales="{{ json_encode($result->load('outlet')) }}"
+												<collection :sales="{{ json_encode($result) }}"
 													     :url="'{{ route('sales.transactions.store', [$result]) }}'" 
 												></collection>
 											</td>

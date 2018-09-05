@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\Eloquent\Filterable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sales extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Filterable;
 
     protected $fillable = [
     	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid'
     ];
 
     protected $dates = [ 'sales_date' ];
+
+    protected $with = ['outlet'];
 
     public function setSalesDateAttribute($value)
     {
@@ -34,6 +37,15 @@ class Sales extends Model
     public function outlet()
     {
     	return $this->belongsTo(Outlet::class);
+    }
+
+    public static function outletsWithDuePayments($filter)
+    {
+    	$sales = static::filter($filter)->orderBy('sales_date', 'desc')
+    	        ->with('outlet', 'records.product', 'transactions')->get();
+    	return $sales->filter(function($query){
+    		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
+    	});
     }
 
     public static function duePayments()

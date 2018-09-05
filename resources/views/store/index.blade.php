@@ -7,10 +7,14 @@
 	        <purchase-product :vendors="{{ json_encode($vendors) }}" 
 	        				  :products="{{ json_encode($products) }}"
 	        				  :url="'{{ route('purchases.store') }}'"
+	        				  :class-name="'float-right ml-auto'"
+	        				  :btn-class="''"
 	        ></purchase-product>
 	        <sale-product :products="{{ json_encode($products) }}"
 	        			  :districts="{{ json_encode($districts) }}"
 	        			  :url="'{{ route('sales.store') }}'"
+	        			  :class-name="'float-right ml-auto ml-4'"
+	        			  :btn-class="''"
 	        ></sale-product>
 	    @endslot
 	@endcomponent
@@ -81,12 +85,23 @@
 										<th>Code</th>
 										<th>Product Title</th>
 										<th>Vendor Name</th>
-										<th>Quantity</th>
+										<th>Stock</th>
 										<th>Unit</th>
 									</tr>
 								</thead>
 								<tbody>
-									
+									@foreach($products->sortBy('vendor_id') as $key => $product)
+										<tr>
+											<td>{{ $key + 1 }}</td>
+											<td>
+												<a href="{{ route('products.show', [$product]) }}">{{ $product->code }}</a>
+											</td>
+											<td>{{ $product->title }}</td>
+											<td>{{ $product->vendor->name }}</td>
+											<td>{{ $product->stock }}</td>
+											<td>{{ $product->unit }}</td>
+										</tr>
+									@endforeach
 								</tbody>
 							</table>
 						</div>

@@ -42,6 +42,10 @@ Vue.component('edit-product', require('./components/Product/EditProduct'));
 Vue.component('purchase-product', require('./components/Store/PurchaseProduct'));
 Vue.component('sale-product', require('./components/Store/SaleProduct'));
 
+// Bank
+Vue.component('manage-bank', require('./components/Bank/ManageBank'));
+Vue.component('edit-bank-transaction', require('./components/Bank/EditBankTransaction'));
+
 const app = new Vue({
     el: '#app'
 }).$mount();

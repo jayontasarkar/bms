@@ -47,6 +47,22 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
+                        <label for="quantity">Product Stock</label>
+                        <input type="number" class="form-control" 
+                               placeholder="Quantity" v-model="qty" name="quantity" 
+                               min="1"
+                               :class="{'is-invalid': errors.has('quantity')}" v-validate="'required'"
+                               step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
+                        >
+                        <div class="invalid-feedback" v-if="errors.has('quantity') || errorList.title ">
+                            {{ errors.first('quantity') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
                         <label for="title">Vendor Name</label>
                         <select class="form-control" name="vendor name" 
                                 v-model="vendor_id" v-validate="'required'"
@@ -87,6 +103,7 @@ export default {
 			title: this.product.title,
             code: this.product.code,
             vendor_id: this.product.vendor_id,
+            qty: this.product.stock,
             errorList: {},
 			loading: false
 		}
@@ -105,7 +122,8 @@ export default {
                 	let data = {
 						title: this.title,
                         code: this.code,
-                        vendor_id: this.vendor_id
+                        vendor_id: this.vendor_id,
+                        stock: this.qty
 					};
 					this.loading = true;
 					axios.patch(this.url, data)
