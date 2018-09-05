@@ -53,6 +53,9 @@ Route::resource('products', 'Product\ProductsController');
 Route::get('store', 'Store\StoresController@index')->name('stores.index');
 Route::get('sales/{sales}', 'Store\SalesController@show')->name('sales.show');
 Route::post('sales', 'Store\SalesController@store')->name('sales.store');
+Route::get('sales', 'Store\SalesController@index')->name('sales.index');
+Route::get('purchases', 'Store\PurchasesController@index')->name('purchases.index');
+Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purchases.show');
 Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purchases.show');
 Route::post('purchases', 'Store\PurchasesController@store')->name('purchases.store');
 Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.report.index');
@@ -62,3 +65,10 @@ Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.r
  */
 Route::post('transactions/purchase/{purchase}', 'Transaction\PurchasesController@store')->name('purchases.transactions.store');
 Route::post('transactions/sales/{sales}', 'Transaction\SalesController@store')->name('sales.transactions.store');
+
+/**
+ * Bankings
+ */
+Route::get('bankings', 'Banking\TransactionsController@index')->name('bankings.index');
+Route::post('bankings', 'Banking\TransactionsController@store')->name('bankings.store');
+Route::patch('transactions/{transaction}', 'Banking\TransactionsController@update')->name('transactions.update');

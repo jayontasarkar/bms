@@ -24,9 +24,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $purchases = Purchase::duePayments()->take(15);
-        $sales     = Sales::duePayments()->take(15);
-
-        return view('dashboard', compact('purchases', 'sales'));
+        return view('dashboard');
     }
 }

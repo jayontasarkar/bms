@@ -10,6 +10,7 @@ mix.styles([
 mix.scripts([
 	'public/theme/js/vendors/jquery-3.2.1.min.js',
 	'public/theme/js/vendors/bootstrap.bundle.min.js',
+	'node_modules/datatables.net/js/jquery.dataTables.js',
 	'public/theme/js/vendors/jquery.sparkline.min.js',
 	'public/theme/js/vendors/selectize.min.js',
 	'public/theme/js/core.js'

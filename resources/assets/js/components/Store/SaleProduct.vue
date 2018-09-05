@@ -1,6 +1,6 @@
 <template>
-	<span class="float-right">
-    	<button type="button" class="btn btn-warning ml-4" @click.prevent="show">
+	<span :class="className">
+    	<button type="button" class="btn btn-warning" :class="btnClass" @click.prevent="show">
 			+ Sell product to outlets
 		</button>
     	<b-modal ref="saleProductModal"
@@ -107,38 +107,38 @@
                           	{{ index + 1 }}
                           </td>
                           <td>
-							<select class="form-control" v-model="list.product_id" 
-									:name="'product' + index" v-validate="'required'" 
-								    :class="{'is-invalid': errors.has('product' + index)}"
-							>
-								<option value="">Select Product</option>
-								<option v-for="(product, index) in products" :value="product.id" :key="index">
-									{{ product.title }} ({{ product.code }})
-								</option>
-							</select>
+              							<select class="form-control" v-model="list.product_id" 
+              									:name="'product' + index" v-validate="'required'" 
+              								    :class="{'is-invalid': errors.has('product' + index)}"
+              							>
+              								<option value="">Select Product</option>
+              								<option v-for="(product, index) in products" :value="product.id" :key="index">
+              									{{ product.code }}-{{ product.title }} ({{ product.stock }})
+              								</option>
+              							</select>
                           </td>
                           <td>
-							<input type="number" style="width: 85px;" class="form-control" 
-							       placeholder="Quantity" v-model="list.qty" :name="'qty' + index" 
-							       :class="{'is-invalid': errors.has('qty' + index)}" v-validate="'required'"
-							       step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
-							>
+              							<input type="number" style="width: 85px;" class="form-control" 
+              							       placeholder="Quantity" v-model="list.qty" :name="'qty' + index" 
+              							       :class="{'is-invalid': errors.has('qty' + index)}" v-validate="'required'"
+              							       step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
+              							>
                           </td>
                           <td>
-							<input type="number" style="width: 90px;" class="form-control" 
-							       placeholder="Unit Price" v-model="list.unit_price" v-validate="'required'"
-							       :name="'unit price' + index" :class="{'is-invalid': errors.has('unit price' + index)}"
-								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$" 	
-							>
+              							<input type="number" style="width: 90px;" class="form-control" 
+              							       placeholder="Unit Price" v-model="list.unit_price" v-validate="'required'"
+              							       :name="'unit price' + index" :class="{'is-invalid': errors.has('unit price' + index)}"
+              								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$" 	
+              							>
                           </td>
                           <td>
-							<select style="width: 80px;" class="form-control" v-model="list.unit"
-							        :name="'unit' + index" v-validate="'required'" 
-							        :class="{'is-invalid': errors.has('unit' + index)}" 
-							>
-								<option value="">Select</option>
-								<option value="piece">Piece</option>
-							</select>
+              							<select style="width: 80px;" class="form-control" v-model="list.unit"
+              							        :name="'unit' + index" v-validate="'required'" 
+              							        :class="{'is-invalid': errors.has('unit' + index)}" 
+              							>
+              								<option value="">Select</option>
+              								<option value="piece">Piece</option>
+              							</select>
                           </td>
                           <td>
                           	{{ beautifyAmount(list.qty * list.unit_price) }}/=
@@ -173,7 +173,7 @@
 <script>
 	var moment = require('moment');
 	export default {
-		props: ['products', 'districts', 'url'],
+		props: ['products', 'districts', 'url', 'className', 'btnClass'],
 		data() {
 			return {
 				district: '',

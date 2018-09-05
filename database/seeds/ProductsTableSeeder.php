@@ -20,18 +20,21 @@ class ProductsTableSeeder extends Seeder
         			'code' => str_random(4) . $key,
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
+        			'stock'     => $faker->numberBetween(50, 100),
         			'created_at' => now()
         		],
         		[
         			'code' => str_random(4) . $key,
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
+        			'stock'     => $faker->numberBetween(50, 100),
         			'created_at' => now()
         		],
         		[
         			'code' => str_random(4) . $key,
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
+        			'stock'     => $faker->numberBetween(50, 100),
         			'created_at' => now()
         		]
         	]);

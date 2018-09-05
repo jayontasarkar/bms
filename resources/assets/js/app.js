@@ -29,10 +29,10 @@ Vue.component('create-outlet', require('./components/Outlet/CreateOutlet'));
 Vue.component('edit-outlet', require('./components/Outlet/EditOutlet'));
 Vue.component('outlet-memo', require('./components/Outlet/OutletMemo'));
 
-// Vendor
-Vue.component('create-vendor', require('./components/Vendor/CreateVendor'));
-Vue.component('edit-vendor', require('./components/Vendor/EditVendor'));
-Vue.component('vendor-memo', require('./components/Vendor/VendorMemo'));
+// Vendors
+Vue.component('create-vendor', require('./components/Vendors/CreateVendor'));
+Vue.component('edit-vendor', require('./components/Vendors/EditVendor'));
+Vue.component('vendor-memo', require('./components/Vendors/VendorMemo'));
 
 //Products
 Vue.component('create-product', require('./components/Product/CreateProduct'));
@@ -41,6 +41,10 @@ Vue.component('edit-product', require('./components/Product/EditProduct'));
 // Store
 Vue.component('purchase-product', require('./components/Store/PurchaseProduct'));
 Vue.component('sale-product', require('./components/Store/SaleProduct'));
+
+// Bank
+Vue.component('manage-bank', require('./components/Bank/ManageBank'));
+Vue.component('edit-bank-transaction', require('./components/Bank/EditBankTransaction'));
 
 const app = new Vue({
     el: '#app'

@@ -54,6 +54,11 @@
                class="nav-link{{ Request::segment(1) == 'outlets' ? ' active' : '' }}"
             ><i class="fe fe-folder-minus"></i> Outlets</a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('bankings.index') }}" 
+               class="nav-link{{ Request::segment(1) == 'bankings' ? ' active' : '' }}"
+            ><i class="fe fe-folder-minus"></i> Bankings</a>
+          </li>
         </ul>
       </div>
     </div>

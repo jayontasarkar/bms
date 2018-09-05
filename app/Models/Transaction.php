@@ -11,7 +11,7 @@ class Transaction extends Model
     use SoftDeletes;
 
     protected $fillable = [
-    	'transactionable_id', 'transactionable_type', 'comment', 'amount', 'transaction_date'
+    	'transactionable_id', 'transactionable_type', 'comment', 'amount', 'transaction_date', 'type'
     ];
 
     protected $dates = ['transaction_date'];

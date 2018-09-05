@@ -23,9 +23,23 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+input[type='date'] {
+    -moz-appearance:textfield;
+}
+/* Webkit browsers like Safari and Chrome */
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
 @media (min-width: 992px) {
 	.modal-lg {
 	    max-width: 980px;
 	}
 }	
+.width--100 { width: 100%; }
+
+table.dataTable.no-footer {
+    border-bottom: 1px solid #e1e1e1;
+}

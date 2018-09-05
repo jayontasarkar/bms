@@ -20,6 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->string('comment')->nullable();
             $table->float('amount')->nullable()->default(0);
             $table->timestamp('transaction_date')->nullable();
+            $table->boolean('type')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -28,18 +28,34 @@
                 </div>
             </div>
     		<div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="title">Product Title</label>
+                        <input type="text" 
+                               name="title"  
+                               class="form-control" 
+                               v-model="title"
+                               v-validate="'required'"
+                               :class="{ 'is-invalid': errors.has('title') || errorList.title }"
+                        >
+                        <div class="invalid-feedback" v-if="errors.has('title') || errorList.title ">
+                            {{ errors.first('title') || errorList.title[0] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
     			<div class="col-md-12">
     				<div class="form-group">
-    					<label for="title">Product Title</label>
-    					<input type="text" 
-    						   name="title"  
-    						   class="form-control" 
-    						   v-model="title"
-    						   v-validate="'required'"
-    						   :class="{ 'is-invalid': errors.has('title') || errorList.title }"
-    					>
-    					<div class="invalid-feedback" v-if="errors.has('title') || errorList.title ">
-    						{{ errors.first('title') || errorList.title[0] }}
+    					<label for="quantity">Product Stock</label>
+    					<input type="number" class="form-control" 
+                               placeholder="Quantity" v-model="qty" name="quantity" 
+                               min="1"
+                               :class="{'is-invalid': errors.has('quantity')}" v-validate="'required'"
+                               step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
+                        >
+    					<div class="invalid-feedback" v-if="errors.has('quantity') || errorList.title ">
+    						{{ errors.first('quantity') }}
     					</div>
     				</div>
     			</div>
@@ -87,6 +103,7 @@ export default {
 			title: '',
             code: '',
             vendor_id: '',
+            qty: null,
             errorList: {},
 			loading: false
 		}
@@ -98,6 +115,7 @@ export default {
 		hide() {
 			this.title = '';
             this.code = '';
+            this.qty = null;
             this.vendor_id = '';
 			this.$refs.addProductModal.hide();
 		},
@@ -107,7 +125,8 @@ export default {
                 	let data = {
 						title: this.title,
                         code: this.code,
-                        vendor_id: this.vendor_id
+                        vendor_id: this.vendor_id,
+                        stock: this.qty
 					};
 					this.loading = true;
 					axios.post('/products', data)

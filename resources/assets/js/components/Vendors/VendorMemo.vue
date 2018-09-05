@@ -1,10 +1,10 @@
 <template>
 	<span>
     	<a href="#" class="btn btn-link" @click.prevent="show">
-			{{ title ? title : sales.memo }}
+			{{ title ? title : purchase.memo }}
 		</a>
-    	<b-modal ref="outletMemoModal"
-             title="Sales Report for Sales Order "
+    	<b-modal ref="vendorMemoModal"
+             title="Vendor Purchase Report By Purchase Order "
              :header-bg-variant="'primary'"
              :header-text-variant="'light'"
              centered size="lg"
@@ -12,7 +12,7 @@
         >
         	<div class="row">
         		<div class="col-md-12">
-        			<h4>Product Sales Summary</h4>
+        			<h4>Product Purchase Summary</h4>
         			<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
 						<thead>
 							<tr class="bg-gray-dark">
@@ -29,15 +29,15 @@
 								<td><strong>Total Amount:</strong></td>
 								<td><strong>{{ beautifyAmount(total) }}/=</strong></td>
 							</tr>
-							<tr v-if="sales.total_discount">
+							<tr v-if="purchase.total_discount">
 								<td colspan="3"></td>
 								<td><strong>Total Discount:</strong></td>
-								<td><strong>{{ beautifyAmount(sales.total_discount) }}/=</strong></td>
+								<td><strong>{{ beautifyAmount(purchase.total_discount) }}/=</strong></td>
 							</tr>
-							<tr v-if="sales.total_discount">
+							<tr v-if="purchase.total_discount">
 								<td colspan="3"></td>
 								<td><strong>Grand Total:</strong></td>
-								<td><strong>{{ beautifyAmount(total - sales.total_discount) }}/=</strong></td>
+								<td><strong>{{ beautifyAmount(total - purchase.total_discount) }}/=</strong></td>
 							</tr>
 						</tfoot>
 						<tbody>
@@ -50,7 +50,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<h4 class="mt-3" v-if="transactions.length > 0">Balance Collection Summary</h4>
+					<h4 class="mt-2" v-if="transactions.length > 0">Balance Payment Summary</h4>
 					<table class="table card-table table-bordered table-vcenter text-nowrap" 
 					       border="1" v-if="transactions.length > 0"
 					>
@@ -64,7 +64,7 @@
 						<tbody>
 							<tr v-for="(transaction, index) in transactions" :key="index">
 								<td colspan="2">
-									{{ transaction.comment ? transaction.comment : 'AMOUNT RECEIVED/COLLECTED FROM OUTLET' }}
+									{{ transaction.comment ? transaction.comment : 'PAYMENT PROVIDED TO VENDOR' }}
 								</td>
 								<td colspan="2" class="text-center">{{ beautifyDate(transaction.transaction_date) }}</td>
 								<td>{{ beautifyAmount(transaction.amount) }}/=</td>
@@ -86,8 +86,8 @@
 	var moment = require('moment');
 	export default {
 		props: {
-			sales: {
-				default: null
+			purchase: {
+				default: {}
 			}, 
 			records: {
 				default: null
@@ -111,10 +111,10 @@
 		},
 		methods: {
 			show() {
-				this.$refs.outletMemoModal.show();
+				this.$refs.vendorMemoModal.show();
 			},
 			hide() {
-				this.$refs.outletMemoModal.hide();
+				this.$refs.vendorMemoModal.hide();
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 <template>
-	<span class="float-right ml-auto">
-    	<button type="button" class="btn btn-primary" @click.prevent="show">
+	<span :class="className">
+    	<button type="button" class="btn btn-primary" :class="btnClass" @click.prevent="show">
 			+ Purchase Product from Vendor
 		</button>
     	<b-modal ref="storeProductModal"
@@ -95,7 +95,7 @@
 								    :class="{'is-invalid': errors.has('product' + index)}"
 							>
 								<option value="">Select Product</option>
-								<option v-for="product in productsByVendor" :value="product.id">{{ product.title }}</option>
+								<option v-for="product in productsByVendor" :value="product.id">{{ product.title }} ({{ product.stock }})</option>
 							</select>
                           </td>
                           <td>
@@ -153,7 +153,7 @@
 <script>
 	var moment = require('moment'); 
 	export default {
-		props: ['vendors', 'products', 'url'],
+		props: ['vendors', 'products', 'url', 'className', 'btnClass'],
 		data() {
 			return {
 				vendor_id: '',

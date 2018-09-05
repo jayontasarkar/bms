@@ -9,7 +9,7 @@ class ProductComposer
 {
 	public function compose(View $view)
 	{
-		$products = Product::orderBy('title')->get();
+		$products = Product::orderBy('title')->with('vendor')->get();
 
 		$view->with('products', $products);
 	}

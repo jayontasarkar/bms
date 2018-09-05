@@ -181,7 +181,7 @@
 												) }}/=
 											</td>
 											<td>
-												<payment :purchase="{{ json_encode($purchase->load('vendor')) }}"
+												<payment :purchase="{{ json_encode($purchase) }}"
 													     :url="'{{ route('purchases.transactions.store', [$purchase]) }}'" 
 												></payment>
 											</td>

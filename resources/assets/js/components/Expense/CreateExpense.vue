@@ -48,10 +48,11 @@
     			<div class="col-md-12">
     				<div class="form-group">
     					<label for="title">Expense Amount</label>
-    					<input type="text" 
+    					<input type="number" 
     					       name="amount"  
     					       class="form-control" 
     					       v-model="amount"
+    					       step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
     					       v-validate="'required|decimal:2|min:1'"
     						   :class="{ 'is-invalid': errors.has('amount') }"
     					>
