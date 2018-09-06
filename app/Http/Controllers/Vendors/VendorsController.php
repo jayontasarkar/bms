@@ -27,8 +27,10 @@ class VendorsController extends Controller
 
     public function store(VendorFormRequest $request)
     {
-    	$vendor = Vendor::create($request->all());
-
+    	$vendor = Vendor::create($request->only('name', 'address', 'phone'));
+        if($request->has('hasOpeningBalance')) {
+            $vendor->purchases()->create($request->only('memo', 'total_balance', 'type', 'purchase_date'));
+        }
     	session()->flash('flash', $msg = 'Vendor created successfully');
     	return response()->json(['msg' => $msg]);
     }

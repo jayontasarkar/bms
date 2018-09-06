@@ -10,7 +10,6 @@ mix.styles([
 mix.scripts([
 	'public/theme/js/vendors/jquery-3.2.1.min.js',
 	'public/theme/js/vendors/bootstrap.bundle.min.js',
-	'node_modules/datatables.net/js/jquery.dataTables.js',
 	'public/theme/js/vendors/jquery.sparkline.min.js',
 	'public/theme/js/vendors/selectize.min.js',
 	'public/theme/js/core.js'
@@ -22,3 +21,19 @@ mix.copy([
 
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
+
+mix.scripts([
+	'public/datatable/js/jquery.dataTables.min.js',
+	'public/datatable/js/dataTables.bootstrap4.min.js',
+	'public/datatable/buttons/js/dataTables.buttons.min.js',
+	'public/datatable/buttons/js/buttons.bootstrap4.min.js',
+	'public/datatable/js/jszip.min.js',
+	'public/datatable/js/pdfmake.min.js',
+	'public/datatable/js/vfs_fonts.js',
+	'public/datatable/buttons/js/buttons.html5.min.js'
+], 'public/js/datatable.js');   
+
+mix.styles([
+	'public/datatable/css/dataTables.bootstrap4.min.css',
+	'public/datatable/buttons/css/buttons.bootstrap4.min'
+], 'public/css/datatable.css');

@@ -27,7 +27,7 @@
     				</div>
     			</div>
     		</div>
-    		<div class="row">
+    		<div class="row mt-1">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="title">Proprietor/Owner Name</label>
@@ -53,32 +53,8 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Address</label>
-                        <textarea name="address" class="form-control" rows="1" v-model="address"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Opening Balance</label>
-                        <input type="text" 
-                               name="opening balance"  
-                               class="form-control" 
-                               v-model="opening_balance"
-                               v-validate="'decimal:2'"
-                               :class="{ 'is-invalid': errors.has('opening balance') || errorList.opening_balance }"
-                        >
-                        <div class="invalid-feedback" v-if="errors.has('opening balance') || errorList.opening_balance">
-                            {{ errors.first('opening balance') || errorList.opening_balance[0] }}
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
+            <div class="row mt-1">
                 <div class="col-md-6">
                     <label for="district">District</label>
                     <select name="district" v-model="district" class="form-control"
@@ -108,6 +84,61 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title">Address</label>
+                        <textarea name="address" class="form-control" rows="1" v-model="address"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title">Opening Balance</label>
+                        <input type="text" 
+                               name="opening balance"  
+                               class="form-control" 
+                               v-model="opening_balance"
+                               v-validate="'decimal:2'"
+                               :class="{ 'is-invalid': errors.has('opening balance') || errorList.opening_balance }"
+                        >
+                        <div class="invalid-feedback" v-if="errors.has('opening balance') || errorList.opening_balance">
+                            {{ errors.first('opening balance') || errorList.opening_balance[0] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-1" v-if="hasOpeningBalance">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="memo">Memo/Opening Balance No.</label>
+                        <input type="text" 
+                               class="form-control" 
+                               v-model="memo"
+                               :class="{ 'is-invalid': errorList.memo }"
+                        >
+                        <div class="invalid-feedback" v-if="errorList.memo">
+                            {{ errorList.memo[0] }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title">Balance Till</label>
+                        <input type="date" 
+                               name="balance till"  
+                               class="form-control" 
+                               v-model="sales_date"
+                               v-validate="'required'"
+                               :class="{ 'is-invalid': errors.has('balance till') }"
+                        >
+                        <div class="invalid-feedback" v-if="errors.has('balance till')">
+                            {{ errors.first('balance till') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div slot="modal-footer" class="w-100">
     			<button type="button" 
@@ -126,6 +157,7 @@
 </template>
 
 <script>
+var moment = require('moment')
 export default {
     props: ['districts'],
 	data() {
@@ -139,6 +171,9 @@ export default {
             address: '',
             thana: null,
             opening_balance: 0,
+            hasOpeningBalance: false,
+            memo: null,
+            sales_date: moment(new Date()).format('YYYY-MM-DD'),
             errorList: {},
 			loading: false
 		}
@@ -148,6 +183,14 @@ export default {
             if( newValue != '' ) {
                 let maped = this.districts.filter(district => district.id == newValue)
                 this.thanas = maped[0].thanas;
+            }
+        },
+        opening_balance: function(newVal, oldVal) {
+            if(newVal > 0) {
+                this.hasOpeningBalance = true
+            }else{
+                this.memo = null
+                this.hasOpeningBalance = false
             }
         }
     },
@@ -168,8 +211,12 @@ export default {
                         phone: this.phone,
                         address: this.address,
                         thana_id: this.thana,
-                        opening_balance: this.opening_balance
+                        total_balance: this.opening_balance,
+                        memo: this.memo,
+                        sales_date: this.sales_date,
+                        type: 1
 					};
+                    if(this.hasOpeningBalance) { data.hasOpeningBalance = true; }
                     this.loading = true;
 					axios.post('/outlets', data)
 						.then(response => {
@@ -177,6 +224,7 @@ export default {
 							location.reload();
 						})
 						.catch(error => {
+                            this.errorList = error.response.data.errors
 							this.loading = false
 							flash('Something went wrong. Plz try again later');
 						})

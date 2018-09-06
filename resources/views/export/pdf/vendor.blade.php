@@ -46,6 +46,7 @@
 						</td>
 						<td>
 							{{ number_format($result->total_balance) }}/=
+							{!! $purchase->type ? '&nbsp;(Opening)' : '' !!}
 						</td>
 						<td>
 							{{ number_format($result->total_paid) }}/=

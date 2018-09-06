@@ -165,7 +165,8 @@
 												{{ $purchase->purchase_date->format('M d, Y') }}
 											</td>
 											<td>
-												{{ number_format($purchase->total_balance) }}/=
+												{{ number_format($purchase->total_balance) }}/= &nbsp;
+												{!! $purchase->type ? '&nbsp;<span class="text-danger">(Opening)</span>' : '' !!}
 											</td>
 											<td>
 												{{ number_format($purchase->total_paid) }}/=

@@ -167,7 +167,7 @@
 												{{ $result->sales_date->format('M d, Y') }}
 											</td>
 											<td>
-												{{ number_format($result->total_balance) }}/=
+												{{ number_format($result->total_balance) }}/= {!! $result->type ? '&nbsp;<span class="text-danger">(Opening)</span>' : '' !!}
 											</td>
 											<td>
 												{{ number_format($result->total_paid) }}/=

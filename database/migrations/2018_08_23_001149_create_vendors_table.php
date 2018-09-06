@@ -18,9 +18,8 @@ class CreateVendorsTable extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->text('phone')->nullable();
-            $table->float('opening_balance')->default(0);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -20,8 +20,8 @@ class CreateProductsTable extends Migration
             $table->unsignedInteger('vendor_id');
             $table->float('stock')->default(0)->nullable();
             $table->string('unit')->default('Piece');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

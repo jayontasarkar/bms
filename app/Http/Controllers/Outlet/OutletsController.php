@@ -21,8 +21,8 @@ class OutletsController extends Controller
 
     public function index(OutletFilter $filters)
     {
-    	$outlets = Outlet::filter($filters)->orderBy('name')->with('thana.district.thanas')
-                          ->paginate(config('bms.items_per_page'));
+    	$outlets = Outlet::filter($filters)->orderBy('name')->with('thana.district.thanas', 'sales')
+                          ->get();
 
     	return view('outlet.index', compact('outlets'));
     }
@@ -38,7 +38,10 @@ class OutletsController extends Controller
 
     public function store(OutletFormRequest $request)
     {
-    	$outlet = Outlet::create($request->all());
+    	$outlet = Outlet::create($request->only('name', 'proprietor', 'phone', 'address', 'thana_id'));
+        if($request->has('hasOpeningBalance')) {
+            $outlet->sales()->create($request->only('memo', 'total_balance', 'type', 'sales_date'));
+        }
 
     	session()->flash('flash', $msg = 'New Outlet created successfully');
     	return response()->json(['msg' => $msg]);

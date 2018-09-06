@@ -11,6 +11,9 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::post('users', 'User\UsersController@store')->name('users.store');
 	Route::get('users/{user}/status', 'User\UsersController@toggleStatus')->name('users.status');
 	Route::get('/profile', 'Profile\ProfileController@index')->name('profile.index');
+	Route::patch('/profile', 'Profile\ProfileController@update')->name('profile.update');
+	Route::get('/profile/password', 'Profile\ProfileController@getPasswordForm')->name('profile.password.index');
+	Route::post('/profile/password', 'Profile\ProfileController@postPasswordForm')->name('profile.password.store');
 });
 
 /**

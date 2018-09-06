@@ -18,8 +18,8 @@ class CreateBanksTable extends Migration
             $table->string('name');
             $table->string('branch');
             $table->string('account_no')->unique();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

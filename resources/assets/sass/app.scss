@@ -43,3 +43,18 @@ input[type=date]::-webkit-outer-spin-button {
 table.dataTable.no-footer {
     border-bottom: 1px solid #e1e1e1;
 }
+
+.dataTables_paginate {
+    text-align: center;
+    margin-top: 25px;
+}
+.buttons-excel .buttons-html5 {
+    margin-bottom: 8px;
+    margin-right: 6px;
+}
+.dataTables_filter {
+    display: none; 
+}
+table.dataTable.no-footer {
+    border-bottom: 1px solid #e1e1e1;
+}

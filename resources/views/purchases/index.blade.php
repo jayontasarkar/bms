@@ -76,7 +76,8 @@
 		                          {{ $purchase->purchase_date->format('M d, Y') }}
 		                        </td>
 		                        <td>
-		                          {{ number_format($total = $purchase->total_balance) }}/=
+		                          {{ number_format($total = $purchase->total_balance) }}/= &nbsp;
+		                          {{ $purchase->type ? '(Opening)' : '' }}
 		                        </td>
 		                        <td>
 		                          {{ number_format($paid = $purchase->total_paid) }}/=
@@ -93,12 +94,16 @@
 		                          ></payment>
 		                        </td>
 		                        <td>
-		                        	<vendor-memo 
-											:purchase="{{ json_encode($purchase) }}"
-											:records="{{ json_encode($purchase->records) }}"
-											:transactions="{{ json_encode($purchase->transactions) }}"
-											:title="'Show'"
-									></vendor-memo>
+		                        	@if( !$purchase->type )
+			                        	<vendor-memo 
+												:purchase="{{ json_encode($purchase) }}"
+												:records="{{ json_encode($purchase->records) }}"
+												:transactions="{{ json_encode($purchase->transactions) }}"
+												:title="'Show'"
+										></vendor-memo>
+									@else
+			                            <span class="badge badge-danger"><strong>Opening Balance</strong></span>
+			                        @endif 	
 		                        </td>
 		                      </tr>
 		                    @endforeach

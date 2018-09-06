@@ -12,7 +12,7 @@ class Sales extends Model
     use SoftDeletes, Filterable;
 
     protected $fillable = [
-    	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid'
+    	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid', 'type'
     ];
 
     protected $dates = [ 'sales_date' ];

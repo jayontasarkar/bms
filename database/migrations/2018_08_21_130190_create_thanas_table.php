@@ -17,8 +17,8 @@ class CreateThanasTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->unsignedInteger('district_id');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -12,7 +12,7 @@ class Purchase extends Model
     use SoftDeletes, Filterable;
 
     protected $fillable = [
-    	'memo', 'vendor_id', 'total_balance', 'total_discount', 'purchase_date', 'total_paid'
+    	'memo', 'vendor_id', 'total_balance', 'total_discount', 'purchase_date', 'total_paid', 'type'
     ];
 
     protected $dates = [ 'purchase_date' ];

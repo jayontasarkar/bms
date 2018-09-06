@@ -20,8 +20,8 @@ class CreateSalesRecordsTable extends Migration
             $table->float('unit_price');
             $table->float('qty');
             $table->string('unit');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

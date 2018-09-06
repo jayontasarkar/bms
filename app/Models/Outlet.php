@@ -11,7 +11,7 @@ class Outlet extends Model
 	use Filterable, SoftDeletes;
 	
     protected $fillable = [
-    	'name', 'proprietor', 'phone', 'address', 'thana_id', 'opening_balance'
+    	'name', 'proprietor', 'phone', 'address', 'thana_id'
     ];
 
     public function thana()
