@@ -34,13 +34,13 @@ Route::delete('/outlets/{outlet}', 'Outlet\OutletsController@destroy')->name('ou
 /**
  * Vendor Management
  */
-Route::get('/vendors', 'Vendor\VendorsController@index')->name('vendors.index');
-Route::get('/vendor/excel', 'Vendor\VendorsController@excel')->name('vendors.excel');
-Route::get('/vendor/pdf', 'Vendor\VendorsController@pdf')->name('vendors.pdf');
-Route::get('/vendors/{vendor}', 'Vendor\VendorsController@show')->name('vendors.show');
-Route::post('/vendors', 'Vendor\VendorsController@store')->name('vendors.store');
-Route::put('/vendors/{vendor}', 'Vendor\VendorsController@update')->name('vendors.update');
-Route::delete('/vendors/{vendor}', 'Vendor\VendorsController@destroy')->name('vendors.destroy');
+Route::get('/vendors', 'Vendors\VendorsController@index')->name('vendors.index');
+Route::get('/vendor/excel', 'Vendors\VendorsController@excel')->name('vendors.excel');
+Route::get('/vendor/pdf', 'Vendors\VendorsController@pdf')->name('vendors.pdf');
+Route::get('/vendors/{vendor}', 'Vendors\VendorsController@show')->name('vendors.show');
+Route::post('/vendors', 'Vendors\VendorsController@store')->name('vendors.store');
+Route::put('/vendors/{vendor}', 'Vendors\VendorsController@update')->name('vendors.update');
+Route::delete('/vendors/{vendor}', 'Vendors\VendorsController@destroy')->name('vendors.destroy');
 
 /**
  * Product Management
