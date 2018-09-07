@@ -50,11 +50,27 @@
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-red mr-3">
-              <i class="fe fe-users"></i>
+              <i class="fa fa-bank"></i>
             </span>
             <div>
-              <h4 class="m-0"><a href="javascript:void(0)">1,352 <small>Members</small></a></h4>
-              <small class="text-muted">163 registered today</small>
+              @php
+                $deposit = 0;
+                $withdraw = 0;
+                if(count($banks)) {
+                  foreach($banks as $bank) {
+                    $deposit += $bank->transactions->where('type', true)->sum('amount');
+                    $withdraw += $bank->transactions->where('type', false)->sum('amount');
+                  }
+                }
+              @endphp
+              <h4 class="m-0">
+                <a href="{{ route('bankings.index') }}">
+                  {{ $banks->count() }} <small>{{ str_plural('Bank', $banks->count()) }}</small>
+                </a>
+              </h4>
+              <small class="text-muted">
+                {{ ($deposit - $withdraw) > 0 ? number_format($deposit - $withdraw) . '/=' : 'No' }} Available Balance
+              </small>
             </div>
           </div>
         </div>
@@ -62,43 +78,49 @@
     </div>
     <div class="row row-cards row-deck">
       
+      {{-- Latest Bank Statements --}}
       <div class="col-sm-8 col-lg-8">
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title">Browser Stats</h4>
+            <h4 class="card-title">
+              Bank Transactions ({{ $banks->count() }} {{ str_plural('bank', $banks->count()) }})
+            </h4>
+            <a href="{{ route('bankings.index') }}" class="ml-auto btn btn-link btn-xs">View All</a>
           </div>
-          <table class="table card-table">
-            <tr>
-              <td width="1"><i class="fa fa-chrome text-muted"></i></td>
-              <td>Google Chrome</td>
-              <td class="text-right"><span class="text-muted">23%</span></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-firefox text-muted"></i></td>
-              <td>Mozila Firefox</td>
-              <td class="text-right"><span class="text-muted">15%</span></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-safari text-muted"></i></td>
-              <td>Apple Safari</td>
-              <td class="text-right"><span class="text-muted">7%</span></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-internet-explorer text-muted"></i></td>
-              <td>Internet Explorer</td>
-              <td class="text-right"><span class="text-muted">9%</span></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-opera text-muted"></i></td>
-              <td>Opera mini</td>
-              <td class="text-right"><span class="text-muted">23%</span></td>
-            </tr>
-            <tr>
-              <td><i class="fa fa-edge text-muted"></i></td>
-              <td>Microsoft edge</td>
-              <td class="text-right"><span class="text-muted">9%</span></td>
-            </tr>
-          </table>
+          <div class="card-body pl-5 pr-5">
+            @if(count($transactions))
+              <table class="table card-table">
+                <thead class="bg-gray-dark">
+                  <tr>
+                    <th>Type</th> 
+                    <th>Bank Name</th> 
+                    <th>Transaction Date</th> 
+                    <th class="text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($transactions as $transaction)
+                    <tr>
+                      <td>
+                        @if($transaction->type)
+                          <span class="badge badge-success">Deposit</span>
+                        @else
+                          <span class="badge badge-danger">Withdraw</span>
+                        @endif
+                      </td>
+                      <td>{{ $transaction->transactionable->name }}</td>
+                      <td>{{ $transaction->transaction_date->format('M d, Y') }}</td>
+                      <td class="text-right"><span class="text-muted">{{ number_format($transaction->amount) }}/=</span></td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            @else
+              <div class="alert alert-danger text-center">
+                <strong>No bank transaction was found</strong>
+              </div>
+            @endif  
+          </div>
         </div>
       </div>
 
@@ -127,6 +149,9 @@
               </li>
               <li class="list-group-item">
                 <manage-bank :url="'{{ route('bankings.store') }}'" :banks="{{ json_encode($banks) }}"></manage-bank>
+              </li>
+              <li class="list-inline-item pl-5 pr-5 pt-3 pb-3">
+                <a href="{{ route('stores.index') }}" class="btn btn-block btn-success">Go to store</a>
               </li>
           </ul>
         </div>
@@ -190,12 +215,16 @@
                           ></payment>
                         </td>
                         <td>
-                          <vendor-memo 
-                              :purchase="{{ json_encode($purchase) }}"
-                              :records="{{ json_encode($purchase->records) }}"
-                              :transactions="{{ json_encode($purchase->transactions) }}"
-                              :title="'Show'"
-                          ></vendor-memo>
+                          @if( !$purchase->type )
+                            <vendor-memo 
+                                :purchase="{{ json_encode($purchase) }}"
+                                :records="{{ json_encode($purchase->records) }}"
+                                :transactions="{{ json_encode($purchase->transactions) }}"
+                                :title="'Show'"
+                            ></vendor-memo>
+                          @else
+                            <span class="badge badge-danger"><strong>Opening Balance</strong></span>
+                          @endif  
                         </td>
                       </tr>
                     @endforeach
@@ -269,12 +298,16 @@
                           ></collection>
                         </td>
                         <td>
-                          <outlet-memo 
-                              :sales="{{ json_encode($sale) }}"
-                              :records="{{ json_encode($sale->records) }}"
-                              :transactions="{{ json_encode($sale->transactions) }}"
-                              :title="'Show'"
-                          ></outlet-memo>
+                          @if ( ! $sale->type )
+                            <outlet-memo 
+                                :sales="{{ json_encode($sale) }}"
+                                :records="{{ json_encode($sale->records) }}"
+                                :transactions="{{ json_encode($sale->transactions) }}"
+                                :title="'Show'"
+                            ></outlet-memo>
+                          @else
+                            <span class="badge badge-success"><strong>Opening Balance</strong></span>
+                          @endif   
                         </td>
                       </tr>
                     @endforeach

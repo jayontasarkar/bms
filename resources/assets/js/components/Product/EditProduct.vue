@@ -113,7 +113,6 @@ export default {
 			this.$refs.editProductModal.show();
 		},
 		hide() {
-			this.title = '';
 			this.$refs.editProductModal.hide();
 		},
 		submit() {

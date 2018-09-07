@@ -76,7 +76,8 @@
 		                          {{ $sale->sales_date->format('M d, Y') }}
 		                        </td>
 		                        <td>
-		                          {{ number_format($total = $sale->total_balance) }}/=
+		                          {{ number_format($total = $sale->total_balance) }}/= &nbsp;
+		                          {{ $sale->type ? '(Opening)' : '' }}
 		                        </td>
 		                        <td>
 		                          {{ number_format($paid = $sale->total_paid) }}/=
@@ -93,12 +94,16 @@
 		                            ></collection>
 		                        </td>
 		                        <td>
-		                        	<outlet-memo 
-											:sales="{{ json_encode($sale) }}"
-											:records="{{ json_encode($sale->records) }}"
-											:transactions="{{ json_encode($sale->transactions) }}"
-											:title="'Show'"
-									></outlet-memo>
+		                        	@if( !$sale->type )
+			                        	<outlet-memo 
+												:sales="{{ json_encode($sale) }}"
+												:records="{{ json_encode($sale->records) }}"
+												:transactions="{{ json_encode($sale->transactions) }}"
+												:title="'Show'"
+										></outlet-memo>
+									@else
+			                            <span class="badge badge-success"><strong>Opening Balance</strong></span>
+			                        @endif 	
 		                        </td>
 		                      </tr>
 		                    @endforeach

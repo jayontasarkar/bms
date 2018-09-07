@@ -28,7 +28,8 @@
           </li>
           <li class="nav-item">
             <a href="javascript:void(0)" 
-               class="nav-link {{ in_array(request()->segment(1), ['products', 'store', 'store-report']) ? 'active' : '' }}" data-toggle="dropdown"
+               class="nav-link {{ in_array(request()->segment(1), ['products', 'store', 'store-report', 'purchases', 'sales']) ? 'active' : '' }}" 
+               data-toggle="dropdown"
             >
               <i class="fe fe-box"></i> Store
             </a>
@@ -36,6 +37,12 @@
               <a href="{{ route('stores.report.index') }}" 
                  class="dropdown-item {{ request()->segment(1) == 'store-report' ? 'active' : '' }}"
               >Store Reporting</a>
+              <a href="{{ route('purchases.index') }}" 
+                 class="dropdown-item {{ request()->segment(1) == 'purchases' ? 'active' : '' }}"
+              >Purchase Reports</a>
+              <a href="{{ route('sales.index') }}" 
+                 class="dropdown-item {{ request()->segment(1) == 'sales' ? 'active' : '' }}"
+              >Sales Report</a>
               <a href="{{ route('stores.index') }}" 
                  class="dropdown-item {{ request()->segment(1) == 'store' ? 'active' : '' }}"
               >Store Management</a>

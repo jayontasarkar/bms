@@ -21,8 +21,8 @@ class CreateTransactionsTable extends Migration
             $table->float('amount')->nullable()->default(0);
             $table->timestamp('transaction_date')->nullable();
             $table->boolean('type')->default(false);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

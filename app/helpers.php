@@ -1,7 +1,7 @@
 <?php 
 
 if ( ! function_exists('invalid')) {
-	function invalid($key)
+	function invalid($key = false)
 	{
 		return $key ? ' is-invalid' : '';
 	}

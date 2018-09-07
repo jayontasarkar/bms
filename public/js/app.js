@@ -93010,75 +93010,122 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
+var moment = __webpack_require__(0);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['districts'],
-  data: function data() {
-    var _ref;
+    props: ['districts'],
+    data: function data() {
+        var _ref;
 
-    return _ref = {
-      district: '',
-      thana: '',
-      thanas: [],
-      name: '',
-      proprietor: '',
-      phone: '',
-      address: ''
-    }, _defineProperty(_ref, 'thana', null), _defineProperty(_ref, 'opening_balance', 0), _defineProperty(_ref, 'errorList', {}), _defineProperty(_ref, 'loading', false), _ref;
-  },
-
-  watch: {
-    district: function district(newValue, oldValue) {
-      if (newValue != '') {
-        var maped = this.districts.filter(function (district) {
-          return district.id == newValue;
-        });
-        this.thanas = maped[0].thanas;
-      }
-    }
-  },
-  methods: {
-    show: function show() {
-      this.$refs.addOutletModal.show();
+        return _ref = {
+            district: '',
+            thana: '',
+            thanas: [],
+            name: '',
+            proprietor: '',
+            phone: '',
+            address: ''
+        }, _defineProperty(_ref, 'thana', null), _defineProperty(_ref, 'opening_balance', 0), _defineProperty(_ref, 'hasOpeningBalance', false), _defineProperty(_ref, 'memo', null), _defineProperty(_ref, 'sales_date', moment(new Date()).format('YYYY-MM-DD')), _defineProperty(_ref, 'errorList', {}), _defineProperty(_ref, 'loading', false), _ref;
     },
-    hide: function hide() {
-      this.clearFields();
-      this.$refs.addOutletModal.hide();
-    },
-    submit: function submit() {
-      var _this = this;
 
-      this.$validator.validate().then(function (result) {
-        if (result) {
-          var data = {
-            name: _this.name,
-            proprietor: _this.proprietor,
-            phone: _this.phone,
-            address: _this.address,
-            thana_id: _this.thana,
-            opening_balance: _this.opening_balance
-          };
-          _this.loading = true;
-          axios.post('/outlets', data).then(function (response) {
-            _this.loading = false;
-            location.reload();
-          }).catch(function (error) {
-            _this.loading = false;
-            flash('Something went wrong. Plz try again later');
-          });
+    watch: {
+        district: function district(newValue, oldValue) {
+            if (newValue != '') {
+                var maped = this.districts.filter(function (district) {
+                    return district.id == newValue;
+                });
+                this.thanas = maped[0].thanas;
+            }
+        },
+        opening_balance: function opening_balance(newVal, oldVal) {
+            if (newVal > 0) {
+                this.hasOpeningBalance = true;
+            } else {
+                this.memo = null;
+                this.hasOpeningBalance = false;
+            }
         }
-      });
     },
-    clearFields: function clearFields() {
-      this.name = '';
-      this.proprietor = '';
-      this.phone = '';
-      this.address = '';
-      this.thana = null;
-      this.opening_balance = 0;
-      errorList: {}
+    methods: {
+        show: function show() {
+            this.$refs.addOutletModal.show();
+        },
+        hide: function hide() {
+            this.clearFields();
+            this.$refs.addOutletModal.hide();
+        },
+        submit: function submit() {
+            var _this = this;
+
+            this.$validator.validate().then(function (result) {
+                if (result) {
+                    var data = {
+                        name: _this.name,
+                        proprietor: _this.proprietor,
+                        phone: _this.phone,
+                        address: _this.address,
+                        thana_id: _this.thana,
+                        total_balance: _this.opening_balance,
+                        memo: _this.memo,
+                        sales_date: _this.sales_date,
+                        type: 1
+                    };
+                    if (_this.hasOpeningBalance) {
+                        data.hasOpeningBalance = true;
+                    }
+                    _this.loading = true;
+                    axios.post('/outlets', data).then(function (response) {
+                        _this.loading = false;
+                        location.reload();
+                    }).catch(function (error) {
+                        _this.errorList = error.response.data.errors;
+                        _this.loading = false;
+                        flash('Something went wrong. Plz try again later');
+                    });
+                }
+            });
+        },
+        clearFields: function clearFields() {
+            this.name = '';
+            this.proprietor = '';
+            this.phone = '';
+            this.address = '';
+            this.thana = null;
+            this.opening_balance = 0;
+            errorList: {}
+        }
     }
-  }
 });
 
 /***/ }),
@@ -93171,7 +93218,7 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "row mt-1" }, [
             _c("div", { staticClass: "col-md-6" }, [
               _c("div", { staticClass: "form-group" }, [
                 _c("label", { attrs: { for: "title" } }, [
@@ -93244,92 +93291,7 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "title" } }, [_vm._v("Address")]),
-                _vm._v(" "),
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.address,
-                      expression: "address"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { name: "address", rows: "1" },
-                  domProps: { value: _vm.address },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.address = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "title" } }, [
-                  _vm._v("Opening Balance")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.opening_balance,
-                      expression: "opening_balance"
-                    },
-                    {
-                      name: "validate",
-                      rawName: "v-validate",
-                      value: "decimal:2",
-                      expression: "'decimal:2'"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  class: {
-                    "is-invalid":
-                      _vm.errors.has("opening balance") ||
-                      _vm.errorList.opening_balance
-                  },
-                  attrs: { type: "text", name: "opening balance" },
-                  domProps: { value: _vm.opening_balance },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.opening_balance = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.has("opening balance") ||
-                _vm.errorList.opening_balance
-                  ? _c("div", { staticClass: "invalid-feedback" }, [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(
-                            _vm.errors.first("opening balance") ||
-                              _vm.errorList.opening_balance[0]
-                          ) +
-                          "\n                        "
-                      )
-                    ])
-                  : _vm._e()
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "row mt-1" }, [
             _c("div", { staticClass: "col-md-6" }, [
               _c("label", { attrs: { for: "district" } }, [_vm._v("District")]),
               _vm._v(" "),
@@ -93476,6 +93438,183 @@ var render = function() {
                 : _vm._e()
             ])
           ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-4" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "title" } }, [_vm._v("Address")]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.address,
+                      expression: "address"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "address", rows: "1" },
+                  domProps: { value: _vm.address },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.address = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "title" } }, [
+                  _vm._v("Opening Balance")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.opening_balance,
+                      expression: "opening_balance"
+                    },
+                    {
+                      name: "validate",
+                      rawName: "v-validate",
+                      value: "decimal:2",
+                      expression: "'decimal:2'"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  class: {
+                    "is-invalid":
+                      _vm.errors.has("opening balance") ||
+                      _vm.errorList.opening_balance
+                  },
+                  attrs: { type: "text", name: "opening balance" },
+                  domProps: { value: _vm.opening_balance },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.opening_balance = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("opening balance") ||
+                _vm.errorList.opening_balance
+                  ? _c("div", { staticClass: "invalid-feedback" }, [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(
+                            _vm.errors.first("opening balance") ||
+                              _vm.errorList.opening_balance[0]
+                          ) +
+                          "\n                        "
+                      )
+                    ])
+                  : _vm._e()
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.hasOpeningBalance
+            ? _c("div", { staticClass: "row mt-1" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "memo" } }, [
+                      _vm._v("Memo/Opening Balance No.")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.memo,
+                          expression: "memo"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: { "is-invalid": _vm.errorList.memo },
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.memo },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.memo = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errorList.memo
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.errorList.memo[0]) +
+                              "\n                        "
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "title" } }, [
+                      _vm._v("Balance Till")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.sales_date,
+                          expression: "sales_date"
+                        },
+                        {
+                          name: "validate",
+                          rawName: "v-validate",
+                          value: "required",
+                          expression: "'required'"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.has("balance till") },
+                      attrs: { type: "date", name: "balance till" },
+                      domProps: { value: _vm.sales_date },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.sales_date = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.has("balance till")
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.errors.first("balance till")) +
+                              "\n                        "
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
@@ -94844,57 +94983,110 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	data: function data() {
-		return {
-			name: '',
-			phone: '',
-			address: '',
-			opening_balance: 0,
-			errorList: {},
-			loading: false
-		};
-	},
+    data: function data() {
+        return {
+            name: '',
+            phone: '',
+            address: '',
+            opening_balance: 0,
+            memo: null,
+            purchase_date: moment(new Date()).format('YYYY-MM-DD'),
+            errorList: {},
+            hasOpeningBalance: false,
+            loading: false
+        };
+    },
 
-	methods: {
-		show: function show() {
-			this.$refs.addVendorModal.show();
-		},
-		hide: function hide() {
-			this.clearFields();
-			this.$refs.addVendorModal.hide();
-		},
-		submit: function submit() {
-			var _this = this;
+    watch: {
+        opening_balance: function opening_balance(newVal, oldVal) {
+            if (newVal > 0) {
+                this.hasOpeningBalance = true;
+            } else {
+                this.memo = null;
+                this.hasOpeningBalance = false;
+            }
+        }
+    },
+    methods: {
+        show: function show() {
+            this.$refs.addVendorModal.show();
+        },
+        hide: function hide() {
+            this.clearFields();
+            this.$refs.addVendorModal.hide();
+        },
+        submit: function submit() {
+            var _this = this;
 
-			this.$validator.validate().then(function (result) {
-				if (result) {
-					var data = {
-						name: _this.name,
-						phone: _this.phone,
-						address: _this.address,
-						opening_balance: _this.opening_balance
-					};
-					_this.loading = true;
-					axios.post('/vendors', data).then(function (response) {
-						_this.loading = false;
-						location.reload();
-					}).catch(function (error) {
-						_this.loading = false;
-						flash('Something went wrong. Plz try again later');
-					});
-				}
-			});
-		},
-		clearFields: function clearFields() {
-			this.name = '';
-			this.phone = '';
-			this.address = '';
-			this.opening_balance = 0;
-			errorList: {}
-		}
-	}
+            this.$validator.validate().then(function (result) {
+                if (result) {
+                    var data = {
+                        name: _this.name,
+                        phone: _this.phone,
+                        address: _this.address,
+                        total_balance: _this.opening_balance,
+                        memo: _this.memo,
+                        type: 1,
+                        purchase_date: _this.purchase_date
+                    };
+                    if (_this.hasOpeningBalance) {
+                        data.hasOpeningBalance = true;
+                    }
+                    _this.loading = true;
+                    axios.post('/vendors', data).then(function (response) {
+                        _this.loading = false;
+                        location.reload();
+                    }).catch(function (error) {
+                        _this.errorList = error.response.data.errors;
+                        _this.loading = false;
+                        flash('Something wrong. Check your data', 'danger');
+                    });
+                }
+            });
+        },
+        clearFields: function clearFields() {
+            this.name = '';
+            this.phone = '';
+            this.address = '';
+            this.opening_balance = 0;
+            errorList: {}
+        }
+    }
 });
 
 /***/ }),
@@ -95112,6 +95304,98 @@ var render = function() {
               ])
             ])
           ]),
+          _vm._v(" "),
+          _vm.hasOpeningBalance
+            ? _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "memo" } }, [
+                      _vm._v("Memo/Opening Balance No.")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.memo,
+                          expression: "memo"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: { "is-invalid": _vm.errorList.memo },
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.memo },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.memo = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errorList.memo
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.errorList.memo[0]) +
+                              "\n                        "
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "title" } }, [
+                      _vm._v("Balance Till")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.purchase_date,
+                          expression: "purchase_date"
+                        },
+                        {
+                          name: "validate",
+                          rawName: "v-validate",
+                          value: "required",
+                          expression: "'required'"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.has("balance till") },
+                      attrs: { type: "date", name: "balance till" },
+                      domProps: { value: _vm.purchase_date },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.purchase_date = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.has("balance till")
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.errors.first("balance till")) +
+                              "\n                        "
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
@@ -96797,7 +97081,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$refs.editProductModal.show();
 		},
 		hide: function hide() {
-			this.title = '';
 			this.$refs.editProductModal.hide();
 		},
 		submit: function submit() {
@@ -98673,7 +98956,9 @@ var render = function() {
                         _vm._v(
                           "\n        \t\t\t\t\t" +
                             _vm._s(thana.name) +
-                            "\n        \t\t\t\t"
+                            " (" +
+                            _vm._s(thana.outlets.length) +
+                            ")\n        \t\t\t\t"
                         )
                       ]
                     )

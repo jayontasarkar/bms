@@ -25,10 +25,12 @@ class VendorFormRequest extends FormRequest
     {
         $rules = [
             'name' => 'required',
-            'phone' => 'nullable|unique:vendors,phone'
+            'phone' => 'nullable|unique:vendors,phone',
         ];
         if($id = $this->segment(2)) {
             $rules['phone'] = 'nullable|unique:vendors,phone,' . $id;
+        }else{
+            $rules['memo']  = 'nullable|unique:purchases,memo';
         }
         return $rules;
     }

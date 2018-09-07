@@ -1,4 +1,5 @@
 @extends('layouts.backend.master')
+
 @section('content')
 @component('layouts.backend.common.page-header')
 Outlet Management
@@ -49,18 +50,19 @@ Outlet Management
 			<div class="card-body">
 				@if(count($outlets))
 					<div class="table-responsive">
-						<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
+						<table class="table card-table table-bordered table-vcenter text-nowrap datatable">
 							<thead>
 								<tr class="bg-gray-dark">
 									<th class="w-1">No.</th>
 									<th>Outlet Name</th>
 									<th>Proprietor Name</th>
-									<th>Phone No.</th>
 									<th>Address</th>
+									<th>Balance</th>
 									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
+								@php $total = 0; @endphp
 								@foreach($outlets as $key => $outlet)
 								<tr>
 									<td>
@@ -79,11 +81,16 @@ Outlet Management
 										{{ $outlet->proprietor }}
 									</td>
 									<td>
-										{{ $outlet->phone }}
+										{{ $outlet->address }}
 									</td>
+									@php
+										$sum = $outlet->sales->sum(function($query){
+											return ($query->total_balance - $query->total_paid - $query->total_discount);
+										});
+										$total += $sum;
+									@endphp
 									<td>
-										{{ $outlet->address }}, {{ $outlet->thana->name }}, 
-										{{ $outlet->thana->district->name }}
+										{{ number_format($sum) }}/=
 									</td>
 									<td>
 										<ul class="list-inline mt-3">
@@ -100,11 +107,16 @@ Outlet Management
 									</td>
 								</tr>
 								@endforeach
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td>Total:</td>
+									<td>{{ number_format($total) }}/=</td>
+									<td></td>
+								</tr>
 							</tbody>
 						</table>
-					</div>
-					<div class="justify-content-center align-tiems-center text-center">
-						{{ $outlets->appends(request()->except('page'))->links() }}
 					</div>
 				@else
 					<div class="alert alert-danger text-center">
@@ -116,6 +128,8 @@ Outlet Management
 	</div>
 </div>
 @stop
+
+@include('layouts.backend.common.datatable', ['columns' => '[ 0, 1, 2, 3, 4 ]'])
 
 @push('scripts')
 	<script type="text/javascript">

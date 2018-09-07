@@ -26,7 +26,7 @@
 			<tr>
 				<td></td>
 				<td><strong>Total :</strong></td>
-				<td>{{ number_format($total = $purchases->sum('total_balance')) }}/=</td>
+				<td>{{ number_format($total = $purchases->sum('total_balance')) }}/= {!! $purchase->type ? ' (Opening)' : '' !!}</td>
 				<td>{{ number_format($paid = $purchases->sum('total_paid')) }}/=</td>
 				<td>{{ number_format($discount = $purchases->sum('total_discount')) }}/=</td>
 				<td>{{ number_format($total - $paid - $discount) }}/=</td>

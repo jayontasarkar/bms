@@ -19,6 +19,7 @@
 									<th>Vendor Name</th>
 									<th>Address</th>
 									<th>Phone No.</th>
+									<th>Balance</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -34,10 +35,18 @@
 										<a href="{{ route('vendors.show', [$vendor]) }}">{{ $vendor->name }}</a>
 									</td>
 									<td>
-										{{ $vendor->phone }}
+										{{ $vendor->address }}
 									</td>
 									<td>
-										{{ $vendor->address }}
+										{{ $vendor->phone }}
+									</td>
+									@php
+										$sum = $vendor->purchases->sum(function($query){
+											return ($query->total_balance - $query->total_paid - $query->total_discount);
+										});
+									@endphp
+									<td>
+										{{ number_format($sum) }}/=
 									</td>
 									<td>
 										<ul class="list-inline mt-3">

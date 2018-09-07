@@ -20,9 +20,8 @@ class CreateOutletsTable extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->unsignedInteger('thana_id');
-            $table->float('opening_balance')->default(0);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

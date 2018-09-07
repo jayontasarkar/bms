@@ -10,7 +10,7 @@ class Vendor extends Model
 	use SoftDeletes;
 	
     protected $fillable = [
-    	'name', 'address', 'phone', 'opening_balance'
+    	'name', 'address', 'phone'
     ];
 
     public function purchases()

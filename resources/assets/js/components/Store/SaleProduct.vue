@@ -25,7 +25,7 @@
         			<select class="form-control" v-model="thana">
         				<option value="">Select thana</option>
         				<option v-for="(thana, index) in thanas" :value="thana.id" :key="index">
-        					{{ thana.name }}
+        					{{ thana.name }} ({{ thana.outlets.length }})
         				</option>
         			</select>
         		</div>

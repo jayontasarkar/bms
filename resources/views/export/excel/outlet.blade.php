@@ -17,7 +17,7 @@
 			<tr>
 				<td>{{ $sale->memo }}</td>
 				<td>{{ $sale->sales_date->format('M d, Y') }}</td>
-				<td>{{ number_format($sale->total_balance) }}/=</td>
+				<td>{{ number_format($sale->total_balance) }}/= {!! $purchase->type ? ' (Opening)' : '' !!}</td>
 				<td>{{ number_format($sale->total_paid) }}/=</td>
 				<td>{{ number_format($sale->total_discount) }}/=</td>
 				<td>{{ number_format($sale->total_balance - $sale->total_paid - $sale->total_discount) }}/=</td>
