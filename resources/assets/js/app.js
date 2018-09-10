@@ -28,6 +28,10 @@ Vue.component('create-user', require('./components/User/CreateUser'));
 Vue.component('create-outlet', require('./components/Outlet/CreateOutlet'));
 Vue.component('edit-outlet', require('./components/Outlet/EditOutlet'));
 Vue.component('outlet-memo', require('./components/Outlet/OutletMemo'));
+Vue.component('sale-outlet-product', require('./components/Outlet/SaleOutletProduct'));
+Vue.component('add-opening-balance', require('./components/Outlet/AddOpeningBalance'));
+Vue.component('update-opening-balance', require('./components/Outlet/UpdateOpeningBalance'));
+Vue.component('update-transactions', require('./components/Outlet/UpdateTransactions'));
 
 // Vendors
 Vue.component('create-vendor', require('./components/Vendors/CreateVendor'));
@@ -41,6 +45,8 @@ Vue.component('edit-product', require('./components/Product/EditProduct'));
 // Store
 Vue.component('purchase-product', require('./components/Store/PurchaseProduct'));
 Vue.component('sale-product', require('./components/Store/SaleProduct'));
+Vue.component('update-sales', require('./components/Store/UpdateSales'));
+Vue.component('update-purchases', require('./components/Store/UpdatePurchases'));
 
 // Bank
 Vue.component('manage-bank', require('./components/Bank/ManageBank'));

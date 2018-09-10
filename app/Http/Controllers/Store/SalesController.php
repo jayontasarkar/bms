@@ -25,13 +25,15 @@ class SalesController extends Controller
 
 	public function show(Sales $sales)
     {
+        $sales->load('outlet.thana.district', 'records', 'transactions');
+
     	return view('sales.show', compact('sales'));
     }
 
     public function store(SalesFormRequest $request)
     {
     	$sale = Sales::create(
-    		$request->only('memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date')
+    		$request->only('memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'comment')
     	);
     	$sales = $sale->records()->createMany($request->only('sales')['sales']);
     	foreach($sales as $sale) {
@@ -41,5 +43,33 @@ class SalesController extends Controller
 
     	session()->flash('flash', $msg = 'Sales order created successfully');
     	return response()->json(['msg' => $msg]);
+    }
+
+    public function update(Request $request, Sales $sales)
+    {
+        if($sales->records) {
+            foreach($sales->records as $record) {
+                $product = Product::find($record->product_id);
+                $product->update(['stock' => $product->stock + $record->qty]);
+            }
+        }
+        $sales->records()->forceDelete();
+        if($request->sales && count($request->sales)) {
+            foreach($request->only('sales')['sales'] as $sale) {
+                $records = $sales->records()->create($sale);
+                $records->product->update(['stock' => $records->product->stock - $sale['qty']]);
+            }
+        }
+        $amount = $sales->fresh()->records->sum(function($query){
+            return $query->unit_price * $query->qty;
+        });
+        $sales->update([
+            'total_balance' => $amount, 
+            'total_discount' => $request->input('total_discount'),
+            'sales_date' => $request->input('sales_date')
+        ]);
+
+        session()->flash('flash', $msg = 'Sales order updated');
+        return response()->json(['msg' => $msg]);
     }
 }

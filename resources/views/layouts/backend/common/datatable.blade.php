@@ -18,21 +18,21 @@
         		dom: 'Bfrtip',
         		buttons : [{
 		            extend : 'excel',
-		            title : {{ isset($title) ? $title : time() }},
+		            title : "{{ isset($title) ? $title : time() }}",
 		            exportOptions: {
 	                    columns: {{ $columns }}
 	                }
 		        },
 		        {
 		            extend : 'pdf',
-		            title : {{ isset($title) ? $title : time() }},
+		            title : "{{ isset($title) ? $title : time() }}",
 		            exportOptions: {
 	                    columns: {{ $columns }}
 	                }
 		        }]
     		});
     		$("#filter-table").on('keyup', function(){
-	            table.columns("0").search(this.value).draw();
+	            table.columns("{{ isset($searchCol) ? $searchCol : '0' }}").search(this.value).draw();
 	        });
 		});
 	</script>

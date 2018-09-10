@@ -3,7 +3,7 @@
     	<button type="button" class="btn btn-warning" :class="btnClass" @click.prevent="show">
 			+ Sell product to outlets
 		</button>
-    	<b-modal ref="saleProductModal"
+    	<b-modal ref="saleOutletProductModal"
              title="Sale product to outlet"
              :header-bg-variant="'primary'"
              :header-text-variant="'light'"
@@ -11,40 +11,7 @@
              size="lg"
              no-close-on-esc no-close-on-backdrop
         >
-
-        	<div class="row">
-        		<div class="col-md-4">
-        			<select class="form-control" v-model="district">
-        				<option value="">Select district</option>
-        				<option v-for="(district, index) in districts" :value="district.id" :key="index">
-        					{{ district.name }}
-        				</option>
-        			</select>
-        		</div>
-        		<div class="col-md-4">
-        			<select class="form-control" v-model="thana">
-        				<option value="">Select thana</option>
-        				<option v-for="(thana, index) in thanas" :value="thana.id" :key="index">
-        					{{ thana.name }} ({{ thana.outlets.length }})
-        				</option>
-        			</select>
-        		</div>
-        		<div class="col-md-4">
-        			<select class="form-control" v-model="outlet" v-validate="'required'" 
-							:class="{'is-invalid': errors.has('outlet') || errorList.outlet_id}" name="outlet" 
-					>
-        				<option value="">Select outlet</option>
-        				<option v-for="(outlet, index) in outlets" :value="outlet.id" :key="index">
-        					{{ outlet.name }}, {{ outlet.address }}
-        				</option>
-        			</select>
-        			<div class="invalid-feedback" v-if="errors.has('outlet') || errorList.outlet_id">
-                        {{ errors.first('outlet') || errorList.outlet_id[0] }}
-                    </div>
-        		</div>
-        	</div>
-
-        	<div class="row mt-2">
+        <div class="row mt-2">
         		<div class="col-md-4">
         			<label for="memo">Sales Order/Memo No.</label>
         			<input type="text" name="sales order no" v-model="memo" class="form-control"
@@ -64,10 +31,10 @@
                     </div>
         		</div>
         		<div class="col-md-4">
-            	<button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="outlet == ''">
-            		<i class="fe fe-plus mr-2"></i>Add product to sales order
-            	</button>
-            </div>
+                	<button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="outlet == ''">
+                		<i class="fe fe-plus mr-2"></i>Add product to sales order
+                	</button>
+                </div>
         	</div>
 
         	<div class="row mt-5" v-if="productList.length">
@@ -173,14 +140,9 @@
 <script>
 	var moment = require('moment');
 	export default {
-		props: ['products', 'districts', 'url', 'className', 'btnClass'],
+		props: ['products', 'outlet', 'url', 'className', 'btnClass'],
 		data() {
 			return {
-				district: '',
-				thana: '',
-				outlet: '',
-				thanas: [],
-				outlets: [],
 				memo: '',
 				discount: null,
 				sales_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -190,37 +152,22 @@
 			}
 		},
 		computed: {
-	    	total() {
-	    		let list = this.productList.map(function(item){ return item.unit_price * item.qty });
-	            return list.length ? list.reduce((acc, curr) =>   acc + curr) : 0;
-	    	}
-	    },
-		watch: {
-			district: function(newValue, oldValue) {
-	            if( newValue != '' ) {
-	                let maped = this.districts.filter(district => district.id == newValue)
-	                this.thanas = maped[0].thanas;
-	            }
-	        },
-	        thana: function(newValue, oldValue) {
-	            if( newValue != '' ) {
-	                let maped = this.thanas.filter(thana => thana.id == newValue)
-	                this.outlets = maped[0].outlets;
-	            }
-	        }
-		},
+    	total() {
+    		let list = this.productList.map(function(item){ return item.unit_price * item.qty });
+            return list.length ? list.reduce((acc, curr) =>   acc + curr) : 0;
+    	}
+    },
 		methods: {
 			show() {
 				this.clearFields()
-				this.$refs.saleProductModal.show();
+				this.$refs.saleOutletProductModal.show();
 			},
 			hide() {
 				this.clearFields()
-				this.$refs.saleProductModal.hide();
+				this.$refs.saleOutletProductModal.hide();
 			},
 			clearFields() {
 				this.memo = ''
-    			this.outlet = ''
     			this.discount = null
     			this.sales_date = moment(new Date()).format('YYYY-MM-DD')
     			this.productList = []
@@ -229,26 +176,26 @@
 			},
 			submit() {
 				this.$validator.validate().then(result => {
-                	if(result) {
-                		let data = {
-                			memo: this.memo,
-                			outlet_id: this.outlet,
-                			total_balance: this.total,
-                			total_discount: this.discount,
-                			sales_date: this.sales_date,
-                			sales: this.productList
-                		};
-                		this.loading = true;
-	                	axios.post(this.url, data)
-	                		.then(response => {
-	                			location.reload();
-	                			this.loading = false;
-	                		}).catch(error => {
-	                			this.loading = false;
-	                			this.errorList = error.response.data.errors
-	                		})
-                	}
-            	});
+          	if(result) {
+          		let data = {
+          			memo: this.memo,
+          			outlet_id: this.outlet.id,
+          			total_balance: this.total,
+          			total_discount: this.discount,
+          			sales_date: this.sales_date,
+          			sales: this.productList
+          		};
+          		this.loading = true;
+            	axios.post(this.url, data)
+            		.then(response => {
+            			location.reload();
+            			this.loading = false;
+            		}).catch(error => {
+            			this.loading = false;
+            			this.errorList = error.response.data.errors
+            		})
+          	}
+      	});
 			},
 			addProduct() {
 				this.productList.push({ product_id: '', unit_price: null, qty: null, unit: 'Pieces' })

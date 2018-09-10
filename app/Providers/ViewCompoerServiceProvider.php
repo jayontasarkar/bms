@@ -22,7 +22,7 @@ class ViewCompoerServiceProvider extends ServiceProvider
 
         View::composer(['store.index', 'dashboard'], VendorComposer::class );
 
-        View::composer(['store.index', 'dashboard'], ProductComposer::class );
+        View::composer(['store.index', 'dashboard', 'outlet.show', 'sales.show', 'purchases.show'], ProductComposer::class );
 
         View::composer(['store.index', 'dashboard'], OutletComposer::class );
         View::composer(['dashboard'], PendingPurchaseAndSalesComposer::class );

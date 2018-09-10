@@ -12,7 +12,7 @@ class Sales extends Model
     use SoftDeletes, Filterable;
 
     protected $fillable = [
-    	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid', 'type'
+    	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid', 'type', 'comment'
     ];
 
     protected $dates = [ 'sales_date' ];
@@ -54,5 +54,10 @@ class Sales extends Model
     	return $sales->filter(function($query){
     		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
     	});
+    }
+
+    public function getOpeningsAttribute()
+    {
+        return $this->transactions->where('type', true);
     }
 }

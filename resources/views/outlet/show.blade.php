@@ -117,6 +117,26 @@
 		<div class="col-md-9">
 			<div class="card">
 				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<sale-outlet-product :products="{{ json_encode($products) }}"
+			                        :outlet="{{ json_encode($outlet) }}"
+			                        :url="'{{ route('sales.store') }}'"
+			                        :class-name="'d-block width--100'"
+			                        :btn-class="'btn-block'"
+			                ></sale-outlet-product>
+						</div>
+						<div class="col-md-6">
+							<add-opening-balance
+									:url="'{{ route('outlets.opening-balance.store', [$outlet]) }}'"
+							>
+							</add-opening-balance>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
 					<div class="alert alert-success">
 						@if(request()->has('year') && request()->has('month'))
 							<strong>
@@ -139,12 +159,13 @@
 								<thead>
 									<tr class="bg-gray-dark">
 										<th class="w-1">No.</th>
-										<th>Memo No.</th>
+										<th>Memo</th>
 										<th>Delivery Date</th>
-										<th>Total Amount</th>
-										<th>Total Paid</th>
+										<th>Total</th>
+										<th>Paid</th>
 										<th>Discount</th>
-										<th>Total Due</th>
+										<th>Due</th>
+										<th>&nbsp;</th>
 										<th>&nbsp;</th>
 									</tr>
 								</thead>
@@ -157,11 +178,7 @@
 												</span>
 											</td>
 											<td>
-												<outlet-memo 
-														:sales="{{ json_encode($result) }}"
-														:records="{{ json_encode($result->records) }}"
-														:transactions="{{ json_encode($result->transactions) }}"
-												></outlet-memo>
+						                        <a href="{{ route('sales.show', [$result]) }}">{{ $result->memo }}</a>
 											</td>
 											<td>
 												{{ $result->sales_date->format('M d, Y') }}
@@ -186,6 +203,18 @@
 												<collection :sales="{{ json_encode($result) }}"
 													     :url="'{{ route('sales.transactions.store', [$result]) }}'" 
 												></collection>
+											</td>
+											<td>
+												@if( !$result->type )
+						                        	<outlet-memo 
+															:sales="{{ json_encode($result) }}"
+															:records="{{ json_encode($result->records) }}"
+															:transactions="{{ json_encode($result->transactions) }}"
+															:title="'Show'"
+													></outlet-memo>
+												@else
+						                            <span class="badge badge-success"><strong>Opening</strong></span>
+						                        @endif
 											</td>
 										</tr>
 									@endforeach

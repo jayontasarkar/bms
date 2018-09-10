@@ -6,7 +6,9 @@ use App\Exports\OutletExport;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\OutletFilter;
 use App\Http\Requests\OutletFormRequest;
+use App\Models\District;
 use App\Models\Outlet;
+use App\Models\Thana;
 use Carbon\Carbon;
 use Excel;
 use Illuminate\Http\Request;
@@ -21,10 +23,19 @@ class OutletsController extends Controller
 
     public function index(OutletFilter $filters)
     {
-    	$outlets = Outlet::filter($filters)->orderBy('name')->with('thana.district.thanas', 'sales')
-                          ->get();
+    	$outlets = Outlet::filter($filters)->orderBy('name')
+                        ->with('thana.district.thanas', 'sales')
+                        ->get();
 
-    	return view('outlet.index', compact('outlets'));
+        $result = 'List of all outlets: ';
+        if(request()->has('thana')) {
+            $result .= Thana::find(request('thana'))->name . ' thana, ';
+        }
+        if(request()->has('district')) {
+            $result .= District::find(request('district'))->name . ' district';
+        }                
+
+    	return view('outlet.index', compact('outlets', 'result'));
     }
 
     public function show(Outlet $outlet)
@@ -40,7 +51,7 @@ class OutletsController extends Controller
     {
     	$outlet = Outlet::create($request->only('name', 'proprietor', 'phone', 'address', 'thana_id'));
         if($request->has('hasOpeningBalance')) {
-            $outlet->sales()->create($request->only('memo', 'total_balance', 'type', 'sales_date'));
+            $outlet->sales()->create($request->only('memo', 'total_balance', 'type', 'sales_date', 'comment'));
         }
 
     	session()->flash('flash', $msg = 'New Outlet created successfully');

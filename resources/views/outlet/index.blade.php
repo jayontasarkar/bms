@@ -48,6 +48,14 @@ Outlet Management
 	<div class="col-md-9">
 		<div class="card">
 			<div class="card-body">
+				<div class="alert alert-success">
+					<div class="row">
+						<div class="col-md-8 pt-2"><strong>{{ $result }}</strong></div>
+						<div class="col-md-4">
+							<input class="form-control" id="filter-table" placeholder="Search by outlet">
+						</div>
+					</div>
+				</div>
 				@if(count($outlets))
 					<div class="table-responsive">
 						<table class="table card-table table-bordered table-vcenter text-nowrap datatable">
@@ -129,7 +137,11 @@ Outlet Management
 </div>
 @stop
 
-@include('layouts.backend.common.datatable', ['columns' => '[ 0, 1, 2, 3, 4 ]'])
+@include('layouts.backend.common.datatable', [
+	'title' => "{{ $result }}",
+	'columns' => '[ 0, 1, 2, 3, 4 ]',
+	'searchCol' => 1
+])
 
 @push('scripts')
 	<script type="text/javascript">

@@ -140,6 +140,15 @@
                 </div>
             </div>
 
+            <div class="row mt-1" v-if="hasOpeningBalance">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="comment">Note/Comment</label>
+                        <textarea id="comment" rows="2" v-model="comment" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
             <div slot="modal-footer" class="w-100">
     			<button type="button" 
     				    class="float-right btn btn-primary" 
@@ -173,6 +182,7 @@ export default {
             opening_balance: 0,
             hasOpeningBalance: false,
             memo: null,
+            comment: null,
             sales_date: moment(new Date()).format('YYYY-MM-DD'),
             errorList: {},
 			loading: false
@@ -214,7 +224,8 @@ export default {
                         total_balance: this.opening_balance,
                         memo: this.memo,
                         sales_date: this.sales_date,
-                        type: 1
+                        type: 1,
+                        comment: this.comment
 					};
                     if(this.hasOpeningBalance) { data.hasOpeningBalance = true; }
                     this.loading = true;

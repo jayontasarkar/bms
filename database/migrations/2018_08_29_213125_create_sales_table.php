@@ -22,6 +22,7 @@ class CreateSalesTable extends Migration
             $table->float('total_discount')->nullable()->default(0);
             $table->timestamp('sales_date')->nullable();
             $table->boolean('type')->nullable()->default(false);
+            $table->text('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

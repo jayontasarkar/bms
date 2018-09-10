@@ -25,6 +25,8 @@ class PurchasesController extends Controller
 
     public function show(Purchase $purchase)
     {
+        $purchase->load('vendor', 'records', 'transactions');
+
     	return view('purchases.show', compact('purchase'));
     }
 
@@ -40,5 +42,33 @@ class PurchasesController extends Controller
     	}
     	session()->flash('flash', $msg = 'Purchase order created successfully');
     	return response()->json(['msg' => $msg]);
+    }
+
+    public function update(Request $request, Purchase $purchase)
+    {
+        if($purchase->records) {
+            foreach($purchase->records as $record) {
+                $product = Product::find($record->product_id);
+                $product->update(['stock' => $product->stock - $record->qty]);
+            }
+        }
+        $purchase->records()->forceDelete();
+        if($request->purchases && count($request->purchases)) {
+            foreach($request->only('purchases')['purchases'] as $pur) {
+                $records = $purchase->records()->create($pur);
+                $records->product->update(['stock' => $records->product->stock + $pur['qty']]);
+            }
+        }
+        $amount = $purchase->fresh()->records->sum(function($query){
+            return $query->unit_price * $query->qty;
+        });
+        $purchase->update([
+            'total_balance' => $amount, 
+            'total_discount' => $request->input('total_discount'),
+            'purchase_date' => $request->input('purchase_date')
+        ]);
+
+        session()->flash('flash', $msg = 'Purchase order updated');
+        return response()->json(['msg' => $msg]);
     }
 }

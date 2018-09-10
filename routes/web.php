@@ -33,6 +33,8 @@ Route::post('/outlets', 'Outlet\OutletsController@store')->name('outlets.store')
 Route::get('/outlets/{outlet}', 'Outlet\OutletsController@show')->name('outlets.show');
 Route::patch('/outlets/{outlet}', 'Outlet\OutletsController@update')->name('outlets.update');
 Route::delete('/outlets/{outlet}', 'Outlet\OutletsController@destroy')->name('outlets.destroy');
+Route::post('/outlets/{outlet}/opening-balance', 'Outlet\OpeningBalanceController@store')->name('outlets.opening-balance.store');
+Route::patch('/outlets/opening-balance/{sales}', 'Outlet\OpeningBalanceController@update')->name('outlets.opening-balance.update');
 
 /**
  * Vendor Management
@@ -44,6 +46,7 @@ Route::get('/vendors/{vendor}', 'Vendors\VendorsController@show')->name('vendors
 Route::post('/vendors', 'Vendors\VendorsController@store')->name('vendors.store');
 Route::put('/vendors/{vendor}', 'Vendors\VendorsController@update')->name('vendors.update');
 Route::delete('/vendors/{vendor}', 'Vendors\VendorsController@destroy')->name('vendors.destroy');
+Route::patch('/vendors/opening-balance/{purchase}', 'Vendors\OpeningBalanceController@update')->name('vendors.opening-balance.update');
 
 /**
  * Product Management
@@ -56,11 +59,16 @@ Route::resource('products', 'Product\ProductsController');
 Route::get('store', 'Store\StoresController@index')->name('stores.index');
 Route::get('sales/{sales}', 'Store\SalesController@show')->name('sales.show');
 Route::post('sales', 'Store\SalesController@store')->name('sales.store');
+Route::patch('sales/{sales}', 'Store\SalesController@update')->name('sales.update');
 Route::get('sales', 'Store\SalesController@index')->name('sales.index');
+Route::patch('sales/{sales}/transactions', 'Sales\SalesTransactionsController@update')->name('sales.transactions.update');
 Route::get('purchases', 'Store\PurchasesController@index')->name('purchases.index');
 Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purchases.show');
 Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purchases.show');
 Route::post('purchases', 'Store\PurchasesController@store')->name('purchases.store');
+Route::patch('purchases/{purchase}', 'Store\PurchasesController@update')->name('purchases.update');
+Route::patch('purchases/{purchase}/transactions', 'Purchase\PurchaseTransactionsController@update')
+       ->name('purchases.transactions.update');
 Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.report.index');
 
 /**
