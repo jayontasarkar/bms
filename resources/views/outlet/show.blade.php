@@ -138,27 +138,33 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="alert alert-success">
-						@if(request()->has('year') && request()->has('month'))
-							<strong>
-								Sales report of (monthly): 
-								{{ config('bms.months.' . request('month')) . ', ' . request('year') }}
-							</strong>
-						@elseif(request()->has('from') && request()->has('to'))	
-							<strong>
-								Sales report of (dates): 
-								{{ Carbon\Carbon::parse(request('from'))->format('d M, Y') }} - 
-								{{ Carbon\Carbon::parse(request('to'))->format('d M, Y') }}
-							</strong>
-						@else
-							<strong>All Sales reports</strong>	
-						@endif
+						<div class="row">
+							<div class="col-md-8 pt-2">
+								@if(request()->has('year') && request()->has('month'))
+									<strong>
+										Sales report of (monthly): 
+										{{ config('bms.months.' . request('month')) . ', ' . request('year') }}
+									</strong>
+								@elseif(request()->has('from') && request()->has('to'))	
+									<strong>
+										Sales report of (dates): 
+										{{ Carbon\Carbon::parse(request('from'))->format('d M, Y') }} - 
+										{{ Carbon\Carbon::parse(request('to'))->format('d M, Y') }}
+									</strong>
+								@else
+									<strong>All Sales reports</strong>	
+								@endif
+							</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control" placeholder="Search by Sales Order" id="filter-table">
+							</div>
+						</div>
 					</div> 
 					@if(count($results = $outlet->sales->sortByDesc('created_at')))
 						<div class="table-responsive">
-							<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
+							<table class="table card-table table-bordered datatable table-vcenter text-nowrap" border="1">
 								<thead>
 									<tr class="bg-gray-dark">
-										<th class="w-1">No.</th>
 										<th>Memo</th>
 										<th>Delivery Date</th>
 										<th>Total</th>
@@ -172,11 +178,6 @@
 								<tbody>
 									@foreach($results as $key => $result)
 										<tr>
-											<td>
-												<span class="text-muted">
-													{{ $key + 1 }}
-												</span>
-											</td>
 											<td>
 						                        <a href="{{ route('sales.show', [$result]) }}">{{ $result->memo }}</a>
 											</td>
@@ -229,3 +230,9 @@
 		</div>
 	</div>
 @stop
+
+@include('layouts.backend.common.datatable', [
+	'title' => "Sales Report of " . $outlet->name,
+	'columns' => '[ 0, 1, 2, 3, 4, 5 ]',
+	'searchCol' => 0
+])

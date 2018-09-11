@@ -121,45 +121,17 @@
 	</div>
 @stop
 
+
+@include('layouts.backend.common.datatable', [
+	'title' => "Pending Sales Amount by Sales Order",
+	'columns' => '[ 0, 1, 2, 3, 4, 5, 6 ]',
+	'searchCol' => 0
+])
+
 @push('scripts')
-	<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-    		var table = $('.datatable').DataTable({
-    			responsive: true,
-    			pagingType: "full_numbers",
-        		ordering: false,
-        		pageLength: 50,
-        		bInfo : false,
-        		columnDefs: [
-            		{targets: 'no-sort', orderable: false}
-        		],
-        		bLengthChange: false,
-        		dom: 'Bfrtip',
-        		buttons : [{
-		            extend : 'excel',
-		            title : 'Pending Sales Amount by Sales Order',
-		            exportOptions: {
-	                    columns: [ 0, 1, 2, 3, 4, 5, 6 ]
-	                }
-		        },
-		        {
-		            extend : 'pdf',
-		            title : 'Pending Sales Amount by Sales Order',
-		            exportOptions: {
-	                    columns: [ 0, 1, 2, 3, 4, 5, 6 ]
-	                }
-		        }]
-    		});
-    		$("#filter-table").on('keyup', function(){
-	            table.columns("0").search(this.value).draw();
-	        });
-	        $("#search").submit(function() {
+    		$("#search").submit(function() {
 		      $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
 		      return true;
 		    });
