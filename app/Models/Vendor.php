@@ -17,4 +17,9 @@ class Vendor extends Model
     {
     	return $this->hasMany(Purchase::class)->orderBy('created_at', 'desc');
     }
+
+    public function products()
+    {
+    	return $this->hasMany(Product::class);
+    }
 }

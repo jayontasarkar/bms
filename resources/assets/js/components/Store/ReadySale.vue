@@ -1,49 +1,22 @@
 <template>
 <span :class="className">
-  <button type="button" class="btn btn-warning" :class="btnClass" @click.prevent="show">
-  + Sell product to outlets
+  <button type="button" class="btn btn-danger" :class="btnClass" @click.prevent="show">
+  + Ready Sell products
   </button>
   <b-modal ref="saleProductModal"
-  title="Sale product to outlet"
-  :header-bg-variant="'primary'"
-  :header-text-variant="'light'"
-  centered
-  size="lg"
-  no-close-on-esc no-close-on-backdrop
+    title="New Ready Sell products"
+    :header-bg-variant="'primary'"
+    :header-text-variant="'light'"
+    centered
+    size="lg"
+    no-close-on-esc no-close-on-backdrop
   >
   <div class="row">
-    <div class="col-md-4">
-      <select class="form-control" v-model="district">
-        <option value="">Select district</option>
-        <option v-for="(district, index) in districts" :value="district.id" :key="index">
-          {{ district.name }}
-        </option>
-      </select>
+    <div class="col-md-6">
+      <label for="ready_sale">Buyer details</label>
+      <input type="text" class="form-control" v-model="ready_sale_details">
     </div>
-    <div class="col-md-4">
-      <select class="form-control" v-model="thana">
-        <option value="">Select thana</option>
-        <option v-for="(thana, index) in thanas" :value="thana.id" :key="index">
-          {{ thana.name }} ({{ thana.outlets.length }})
-        </option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <select class="form-control" v-model="outlet" v-validate="'required'"
-        :class="{'is-invalid': errors.has('outlet') || errorList.outlet_id}" name="outlet"
-        >
-        <option value="">Select outlet</option>
-        <option v-for="(outlet, index) in outlets" :value="outlet.id" :key="index">
-          {{ outlet.name }}, {{ outlet.address }}
-        </option>
-      </select>
-      <div class="invalid-feedback" v-if="errors.has('outlet') || errorList.outlet_id">
-        {{ errors.first('outlet') || errorList.outlet_id[0] }}
-      </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <label for="vendor">Select vendor</label>
       <select class="form-control" v-model="vendor_id" v-validate="'required'"
         :class="{'is-invalid': errors.has('vendor') || errorList.vendor_id}" name="vendor"
@@ -57,7 +30,9 @@
         {{ errors.first('vendor') || errorList.vendor_id[0] }}
       </div>
     </div>
-    <div class="col-md-3">
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-4">
       <label for="memo">Sales Order/Memo No.</label>
       <input type="text" name="sales order no" v-model="memo" class="form-control"
       :class="{'is-invalid': errors.has('sales order no') || errorList.memo}"  v-validate="'required'"
@@ -66,7 +41,7 @@
         {{ errors.first('sales order no') || errorList.memo[0] }}
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <label for="memo">Sales Date</label>
       <input type="date" name="sales date" v-model="sales_date" class="form-control"
       :class="{'is-invalid': errors.has('sales date') || errorList.sales_date}"  v-validate="'required'"
@@ -75,8 +50,8 @@
         {{ errors.first('sales date') || errorList.sales_date[0] }}
       </div>
     </div>
-    <div class="col-md-3">
-      <button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="outlet == '' || vendor_id == ''">
+    <div class="col-md-4">
+      <button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="vendor_id == ''">
       <i class="fe fe-plus mr-2"></i>Add product to sales order
       </button>
     </div>
@@ -171,7 +146,7 @@
     :class="{ 'btn-loading': loading }"
     :disabled="productList.length <= 0"
     >
-    Sale Products in Outlet
+    Ready Sell
     </button>
     <button type="button" class="float-right btn btn-danger mr-2" @click.prevent="hide">
     Close
@@ -183,16 +158,12 @@
 <script>
   var moment = require('moment');
   export default {
-    props: ['vendors', 'districts', 'url', 'className', 'btnClass'],
+    props: ['vendors', 'url', 'className', 'btnClass'],
     data() {
       return {
-        district: '',
-        thana: '',
-        outlet: '',
+        ready_sale_details: '',
         vendor_id: '',
         products: [],
-        thanas: [],
-        outlets: [],
         memo: '',
         discount: null,
         sales_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -204,22 +175,10 @@
     computed: {
     total() {
       let list = this.productList.map(function(item){ return item.unit_price * item.qty });
-  return list.length ? list.reduce((acc, curr) =>   acc + curr) : 0;
+      return list.length ? list.reduce((acc, curr) =>   acc + curr) : 0;
     }
   },
     watch: {
-      district: function(newValue, oldValue) {
-        if( newValue != '' ) {
-        let maped = this.districts.filter(district => district.id == newValue)
-        this.thanas = maped[0].thanas;
-        }
-      },
-      thana: function(newValue, oldValue) {
-        if( newValue != '' ) {
-          let maped = this.thanas.filter(thana => thana.id == newValue)
-          this.outlets = maped[0].outlets;
-        }
-      },
       vendor_id: function(newValue, oldValue) {
         if( newValue != '' ) {
           this.products = this.vendors.filter(vendor => vendor.id == newValue)[0].products;
@@ -237,7 +196,6 @@
       },
       clearFields() {
         this.memo = ''
-        this.outlet = ''
         this.discount = null
         this.sales_date = moment(new Date()).format('YYYY-MM-DD')
         this.productList = []
@@ -249,11 +207,14 @@
           if(result) {
             let data = {
               memo: this.memo,
-              outlet_id: this.outlet,
+              outlet_id: null,
               vendor_id: this.vendor_id,
+              ready_sale_details: this.ready_sale_details,
+              total_balance: this.total,
               total_discount: this.discount,
               sales_date: this.sales_date,
-              sales: this.productList
+              sales: this.productList,
+              type: 'readysale'
             };
             this.loading = true;
             axios.post(this.url, data)

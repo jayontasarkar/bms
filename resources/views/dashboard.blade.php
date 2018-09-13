@@ -132,6 +132,9 @@
           </div>
           <ul class="list-group">
               <li class="list-group-item">
+                <manage-bank :url="'{{ route('bankings.store') }}'" :banks="{{ json_encode($banks) }}"></manage-bank>
+              </li>
+              <li class="list-group-item">
                 <purchase-product :vendors="{{ json_encode($vendors) }}" 
                           :products="{{ json_encode($products) }}"
                           :url="'{{ route('purchases.store') }}'"
@@ -140,7 +143,7 @@
                 ></purchase-product>
               </li>
               <li class="list-group-item">
-                <sale-product :products="{{ json_encode($products) }}"
+                <sale-product :vendors="{{ json_encode($vendors) }}"
                         :districts="{{ json_encode($districts) }}"
                         :url="'{{ route('sales.store') }}'"
                         :class-name="'d-block width--100'"
@@ -148,10 +151,11 @@
                 ></sale-product>
               </li>
               <li class="list-group-item">
-                <manage-bank :url="'{{ route('bankings.store') }}'" :banks="{{ json_encode($banks) }}"></manage-bank>
-              </li>
-              <li class="list-inline-item pl-5 pr-5 pt-3 pb-3">
-                <a href="{{ route('stores.index') }}" class="btn btn-block btn-success">Go to store</a>
+                <ready-sale :vendors="{{ json_encode($vendors) }}"
+                        :url="'{{ route('sales.store') }}'"
+                        :class-name="'d-block width--100'"
+                        :btn-class="'btn-block'"
+                ></ready-sale>
               </li>
           </ul>
         </div>

@@ -1,0 +1,8 @@
+1. Make a table name records that will be polymorphic to
+	-> Sales
+	-> Purchase
+	-> ReadySale 
+
+2. Remove the existing records relation from 
+    -> Sales
+    -> Purchases

@@ -33,7 +33,7 @@ class SalesController extends Controller
     public function store(SalesFormRequest $request)
     {
     	$sale = Sales::create(
-    		$request->only('memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'comment')
+    		$request->only('memo', 'outlet_id', 'ready_sale_details', 'vendor_id', 'total_discount', 'sales_date', 'comment')
     	);
     	$sales = $sale->records()->createMany($request->only('sales')['sales']);
     	foreach($sales as $sale) {

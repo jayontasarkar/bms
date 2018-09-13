@@ -46,6 +46,7 @@ Vue.component('edit-product', require('./components/Product/EditProduct'));
 // Store
 Vue.component('purchase-product', require('./components/Store/PurchaseProduct'));
 Vue.component('sale-product', require('./components/Store/SaleProduct'));
+Vue.component('ready-sale', require('./components/Store/ReadySale'));
 Vue.component('update-sales', require('./components/Store/UpdateSales'));
 Vue.component('update-purchases', require('./components/Store/UpdatePurchases'));
 

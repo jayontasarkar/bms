@@ -12,7 +12,7 @@ class Sales extends Model
     use SoftDeletes, Filterable;
 
     protected $fillable = [
-    	'memo', 'outlet_id', 'total_balance', 'total_discount', 'sales_date', 'total_paid', 'type', 'comment'
+    	'memo', 'outlet_id', 'vendor_id', 'ready_sale_details', 'total_discount', 'sales_date', 'comment'
     ];
 
     protected $dates = [ 'sales_date' ];
@@ -29,6 +29,11 @@ class Sales extends Model
     	return $this->hasMany(SalesRecord::class, 'sale_id', 'id');
     }
 
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
+    }
+
     public function outlet()
     {
     	return $this->belongsTo(Outlet::class);
@@ -37,7 +42,7 @@ class Sales extends Model
     public static function outletsWithDuePayments($filter)
     {
     	$sales = static::filter($filter)->orderBy('sales_date', 'desc')
-    	        ->with('outlet', 'records.product', 'transactions')->get();
+    	        ->with('outlet', 'records.product')->get();
     	return $sales->filter(function($query){
     		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
     	});
