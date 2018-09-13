@@ -11,7 +11,8 @@ class Transaction extends Model
     use SoftDeletes;
 
     protected $fillable = [
-    	'transactionable_id', 'transactionable_type', 'comment', 'amount', 'transaction_date', 'type'
+    	'transactionable_id', 'transactionable_type', 'vendor_id',
+        'comment', 'amount', 'transaction_date', 'type'
     ];
 
     protected $dates = ['transaction_date'];
@@ -25,4 +26,10 @@ class Transaction extends Model
     {
         return $this->morphTo();
     }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
 }

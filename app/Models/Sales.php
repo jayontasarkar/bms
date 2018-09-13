@@ -29,11 +29,6 @@ class Sales extends Model
     	return $this->hasMany(SalesRecord::class, 'sale_id', 'id');
     }
 
-    public function transactions()
-    {
-        return $this->morphMany('App\Models\Transaction', 'transactionable');
-    }
-
     public function outlet()
     {
     	return $this->belongsTo(Outlet::class);

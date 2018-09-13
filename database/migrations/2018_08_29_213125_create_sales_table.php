@@ -16,12 +16,11 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id');
             $table->string('memo')->unique();
-            $table->unsignedInteger('outlet_id');
-            $table->float('total_balance')->default(0);
-            $table->float('total_paid')->nullable()->default(0);
+            $table->unsignedInteger('outlet_id')->nullable();
+            $table->unsignedInteger('vendor_id')->nullable();
+            $table->text('ready_sale_details')->nullable();
             $table->float('total_discount')->nullable()->default(0);
             $table->timestamp('sales_date')->nullable();
-            $table->boolean('type')->nullable()->default(false);
             $table->text('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();

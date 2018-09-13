@@ -61,27 +61,15 @@ Outlet Management
 						<table class="table card-table table-bordered table-vcenter text-nowrap datatable">
 							<thead>
 								<tr class="bg-gray-dark">
-									<th class="w-1">No.</th>
 									<th>Outlet Name</th>
 									<th>Proprietor Name</th>
 									<th>Address</th>
-									<th>Balance</th>
 									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
-								@php $total = 0; @endphp
-								@foreach($outlets as $key => $outlet)
+								@foreach($outlets as $outlet)
 								<tr>
-									<td>
-										<span class="text-muted">
-											{{ 
-												(request('page') != null && request('page') != 1 ? 
-													config('bms.items_per_page') * (request('page') - 1) : 
-													1)  + $key 
-											}}
-										</span>
-									</td>
 									<td>
 										<a href="{{ route('outlets.show', [$outlet]) }}">{{ $outlet->name }}</a>
 									</td>
@@ -91,38 +79,22 @@ Outlet Management
 									<td>
 										{{ $outlet->address }}
 									</td>
-									@php
-										$sum = $outlet->sales->sum(function($query){
-											return ($query->total_balance - $query->total_paid - $query->total_discount);
-										});
-										$total += $sum;
-									@endphp
-									<td>
-										{{ number_format($sum) }}/=
-									</td>
 									<td>
 										<ul class="list-inline mt-3">
 											<li class="list-inline-item">
-												<edit-outlet :districts="{{ json_encode($districts) }}"
-															 :outlet="{{ json_encode($outlet) }}"
-															 :url="'{{ route('outlets.update', [$outlet]) }}'"
-												></edit-outlet>
+												<a href="{{ route('outlets.edit', [$outlet]) }}" class="btn btn-xs btn-info">
+													<i class="fa fa-edit"></i>
+												</a>
 											</li>
 											<li class="list-inline-item">
-												<remove-btn :url="'{{ route('outlets.destroy', [$outlet]) }}'"></remove-btn>	
+												<a href="#" class="btn btn-xs btn-danger">
+													<i class="fa fa-remove"></i>
+												</a>
 											</li>
 										</ul>
 									</td>
 								</tr>
 								@endforeach
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td>Total:</td>
-									<td>{{ number_format($total) }}/=</td>
-									<td></td>
-								</tr>
 							</tbody>
 						</table>
 					</div>

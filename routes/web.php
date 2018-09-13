@@ -29,6 +29,7 @@ Route::resource('/expenses', 'Expense\ExpensesController');
 Route::get('/outlets', 'Outlet\OutletsController@index')->name('outlets.index');
 Route::get('/outlet/excel', 'Outlet\OutletsController@excel')->name('outlets.excel');
 Route::get('/outlet/pdf', 'Outlet\OutletsController@pdf')->name('outlets.pdf');
+Route::get('outlets/{outlet}/edit', 'Outlet\OutletsController@edit')->name('outlets.edit');
 Route::post('/outlets', 'Outlet\OutletsController@store')->name('outlets.store');
 Route::get('/outlets/{outlet}', 'Outlet\OutletsController@show')->name('outlets.show');
 Route::patch('/outlets/{outlet}', 'Outlet\OutletsController@update')->name('outlets.update');
@@ -83,3 +84,16 @@ Route::post('transactions/sales/{sales}', 'Transaction\SalesController@store')->
 Route::get('bankings', 'Banking\TransactionsController@index')->name('bankings.index');
 Route::post('bankings', 'Banking\TransactionsController@store')->name('bankings.store');
 Route::patch('transactions/{transaction}', 'Banking\TransactionsController@update')->name('transactions.update');
+
+// Route::get('test', function(){
+// 	$sales = App\Models\Sales::whereHas('records', function($inner){
+// 		$inner->whereHas('product', function($query){
+// 			$query->where('vendor_id', 1);
+// 		});
+// 	})->with(['records' => function($query){
+// 		$query->whereHas('product', function($inner){
+// 			$inner->where('vendor_id', 1);
+// 		});
+// 	}])->get();
+// 	dd($sales);
+// });

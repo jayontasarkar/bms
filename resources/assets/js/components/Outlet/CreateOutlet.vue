@@ -11,7 +11,7 @@
              no-close-on-esc no-close-on-backdrop
         >
     		<div class="row">
-    			<div class="col-md-12">
+    			<div class="col-md-6">
     				<div class="form-group">
     					<label for="title">Outlet/Business Name</label>
     					<input type="text" 
@@ -26,8 +26,6 @@
     					</div>
     				</div>
     			</div>
-    		</div>
-    		<div class="row mt-1">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="title">Proprietor/Owner Name</label>
@@ -38,6 +36,8 @@
                         >
                     </div>
                 </div>
+    		</div>
+    		<div class="row mt-1">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="title">Phone/Mobile No.</label>
@@ -50,6 +50,12 @@
                         <div class="invalid-feedback" v-if="errorList.phone">
                             {{ errorList.phone[0] }}
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title">Address</label>
+                        <textarea name="address" class="form-control" rows="1" v-model="address"></textarea>
                     </div>
                 </div>
             </div>
@@ -84,70 +90,6 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Address</label>
-                        <textarea name="address" class="form-control" rows="1" v-model="address"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Opening Balance</label>
-                        <input type="text" 
-                               name="opening balance"  
-                               class="form-control" 
-                               v-model="opening_balance"
-                               v-validate="'decimal:2'"
-                               :class="{ 'is-invalid': errors.has('opening balance') || errorList.opening_balance }"
-                        >
-                        <div class="invalid-feedback" v-if="errors.has('opening balance') || errorList.opening_balance">
-                            {{ errors.first('opening balance') || errorList.opening_balance[0] }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-1" v-if="hasOpeningBalance">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="memo">Memo/Opening Balance No.</label>
-                        <input type="text" 
-                               class="form-control" 
-                               v-model="memo"
-                               :class="{ 'is-invalid': errorList.memo }"
-                        >
-                        <div class="invalid-feedback" v-if="errorList.memo">
-                            {{ errorList.memo[0] }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Balance Till</label>
-                        <input type="date" 
-                               name="balance till"  
-                               class="form-control" 
-                               v-model="sales_date"
-                               v-validate="'required'"
-                               :class="{ 'is-invalid': errors.has('balance till') }"
-                        >
-                        <div class="invalid-feedback" v-if="errors.has('balance till')">
-                            {{ errors.first('balance till') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-1" v-if="hasOpeningBalance">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="comment">Note/Comment</label>
-                        <textarea id="comment" rows="2" v-model="comment" class="form-control"></textarea>
-                    </div>
-                </div>
-            </div>
 
             <div slot="modal-footer" class="w-100">
     			<button type="button" 
@@ -179,11 +121,6 @@ export default {
 			phone: '',
             address: '',
             thana: null,
-            opening_balance: 0,
-            hasOpeningBalance: false,
-            memo: null,
-            comment: null,
-            sales_date: moment(new Date()).format('YYYY-MM-DD'),
             errorList: {},
 			loading: false
 		}
@@ -194,14 +131,6 @@ export default {
                 let maped = this.districts.filter(district => district.id == newValue)
                 this.thanas = maped[0].thanas;
             }
-        },
-        opening_balance: function(newVal, oldVal) {
-            if(newVal > 0) {
-                this.hasOpeningBalance = true
-            }else{
-                this.memo = null
-                this.hasOpeningBalance = false
-            }
         }
     },
 	methods: {
@@ -209,7 +138,6 @@ export default {
 			this.$refs.addOutletModal.show();
 		},
 		hide() {
-			this.clearFields()
 			this.$refs.addOutletModal.hide();
 		},
 		submit() {
@@ -220,19 +148,13 @@ export default {
                         proprietor: this.proprietor,
                         phone: this.phone,
                         address: this.address,
-                        thana_id: this.thana,
-                        total_balance: this.opening_balance,
-                        memo: this.memo,
-                        sales_date: this.sales_date,
-                        type: 1,
-                        comment: this.comment
+                        thana_id: this.thana
 					};
-                    if(this.hasOpeningBalance) { data.hasOpeningBalance = true; }
                     this.loading = true;
 					axios.post('/outlets', data)
 						.then(response => {
 							this.loading = false
-							location.reload();
+                            window.location.href="/outlets/" + response.data.id;
 						})
 						.catch(error => {
                             this.errorList = error.response.data.errors
@@ -241,16 +163,7 @@ export default {
 						})
                 }
             });
-		},
-        clearFields() {
-            this.name = ''
-            this.proprietor = ''
-            this.phone = ''
-            this.address = ''
-            this.thana = null
-            this.opening_balance = 0
-            errorList: {}
-        }
+		}
 	}
 }
 </script>

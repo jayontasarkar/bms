@@ -30,9 +30,8 @@ class OutletFormRequest extends FormRequest
         ];
         if($id = $this->segment(2)) {
             $rules['phone'] = 'nullable|unique:outlets,phone,' . $id;
-        }else{
-            $rules['memo'] = 'nullable|unique:sales,memo';
         }
+        
         return $rules;
     }
 }

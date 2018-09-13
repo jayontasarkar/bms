@@ -72,3 +72,11 @@ table.dataTable.no-footer {
   border-bottom: 1px solid #e1e1e1;
 }
 
+.remove-btn {
+  cursor: pointer;
+  padding: 0px;
+  background: transparent;
+  color: darkred;
+  border: none;
+}
+

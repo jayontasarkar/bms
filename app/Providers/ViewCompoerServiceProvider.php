@@ -18,9 +18,9 @@ class ViewCompoerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['outlet.index', 'store.index', 'dashboard'], UpozilaComposer::class );
+        View::composer(['outlet.index', 'outlet.edit', 'store.index', 'dashboard'], UpozilaComposer::class );
 
-        View::composer(['store.index', 'dashboard'], VendorComposer::class );
+        View::composer(['store.index', 'dashboard', 'outlet.edit', 'outlet.show'], VendorComposer::class );
 
         View::composer(['store.index', 'dashboard', 'outlet.show', 'sales.show', 'purchases.show'], ProductComposer::class );
 

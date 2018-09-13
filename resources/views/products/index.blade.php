@@ -47,6 +47,7 @@
 										<th>Product Code</th>
 										<th>Product Title</th>
 										<th>Vendor Name</th>
+										<th>Stock</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -70,6 +71,9 @@
 											<a href="{{ route('vendors.show', [$product->vendor]) }}">
 												{{ $product->vendor->name }}
 										</a>
+										</td>
+										<td>
+											{{ $product->stock }} PIECE
 										</td>
 										<td>
 											<ul class="list-inline mt-3">

@@ -26,10 +26,11 @@ Vue.component('create-user', require('./components/User/CreateUser'));
 
 // Outlet
 Vue.component('create-outlet', require('./components/Outlet/CreateOutlet'));
-Vue.component('edit-outlet', require('./components/Outlet/EditOutlet'));
+Vue.component('update-outlet', require('./components/Outlet/UpdateOutlet'));
 Vue.component('outlet-memo', require('./components/Outlet/OutletMemo'));
 Vue.component('sale-outlet-product', require('./components/Outlet/SaleOutletProduct'));
 Vue.component('add-opening-balance', require('./components/Outlet/AddOpeningBalance'));
+Vue.component('collection-from-outlet', require('./components/Outlet/CollectionFromOutlet'));
 Vue.component('update-opening-balance', require('./components/Outlet/UpdateOpeningBalance'));
 Vue.component('update-transactions', require('./components/Outlet/UpdateTransactions'));
 

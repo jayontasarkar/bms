@@ -24,10 +24,10 @@ class OutletsController extends Controller
     public function index(OutletFilter $filters)
     {
     	$outlets = Outlet::filter($filters)->orderBy('name')
-                        ->with('thana.district.thanas', 'sales')
+                        ->with('thana.district.thanas')
                         ->get();
 
-        $result = 'List of all outlets: ';
+        $result = "List of all outlets (" . count($outlets) . "): ";
         if(request()->has('thana')) {
             $result .= Thana::find(request('thana'))->name . ' thana, ';
         }
@@ -50,17 +50,26 @@ class OutletsController extends Controller
     public function store(OutletFormRequest $request)
     {
     	$outlet = Outlet::create($request->only('name', 'proprietor', 'phone', 'address', 'thana_id'));
-        if($request->has('hasOpeningBalance')) {
-            $outlet->sales()->create($request->only('memo', 'total_balance', 'type', 'sales_date', 'comment'));
-        }
-
+        
     	session()->flash('flash', $msg = 'New Outlet created successfully');
-    	return response()->json(['msg' => $msg]);
+    	return response()->json(['msg' => $msg, 'id' => $outlet->id]);
+    }
+
+    public function edit(Outlet $outlet)
+    {
+        $outlet->load('thana.district.thanas');
+        return view('outlet.edit', compact('outlet'));
     }
 
     public function update(OutletFormRequest $request, Outlet $outlet)
     {
         $outlet->update($request->all());
+        $outlet->transactions()->forceDelete();
+        if($request->opening_balances && count($request->opening_balances)) {
+            foreach($request->only('opening_balances')['opening_balances'] as $balance) {
+                $outlet->transactions()->create($balance);
+            }
+        }
 
         session()->flash('flash', $msg = 'Outlet updated successfully');
         return response()->json(['msg' => $msg]);

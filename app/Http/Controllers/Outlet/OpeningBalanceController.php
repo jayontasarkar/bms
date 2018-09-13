@@ -17,11 +17,11 @@ class OpeningBalanceController extends Controller
     public function store(Request $request, Outlet $outlet)
     {
     	$request->validate([
-    		'total_balance' => 'required|min:1',
-    		'memo'  => 'required|unique:sales,memo'
+            'amount' => 'required|min:1',
+    		'vendor_id' => 'required|exists:vendors,id'
     	]);
 
-    	$outlet->sales()->create($request->all());
+    	$outlet->transactions()->create($request->all());
 
     	session()->flash('flash', $msg = 'Opening balance created for outlet');
     	return response()->json(['msg' => $msg]);

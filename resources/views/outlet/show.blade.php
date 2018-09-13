@@ -5,6 +5,14 @@
 		<small>
 			{{ $outlet->address }}, {{ $outlet->thana->name }}, {{ $outlet->thana->district->name }}
 		</small>
+		@slot('rightContent')
+			<a href="{{ route('outlets.edit', [$outlet]) }}" class="btn btn-sm btn-info ml-auto mr-3 mt-4">
+				<i class="fa fa-edit mr-1"></i> Edit
+			</a>
+			<a href="#" onClick="history.go(-1); return false;" class="btn btn-sm btn-gray mt-4">
+				<i class="fe fe-corner-down-left mr-1"></i> Back
+			</a>
+		@endslot
 	@endcomponent
 	<div class="row row-cards">
 		<div class="col-6 col-sm-3 col-lg-3">
@@ -118,7 +126,7 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<sale-outlet-product :products="{{ json_encode($products) }}"
 			                        :outlet="{{ json_encode($outlet) }}"
 			                        :url="'{{ route('sales.store') }}'"
@@ -126,9 +134,17 @@
 			                        :btn-class="'btn-block'"
 			                ></sale-outlet-product>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
+							<collection-from-outlet
+									:url="'{{ route('outlets.opening-balance.store', [$outlet]) }}'"
+									:vendors="{{ json_encode($vendors) }}"
+							>
+							</collection-from-outlet>
+						</div>
+						<div class="col-md-4">
 							<add-opening-balance
 									:url="'{{ route('outlets.opening-balance.store', [$outlet]) }}'"
+									:vendors="{{ json_encode($vendors) }}"
 							>
 							</add-opening-balance>
 						</div>

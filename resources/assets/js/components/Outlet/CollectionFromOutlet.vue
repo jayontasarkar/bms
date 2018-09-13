@@ -1,10 +1,10 @@
 <template>
     <div class="full-width">
-    	<button type="button" class="btn btn-primary btn-block" @click.prevent="show">
-			+ Add Opening Balance
+    	<button type="button" class="btn btn-success btn-block" @click.prevent="show">
+			+ Collection from Outlet
 		</button>
-    	<b-modal ref="addOpeningBalanceModal"
-             title="Add opening balance to outlet"
+    	<b-modal ref="addCollectionFromOutletModal"
+             title="Add collection from outlet"
              :header-bg-variant="'primary'"
              :header-text-variant="'light'"
              centered
@@ -28,27 +28,27 @@
             </div>
         	<div class="row mt-3">
                 <div class="col-md-6">
-                    <label for="memo">Closing Date</label>
-                    <input type="date" name="closing date" v-model="transaction_date" class="form-control"
-                           :class="{'is-invalid': errors.has('closing date') }"  v-validate="'required'"
+                    <label for="memo">Collection Date</label>
+                    <input type="date" name="collection date" v-model="transaction_date" class="form-control"
+                           :class="{'is-invalid': errors.has('collection date') }"  v-validate="'required'"
                     >
-                    <div class="invalid-feedback" v-if="errors.has('closing date') ">
-                        {{ errors.first('closing date') }}
+                    <div class="invalid-feedback" v-if="errors.has('collection date') ">
+                        {{ errors.first('collection date') }}
                     </div>
                 </div>
         		<div class="col-md-6">
                     <div class="form-group">
-                        <label for="title">Opening Balance</label>
+                        <label for="title">Collection Amount</label>
                         <input type="number" 
-                               name="opening balance"  
+                               name="collection amount"  
                                class="form-control" 
                                v-model="amount"
                                min="1"
                                v-validate="'decimal:2'"
-                               :class="{ 'is-invalid': errors.has('opening balance') }"
+                               :class="{ 'is-invalid': errors.has('collection amount') }"
                         >
-                        <div class="invalid-feedback" v-if="errors.has('opening balance') ">
-                            {{ errors.first('opening balance') }}
+                        <div class="invalid-feedback" v-if="errors.has('collection amount') ">
+                            {{ errors.first('collection amount') }}
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
     				    @click.prevent="submit"
     				    :class="{ 'btn-loading': loading }"
     		    >
-		           Save opening balance
+		           Save Collection
 		        </button>
 		        <button type="button" class="float-right btn btn-danger mr-2" @click.prevent="hide">
 		           Close
@@ -86,11 +86,10 @@ export default {
 	},
     methods: {
         show() {
-			this.$refs.addOpeningBalanceModal.show();
+			this.$refs.addCollectionFromOutletModal.show();
 		},
 		hide() {
-			this.clearFields()
-			this.$refs.addOpeningBalanceModal.hide();
+			this.$refs.addCollectionFromOutletModal.hide();
 		},
 		submit() {
 			this.$validator.validate().then(result => {
@@ -99,7 +98,7 @@ export default {
 						amount: this.amount,
                         vendor_id: this.vendor_id,
                         transaction_date: this.transaction_date,
-                        type: 1
+                        type: 0
 					};
                     this.loading = true;
 					axios.post(this.url, data)

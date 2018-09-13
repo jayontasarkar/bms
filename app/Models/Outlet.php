@@ -23,4 +23,19 @@ class Outlet extends Model
     {
     	return $this->hasMany(Sales::class);
     }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
+    }
+
+    public function openingBalances()
+    {
+        return $this->transactions->load('vendor')->where('type', true);
+    }
+
+    public function collections()
+    {
+        return $this->transactions->load('vendor')->where('type', false);
+    }
 }
