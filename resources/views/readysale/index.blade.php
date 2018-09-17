@@ -2,14 +2,19 @@
 
 @section('content')
 	@component('layouts.backend.common.page-header')
-		Outlet Sales by Sales Order
+		Store Ready Sales
+		@slot('rightContent')
+			<a href="#" onClick="history.go(-1); return false;" class="btn btn-sm ml-auto btn-gray">
+				<i class="fe fe-corner-down-left mr-1"></i> Back
+			</a>
+		@endslot
 	@endcomponent
 	<div class="row">
 		<div class="col-md-3">
 			<div class="card">
 				<div class="card-body">
 					@include('layouts.backend.common._sidebarSearch', [
-						'route' => route('sales.index')
+						'route' => route('readysales.index')
 					])
 				</div>
 			</div>
@@ -20,7 +25,7 @@
 					<div class="row mb-5 alert alert-success">
 						<div class="col-md-9 pt-2">
 							@php 
-								$title = "Sales reports "; 
+								$title = "Ready Sale reports "; 
 								if(request()->has('vendor')) {
 									$title .= ' of ' . App\Models\Vendor::find(request('vendor'))->name;
 								}
@@ -39,71 +44,73 @@
 								   placeholder="Search by Sales Order">
 						</div>
 					</div>
-					@if(count($sales))
+					@if(count($readysales))
 		              <div class="table-responsive">
 		                <table class="table card-table table-bordered table-vcenter text-nowrap datatable">
 		                  <thead class="bg-gray-dark">
 		                    <tr>
-		                      <th>SO. No.</th>
-		                      <th>Outlet/Clients</th>
-		                      <th>Sales Date</th>
+		                      <th>Memo</th>
+		                      <th>Customer Details</th>
+		                      <th>Ready Sale Date</th>
 		                      <th>Total Amount</th>
-		                      <th>Discount</th>
+		                      <th>Total Paid</th>
 		                      <th></th>
 		                    </tr>
 		                  </thead>
 		                  <tbody>
-		                  	@php $grandTotal = 0; @endphp
-		                    @foreach($sales as $sale)
+		                  	@php $grandTotal = 0; $totalPaid = 0; @endphp
+		                    @foreach($readysales as $index => $sale)
 		                      <tr>
-		                        <td class="search">
-		                        	<a href="{{ route('sales.show', [$sale]) }}">{{ $sale->memo }}</a>
+		                      	<td class="search">
+		                        	<a href="{{ route('readysales.edit', [$sale]) }}">{{ $sale->memo }}</a>
 		                        </td>
 		                        <td class="search">
-		                          <a href="{{ route('sales.show', [$sale->vendor]) }}" class="text-inherit">
-		                            {{ $sale->outlet->name }}
-		                          </a>
+		                          {{ $sale->ready_sale_details }}
 		                        </td>
 		                        <td>
-		                          {{ $sale->sales_date->format('M d, Y') }}
+		                          {{ $sale->ready_sale_date->format('M d, Y') }}
 		                        </td>
 		                        <td>
-				                  @php
-		                            $total = $sale->records->sum(function($query){ 
-		                              return $query->unit_price * $query->qty; 
-		                            });
-		                            $grandTotal += $total;
+		                        	@php
+		                        	$total = $sale->records->sum(function($query){ 
+		                        		return $query->unit_price * $query->qty; 
+		                        	});
+		                        	$grandTotal += $total;
+		                        	@endphp
+		                          {{ number_format($total) }}/= 
+		                        </td>
+		                        <td>
+		                          @php
+		                          $paid = $sale->transactions->sum('amount');
+		                          $totalPaid += $paid;
 		                          @endphp
-		                          {{ number_format($total) }}/=
+		                          {{ number_format($paid) }}/=
 		                        </td>
 		                        <td>
-		                          {{ number_format($sale->total_discount) }}/=
-		                        </td>
-		                        <td>
-		                        	<outlet-memo 
-											:sales="{{ json_encode($sale) }}"
-											:records="{{ json_encode($sale->records) }}"
-											:title="'Show'"
-									></outlet-memo>	
+		                        	<ready-sale-memo 
+		                                :sales="{{ json_encode($sale) }}"
+		                                :records="{{ json_encode($sale->records) }}"
+		                                :title="'Show'"
+		                            ></ready-sale-memo>
 		                        </td>
 		                      </tr>
 		                    @endforeach
 		                    <tfoot class="bg-light">
 		                    	<tr>
-			                    	<td></td>
-			                    	<td></td>
-			                    	<td><strong>Total Amount:</strong></td>
-			                    	<td><strong>{{ number_format($grandTotal) }}/=</strong></td>
-			                    	<td>{{ number_format($sales->sum('total_discount')) }}/=</td>
-			                    	<td></td>
-			                    </tr>
+		                    		<td></td>
+		                    		<td></td>
+		                    		<td>Total Amount:</td>
+		                    		<td>{{ number_format($grandTotal) }}/=</td>
+		                    		<td>{{ number_format($totalPaid) }}/=</td>
+		                    		<td></td>
+		                    	</tr>
 		                    </tfoot>
 		                  </tbody>
 		                </table>
 		              </div>
 		            @else
 		              <div class="alert alert-warning text-center">
-		                <strong>No Sales was found with the search criteria</strong>
+		                <strong>No ready sale item was found with the criteria.</strong>
 		              </div>
 		            @endif
 				</div>
@@ -115,7 +122,7 @@
 
 @include('layouts.backend.common.datatable', [
 	'title' => $title,
-	'columns' => '[ 0, 1, 2, 3, 4 ]',
+	'columns' => '[0, 1, 2, 3, 4]',
 	'searchCol' => 0
 ])
 

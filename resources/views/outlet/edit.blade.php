@@ -4,7 +4,10 @@
 @component('layouts.backend.common.page-header')
 	Edit Outlet: {{ $outlet->name }}
 	@slot('rightContent')
-		<a href="#" onClick="history.go(-1); return false;" class="btn btn-sm btn-gray ml-auto mt-4">
+		<a href="{{ route('outlets.show', [$outlet]) }}" class="btn btn-sm btn-info ml-auto mr-3 mt-4">
+			<i class="fa fa-search-plus mr-1"></i> Go outlet page
+		</a>
+		<a href="#" onClick="history.go(-1); return false;" class="btn btn-sm btn-gray mt-4">
 			<i class="fe fe-corner-down-left mr-1"></i> Back
 		</a>
 	@endslot

@@ -1,6 +1,6 @@
 <template>
 	<span :class="className">
-    	<button type="button" class="btn btn-warning" :class="btnClass" @click.prevent="show">
+    	<button type="button" class="btn btn-cyan" :class="btnClass" @click.prevent="show">
 			+ Sell product to outlets
 		</button>
     	<b-modal ref="saleOutletProductModal"
@@ -12,7 +12,7 @@
              no-close-on-esc no-close-on-backdrop
         >
         <div class="row mt-2">
-        		<div class="col-md-4">
+        		<div class="col-md-3">
         			<label for="memo">Sales Order/Memo No.</label>
         			<input type="text" name="sales order no" v-model="memo" class="form-control"
         				   :class="{'is-invalid': errors.has('sales order no') || errorList.memo}"  v-validate="'required'"
@@ -21,7 +21,19 @@
                         {{ errors.first('sales order no') || errorList.memo[0] }}
                     </div>
         		</div>
-        		<div class="col-md-4">
+            <div class="col-md-3">
+              <label for="vendor">Select vendor</label>
+              <select name="vendor" id="vendor" v-model="vendor_id" class="form-control"
+                  :class="{'is-invalid': errors.has('vendor') }"  v-validate="'required'"
+              >
+                <option value="">Select</option>
+                <option v-for="(vendor, index) in vendors" :value="vendor.id">{{ vendor.name }}</option>
+              </select>
+              <div class="invalid-feedback" v-if="errors.has('vendor')">
+                  {{ errors.first('vendor') }}
+              </div>
+            </div>
+        		<div class="col-md-3">
         			<label for="memo">Sales Date</label>
         			<input type="date" name="sales date" v-model="sales_date" class="form-control"
 						   :class="{'is-invalid': errors.has('sales date') || errorList.sales_date}"  v-validate="'required'"
@@ -30,8 +42,8 @@
                         {{ errors.first('sales date') || errorList.sales_date[0] }}
                     </div>
         		</div>
-        		<div class="col-md-4">
-                	<button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="outlet == ''">
+        		<div class="col-md-3">
+                	<button type="button" class="btn btn-success mt-6 btn-block" @click="addProduct" :disabled="vendor_id == ''">
                 		<i class="fe fe-plus mr-2"></i>Add product to sales order
                 	</button>
                 </div>
@@ -140,10 +152,12 @@
 <script>
 	var moment = require('moment');
 	export default {
-		props: ['products', 'outlet', 'url', 'className', 'btnClass'],
+		props: ['vendors', 'outlet', 'url', 'className', 'btnClass'],
 		data() {
 			return {
 				memo: '',
+        vendor_id: '',
+        products: [],
 				discount: null,
 				sales_date: moment(new Date()).format('YYYY-MM-DD'),
 				productList: [],
@@ -156,6 +170,14 @@
     		let list = this.productList.map(function(item){ return item.unit_price * item.qty });
             return list.length ? list.reduce((acc, curr) =>   acc + curr) : 0;
     	}
+    },
+    watch: {
+      vendor_id: function(newVal, oldVal) {
+        if(newVal != '') {
+          let filtered = this.vendors.filter(item => item.id == newVal);
+          this.products = filtered[0].products;
+        }
+      }
     },
 		methods: {
 			show() {
@@ -180,7 +202,7 @@
           		let data = {
           			memo: this.memo,
           			outlet_id: this.outlet.id,
-          			total_balance: this.total,
+          			vendor_id: this.vendor_id,
           			total_discount: this.discount,
           			sales_date: this.sales_date,
           			sales: this.productList

@@ -95,6 +95,7 @@
                     <th>Type</th> 
                     <th>Bank Name</th> 
                     <th>Transaction Date</th> 
+                    <th>Note</th>
                     <th class="text-right">Amount</th>
                   </tr>
                 </thead>
@@ -110,6 +111,7 @@
                       </td>
                       <td>{{ $transaction->transactionable->name }}</td>
                       <td>{{ $transaction->transaction_date->format('M d, Y') }}</td>
+                      <td>{{ str_limit($transaction->comment, 15) }}</td>
                       <td class="text-right"><span class="text-muted">{{ number_format($transaction->amount) }}/=</span></td>
                     </tr>
                   @endforeach
@@ -152,10 +154,16 @@
               </li>
               <li class="list-group-item">
                 <ready-sale :vendors="{{ json_encode($vendors) }}"
-                        :url="'{{ route('sales.store') }}'"
+                        :url="'{{ route('readysales.store') }}'"
                         :class-name="'d-block width--100'"
                         :btn-class="'btn-block'"
                 ></ready-sale>
+              </li>
+              <li class="list-group-item">
+                <dashboard-collection :districts="{{ json_encode($districts) }}"
+                        :vendors="{{ json_encode($vendors) }}"
+                        :url="'{{ route('collections.store') }}'"
+                ></dashboard-collection>
               </li>
           </ul>
         </div>
@@ -259,14 +267,11 @@
                 <table class="table card-table table-vcenter text-nowrap">
                   <thead class="bg-gray-dark">
                     <tr>
-                      <th class="w-1">SO. No.</th>
+                      <th>SO. No.</th>
                       <th>Outlet/Customers</th>
                       <th>Sales Date</th>
                       <th>Total Amount</th>
-                      <th>Total Paid</th>
                       <th>Discount</th>
-                      <th>Due Amount</th>
-                      <th></th>
                       <th></th>
                     </tr>
                   </thead>
@@ -285,28 +290,21 @@
                           {{ $sale->sales_date->format('M d, Y') }}
                         </td>
                         <td>
-                          {{ number_format($total = $sale->total_balance) }}/=
-                        </td>
-                        <td>
-                          {{ number_format($paid = $sale->total_paid) }}/=
+                          @php
+                            $total = $sale->records->sum(function($query){ 
+                              return $query->unit_price * $query->qty; 
+                            });
+                          @endphp
+                          {{ number_format($total) }}/=
                         </td>
                         <td>
                           {{ number_format($discount = $sale->total_discount) }}/=
-                        </td>
-                        <td>
-                          {{ number_format($total - $paid - $discount) }}/=
-                        </td>
-                        <td>
-                          <collection :sales="{{ json_encode($sale) }}"
-                                 :url="'{{ route('sales.transactions.store', [$sale]) }}'" 
-                          ></collection>
                         </td>
                         <td>
                           @if ( ! $sale->type )
                             <outlet-memo 
                                 :sales="{{ json_encode($sale) }}"
                                 :records="{{ json_encode($sale->records) }}"
-                                :transactions="{{ json_encode($sale->transactions) }}"
                                 :title="'Show'"
                             ></outlet-memo>
                           @else

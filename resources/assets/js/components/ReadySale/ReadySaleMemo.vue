@@ -4,7 +4,7 @@
 			{{ title ? title : sales.memo }}
 		</a>
     	<b-modal ref="outletMemoModal"
-             title="Sales Report for Sales Order "
+             title="Ready Sales Report by Ready Sales Order "
              :header-bg-variant="'primary'"
              :header-text-variant="'light'"
              centered size="lg"
@@ -12,7 +12,7 @@
         >
         	<div class="row">
         		<div class="col-md-12">
-        			<h4>Product Sales Summary</h4>
+        			<h4>Ready Sale Summary</h4>
         			<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
 						<thead>
 							<tr class="bg-gray-dark">

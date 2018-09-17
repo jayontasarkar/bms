@@ -26,7 +26,7 @@ class Purchase extends Model
 
     public function records()
     {
-    	return $this->hasMany(PurchaseRecords::class, 'purchase_id', 'id');
+        return $this->morphMany(Record::class, 'recordable');
     }
 
     public function vendor()
@@ -55,5 +55,14 @@ class Purchase extends Model
     	return $purchases->filter(function($query){
     		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
     	});
+    }
+
+    public function createRelationalData($request)
+    {
+        $purchases = $this->records()->createMany($request->only('purchases')['purchases']);
+        foreach($purchases as $purchase) {
+            $purchase->product->update(['stock' => $purchase->product->stock + $purchase->qty ]);
+        }
+        return $this;
     }
 }

@@ -14,111 +14,17 @@
 			</a>
 		@endslot
 	@endcomponent
-	<div class="row row-cards">
-		<div class="col-6 col-sm-3 col-lg-3">
-			<div class="card">
-				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($total = $outlet->sales->sum('total_balance')) }}/=</div> 
-	              	<div class="text-muted mb-4">Total Amount</div>
-	            </div>
-	        </div>
-	    </div>
-	    <div class="col-6 col-sm-3 col-lg-3">
-			<div class="card">
-				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($paid = $outlet->sales->sum('total_paid')) }}/=</div> 
-	              	<div class="text-muted mb-4">Paid Amount</div>
-	            </div>
-	        </div>
-	    </div>
-	    <div class="col-6 col-sm-3 col-lg-3">
-			<div class="card">
-				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($discount = $outlet->sales->sum('total_discount')) }}/=</div> 
-	              	<div class="text-muted mb-4">Total Discount</div>
-	            </div>
-	        </div>
-	    </div>
-	    <div class="col-6 col-sm-3 col-lg-3">
-			<div class="card">
-				<div class="card-body p-3 text-center">
-					<div class="h1 m-0 text-center">{{ number_format($total - $paid - $discount) }}/=</div> 
-	              	<div class="text-muted mb-4 text-center">Due Amount</div>
-	            </div>
-	        </div>
-	    </div>
-	</div>
 	<div class="row">
 		<div class="col-md-3">
 			<div class="card">
 				<div class="card-body">
-					<a href="{{ route('outlets.show', [$outlet]) }}" class="btn btn-secondary" style="width: 30%;">Clear</a>
-					<a href="{{ route('outlets.excel', array_merge($_GET, ['id' => $outlet->id])) }}" 
-							style="width: 33%;" class="btn btn-primary"
-					>Excel</a>
-					<a href="{{ route('outlets.pdf', array_merge($_GET, ['id' => $outlet->id])) }}" style="width: 33%;" 
-						class="btn btn-danger"
-					>PDF</a>
+					@include('outlet.views._overall_balance_report_modal')
+					<a href="{{ route('outlet.collections.index', [$outlet]) }}" class="btn btn-block btn-gray">Collection Report</a>
 					<hr>
-					<div class="form-group">
-	                    <label class="form-label"><strong>Search by month</strong></label>
-	                    <form>
-	                    	<div class="form-group">
-	                    		<div class="row">
-	                    			<div class="col-md-6">
-	                    				<label for="month">Month</label>
-	                    				<select name="month" id="month" class="form-control">
-	                    					@foreach(config('bms.months') as $key => $month)
-	                    						<option value="{{ $key }}" {{ old('month', date('m')) == $key ? 'selected' : '' }}>
-	                    							{{ $month }}
-	                    						</option>
-	                    					@endforeach
-	                    				</select>
-	                    			</div>
-	                    			<div class="col-md-6">
-	                    				<label for="year">Year</label>
-	                    				<select name="year" id="year" class="form-control">
-	                    					@for($i = 2018; $i <= date('Y') + 5; $i++)
-	                    						<option value="{{ $i }}" {{ old('year', date('Y')) == $i ? 'selected' : '' }}>
-	                    							{{ $i }}
-	                    						</option>
-	                    					@endfor
-	                    				</select>	
-	                    			</div>
-	                    		</div>
-	                    	</div>
-	                    	<div class="form-group text-center">
-		                    	<a href="{{ route('outlets.show', [$outlet]) }}" class="btn btn-sm btn-secondary">
-		                    		<i class="fe fe-x-circle"></i> Clear
-		                    	</a> 
-		                    	<button type="submit" class="btn btn-sm btn-info">
-		                    		<i class="fe fe-search"></i> Search
-		                    	</button>
-		                    </div>
-	                    </form>
-	                </div>
-					<hr>
-					<div class="form-group">
-	                    <label class="form-label"><strong>Search by date(s)</strong></label>
-	                    <form>
-	                    	<div class="form-group">
-								<label class="selectgroup-item">From Date</label>
-								<input type="date" name="from" required value="{{ request('from', date('Y-m-d')) }}" class="form-control">
-		                    </div>
-		                    <div class="form-group">
-								<label class="selectgroup-item">To Date</label>
-								<input type="date" name="to" required value="{{ request('to', date('Y-m-d')) }}" class="form-control">
-		                    </div>
-		                    <div class="form-group text-center">
-		                    	<a href="{{ route('outlets.show', [$outlet]) }}" class="btn btn-sm btn-secondary">
-		                    		<i class="fe fe-x-circle"></i> Clear
-		                    	</a> 
-		                    	<button type="submit" class="btn btn-sm btn-info">
-		                    		<i class="fe fe-search"></i> Search
-		                    	</button>
-		                    </div>
-	                    </form>
-	                </div>
+                    <label class="form-label"><strong>Search by vendor & date(s)</strong></label>
+                    @include('layouts.backend.common._sidebarSearch', [
+						'route' => route('outlets.show', [$outlet])
+					])
 				</div>
 			</div>
 		</div>
@@ -127,7 +33,7 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-4">
-							<sale-outlet-product :products="{{ json_encode($products) }}"
+							<sale-outlet-product :vendors="{{ json_encode($vendors) }}"
 			                        :outlet="{{ json_encode($outlet) }}"
 			                        :url="'{{ route('sales.store') }}'"
 			                        :class-name="'d-block width--100'"
@@ -138,8 +44,7 @@
 							<collection-from-outlet
 									:url="'{{ route('outlets.opening-balance.store', [$outlet]) }}'"
 									:vendors="{{ json_encode($vendors) }}"
-							>
-							</collection-from-outlet>
+							></collection-from-outlet>
 						</div>
 						<div class="col-md-4">
 							<add-opening-balance
@@ -156,42 +61,40 @@
 					<div class="alert alert-success">
 						<div class="row">
 							<div class="col-md-8 pt-2">
-								@if(request()->has('year') && request()->has('month'))
-									<strong>
-										Sales report of (monthly): 
-										{{ config('bms.months.' . request('month')) . ', ' . request('year') }}
-									</strong>
-								@elseif(request()->has('from') && request()->has('to'))	
-									<strong>
-										Sales report of (dates): 
-										{{ Carbon\Carbon::parse(request('from'))->format('d M, Y') }} - 
-										{{ Carbon\Carbon::parse(request('to'))->format('d M, Y') }}
-									</strong>
-								@else
-									<strong>All Sales reports</strong>	
-								@endif
+								@php 
+									$title = "Sales report of " . $outlet->name; 
+									if(request()->has('vendor')) {
+										$title .= ' for ' . App\Models\Vendor::find(request('vendor'))->name;
+									}
+									elseif(request()->has('from') && request()->has('to')) {
+										$title .= ' (' . Carbon\Carbon::parse(request('from'))->format('d M, Y') . ' - ' . 
+										Carbon\Carbon::parse(request('to'))->format('d M, Y') . ')';
+									}
+									else{
+										$title .= ' (All)';
+									}
+								@endphp
+								<strong>{{ $title }}</strong>
 							</div>
 							<div class="col-md-4">
 								<input type="text" class="form-control" placeholder="Search by Sales Order" id="filter-table">
 							</div>
 						</div>
 					</div> 
-					@if(count($results = $outlet->sales->sortByDesc('created_at')))
+					@if(count($results = $outlet->sales))
 						<div class="table-responsive">
 							<table class="table card-table table-bordered datatable table-vcenter text-nowrap" border="1">
 								<thead>
 									<tr class="bg-gray-dark">
 										<th>Memo</th>
-										<th>Delivery Date</th>
-										<th>Total</th>
-										<th>Paid</th>
+										<th>Sales Date</th>
+										<th>Vendor Name</th>
+										<th>Total Amount</th>
 										<th>Discount</th>
-										<th>Due</th>
-										<th>&nbsp;</th>
-										<th>&nbsp;</th>
 									</tr>
 								</thead>
 								<tbody>
+									@php $total = 0; @endphp
 									@foreach($results as $key => $result)
 										<tr>
 											<td>
@@ -201,45 +104,36 @@
 												{{ $result->sales_date->format('M d, Y') }}
 											</td>
 											<td>
-												{{ number_format($result->total_balance) }}/= {!! $result->type ? '&nbsp;<span class="text-danger">(Opening)</span>' : '' !!}
+												{{ $result->vendor->name }}
 											</td>
 											<td>
-												{{ number_format($result->total_paid) }}/=
+												@php 
+													$sum = $result->amoutnInEachSalesOrder();
+													$total += $sum;
+												@endphp
+												{{ number_format($sum) }}/=
 											</td>
 											<td>
 												{{ number_format($result->total_discount) }}/=
 											</td>
-											<td>
-												{{ number_format(
-													$result->total_balance - 
-													$result->total_paid - 
-													$result->total_discount
-												) }}/=
-											</td>
-											<td>
-												<collection :sales="{{ json_encode($result) }}"
-													     :url="'{{ route('sales.transactions.store', [$result]) }}'" 
-												></collection>
-											</td>
-											<td>
-												@if( !$result->type )
-						                        	<outlet-memo 
-															:sales="{{ json_encode($result) }}"
-															:records="{{ json_encode($result->records) }}"
-															:transactions="{{ json_encode($result->transactions) }}"
-															:title="'Show'"
-													></outlet-memo>
-												@else
-						                            <span class="badge badge-success"><strong>Opening</strong></span>
-						                        @endif
-											</td>
 										</tr>
 									@endforeach
+									<tfoot class="bg-light">
+										<tr>
+											<td></td>
+											<td></td>
+											<td><strong>Total Amount:</strong></td>
+											<td>
+												<strong>{{ number_format($total) }}/=</strong>
+											</td>
+											<td></td>
+										</tr>
+									</tfoot>
 								</tbody>
 							</table>
 						</div>
 					@else
-						<h3>No sales was found within the search criteria</h3>
+						<h3 class="text-center">No sales was found within the search criteria</h3>
 					@endif
 				</div>
 			</div>
@@ -248,7 +142,19 @@
 @stop
 
 @include('layouts.backend.common.datatable', [
-	'title' => "Sales Report of " . $outlet->name,
-	'columns' => '[ 0, 1, 2, 3, 4, 5 ]',
+	'title' => $title,
+	'columns' => '[ 0, 1, 2, 3, 4 ]',
 	'searchCol' => 0
 ])
+
+@push('scripts')
+	<script type="text/javascript">
+		$(document).ready(function(){
+    		$("#search").submit(function() {
+		      $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		      $(this).find("select").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		      return true;
+		    });
+		});
+	</script>
+@endpush

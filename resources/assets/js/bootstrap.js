@@ -46,7 +46,7 @@ window.flash = function (message, level = 'success') {
 
 window.beautifyAmount = str => {
     if(str == '' || str == null) { return 0; }
-    let formated = numeral(str).format('00,00,000.0');
+    let formated = numeral(str).format('0,0.0');
     return formated;
 }
 

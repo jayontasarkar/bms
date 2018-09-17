@@ -13,7 +13,7 @@ return [
 		'name' => 'Dinajpur',
 		'slug' => 'dinajpur',
 		'thana' => [
-			'Birampur', 'Birganj', 'Biral', 'Bochaganj', 'Chirirbandar', 'Phulbari', 'Ghoraghat', 
+			'Birampur', 'Birganj', 'Biral', 'Bochaganj', 'Chirirbandar', 'Fulbari', 'Ghoraghat', 
 			'Hakimpur', 'Kaharole', 'Khansama', 'Dinajpur Sadar', 'Nawabganj', 'Parbatipur'
 		]
 	],

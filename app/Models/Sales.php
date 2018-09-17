@@ -12,7 +12,7 @@ class Sales extends Model
     use SoftDeletes, Filterable;
 
     protected $fillable = [
-    	'memo', 'outlet_id', 'vendor_id', 'ready_sale_details', 'total_discount', 'sales_date', 'comment'
+    	'memo', 'outlet_id', 'vendor_id', 'total_discount', 'sales_date', 'comment'
     ];
 
     protected $dates = [ 'sales_date' ];
@@ -26,7 +26,7 @@ class Sales extends Model
 
     public function records()
     {
-    	return $this->hasMany(SalesRecord::class, 'sale_id', 'id');
+        return $this->morphMany(Record::class, 'recordable');
     }
 
     public function transactions()
@@ -39,13 +39,15 @@ class Sales extends Model
     	return $this->belongsTo(Outlet::class);
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
     public static function outletsWithDuePayments($filter)
     {
-    	$sales = static::filter($filter)->orderBy('sales_date', 'desc')
+    	return static::filter($filter)->orderBy('sales_date', 'desc')
     	        ->with('outlet', 'records.product')->get();
-    	return $sales->filter(function($query){
-    		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
-    	});
     }
 
     public static function duePayments()
@@ -59,5 +61,21 @@ class Sales extends Model
     public function getOpeningsAttribute()
     {
         return $this->transactions->where('type', true);
+    }
+
+    public function createRelationalData($request)
+    {
+        $sales = $this->records()->createMany($request->only('sales')['sales']);
+        foreach($sales as $sale) {
+            $sale->product->update(['stock' => $sale->product->stock - $sale->qty ]);
+        }
+        return $this;
+    }
+
+    public function amoutnInEachSalesOrder()
+    {
+        return $this->records->sum(function($query){ 
+            return  $query->unit_price * $query->qty; 
+        });
     }
 }

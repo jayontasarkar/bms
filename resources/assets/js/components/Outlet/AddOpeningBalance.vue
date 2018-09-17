@@ -89,7 +89,6 @@ export default {
 			this.$refs.addOpeningBalanceModal.show();
 		},
 		hide() {
-			this.clearFields()
 			this.$refs.addOpeningBalanceModal.hide();
 		},
 		submit() {

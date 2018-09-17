@@ -18,15 +18,20 @@ class ViewCompoerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['outlet.index', 'outlet.edit', 'store.index', 'dashboard'], UpozilaComposer::class );
-
-        View::composer(['store.index', 'dashboard', 'outlet.edit', 'outlet.show'], VendorComposer::class );
-
-        View::composer(['store.index', 'dashboard', 'outlet.show', 'sales.show', 'purchases.show'], ProductComposer::class );
-
         View::composer(['store.index', 'dashboard'], OutletComposer::class );
         View::composer(['dashboard'], PendingPurchaseAndSalesComposer::class );
         View::composer(['banking.index', 'dashboard'], BankingComposer::class );
+        View::composer([
+            'outlet.index', 'outlet.edit', 'store.index', 'dashboard', 'collections.edit', 'store.report.index'
+        ], UpozilaComposer::class );
+        View::composer([
+            'store.index', 'dashboard', 'outlet.edit', 'outlet.show', 'readysale.edit', 'store.report.index',
+            'collections.index', 'collections.edit', 'sales.index', 'layouts.backend.common._sidebarSearch'
+        ], VendorComposer::class );
+
+        View::composer([
+            'store.index', 'dashboard', 'outlet.show', 'sales.show', 'purchases.show', 'readysale.edit'
+        ], ProductComposer::class );
     }
 
     /**

@@ -21,14 +21,16 @@
 		            title : "{{ isset($title) ? $title : time() }}",
 		            exportOptions: {
 	                    columns: {{ $columns }}
-	                }
+	                },
+	                footer: true
 		        },
 		        {
 		            extend : 'pdf',
 		            title : "{{ isset($title) ? $title : time() }}",
 		            exportOptions: {
 	                    columns: {{ $columns }}
-	                }
+	                },
+	                footer: true
 		        }]
     		});
     		$("#filter-table").on('keyup', function(){

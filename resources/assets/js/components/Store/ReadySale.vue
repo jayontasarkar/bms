@@ -1,6 +1,6 @@
 <template>
 <span :class="className">
-  <button type="button" class="btn btn-danger" :class="btnClass" @click.prevent="show">
+  <button type="button" class="btn btn-indigo" :class="btnClass" @click.prevent="show">
   + Ready Sell products
   </button>
   <b-modal ref="saleProductModal"
@@ -207,14 +207,12 @@
           if(result) {
             let data = {
               memo: this.memo,
-              outlet_id: null,
               vendor_id: this.vendor_id,
               ready_sale_details: this.ready_sale_details,
-              total_balance: this.total,
+              amount: this.total,
               total_discount: this.discount,
-              sales_date: this.sales_date,
+              ready_sale_date: this.sales_date,
               sales: this.productList,
-              type: 'readysale'
             };
             this.loading = true;
             axios.post(this.url, data)

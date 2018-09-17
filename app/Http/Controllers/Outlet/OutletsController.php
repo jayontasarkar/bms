@@ -40,11 +40,11 @@ class OutletsController extends Controller
 
     public function show(Outlet $outlet)
     {
+        $overall = $outlet->overallCollectionReport();
         $outlet->load('thana.district');
-
-        $this->generateRelationalData($outlet);
+        $outlet = $this->generateRelationalData($outlet);
         
-        return view('outlet.show', compact('outlet'));
+        return view('outlet.show', compact('outlet', 'overall'));
     }
 
     public function store(OutletFormRequest $request)
@@ -95,23 +95,17 @@ class OutletsController extends Controller
 
     private function generateRelationalData($outlet)
     {
-        if(request()->has('month') && request()->has('year')) {
-            return $outlet->load(['sales' => function($query){
-                $start = Carbon::parse(request('year') . '-' . request('month') . '-01')->startOfDay();
-                $end   = Carbon::parse(request('year') . '-' . request('month') . '-01')->endOfMonth();
-                $query->whereBetween('sales_date', [$start, $end]);
-                $query->with('records.product');
-            }]);
-        }
-        if(request()->has('from') && request()->has('to')) {
-            return $outlet->load(['sales' => function($query){
+        return $outlet->load(['sales' => function($query){
+            if(request()->has('from') && request()->has('to')) {
                 $start = Carbon::parse(request('from'))->startOfDay();
                 $end   = Carbon::parse(request('to'))->endOfDay();
                 $query->whereBetween('sales_date', [$start, $end]);
-                $query->with('records.product');
-            }]);
-        }
-
-        return $outlet->load('sales.records.product');
+            }
+            if(request()->has('vendor')) {
+                $query->where('vendor_id', request('vendor'));
+            }
+            $query->orderBy('sales_date', 'desc');
+            $query->with('records.product', 'vendor');
+        }]);
     }
 }

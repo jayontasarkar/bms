@@ -34,6 +34,14 @@ Vue.component('collection-from-outlet', require('./components/Outlet/CollectionF
 Vue.component('update-opening-balance', require('./components/Outlet/UpdateOpeningBalance'));
 Vue.component('update-transactions', require('./components/Outlet/UpdateTransactions'));
 
+//Collections
+Vue.component('dashboard-collection', require('./components/Outlet/DashboardCollection'));
+Vue.component('update-collection', require('./components/Outlet/UpdateCollection'));
+
+// ReadySale
+Vue.component('ready-sale-memo', require('./components/ReadySale/ReadySaleMemo'));
+Vue.component('update-ready-sales', require('./components/ReadySale/UpdateReadySales'));
+
 // Vendors
 Vue.component('create-vendor', require('./components/Vendors/CreateVendor'));
 Vue.component('edit-vendor', require('./components/Vendors/EditVendor'));

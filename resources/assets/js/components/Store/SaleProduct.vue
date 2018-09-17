@@ -1,6 +1,6 @@
 <template>
 <span :class="className">
-  <button type="button" class="btn btn-warning" :class="btnClass" @click.prevent="show">
+  <button type="button" class="btn btn-cyan" :class="btnClass" @click.prevent="show">
   + Sell product to outlets
   </button>
   <b-modal ref="saleProductModal"

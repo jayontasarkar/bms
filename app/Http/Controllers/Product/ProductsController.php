@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\ProductFilter;
 use App\Http\Requests\ProductFormRequest;
+use App\Models\Record;
 use App\Models\{Product, SalesRecord, PurchaseRecords, Vendor};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,10 +35,14 @@ class ProductsController extends Controller
 
     public function show(Product $product)
     {
-    	$sales = SalesRecord::byProduct($product);
-    	$purchases = PurchaseRecords::byProduct($product);
-    	$results = $sales->merge($purchases)->sortByDesc('created_at');
-    
+        $query = (new Record)->newQuery();
+        if(request()->has('from') && request()->has('to')) {
+            $from = Carbon::parse(request('from'));
+            $to   = Carbon::parse(request('to'));
+            $query->whereBetween('created_at', [$from, $to]);
+        }
+    	$results = $query->where('product_id', $product->id)->latest()->get();
+
     	return view('products.show', compact('product', 'results'));
     }
 

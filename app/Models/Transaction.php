@@ -32,4 +32,8 @@ class Transaction extends Model
         return $this->belongsTo(Vendor::class);
     }
 
+    public static function collectionsByOutlet($outlet)
+    {
+         
+    }
 }

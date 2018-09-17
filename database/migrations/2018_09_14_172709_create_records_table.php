@@ -4,22 +4,23 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSalesRecordsTable extends Migration
+class CreateRecordsTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
-     */
+     */ 
     public function up()
     {
-        Schema::create('sales_records', function (Blueprint $table) {
+        Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('sale_id');
+            $table->unsignedInteger('recordable_id');
+            $table->string('recordable_type');
             $table->unsignedInteger('product_id');
-            $table->float('unit_price');
-            $table->float('qty');
-            $table->string('unit');
+            $table->double('unit_price');
+            $table->double('qty');
+            $table->string('unit')->nullable()->default('Piece');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +33,6 @@ class CreateSalesRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales_records');
+        Schema::dropIfExists('records');
     }
 }

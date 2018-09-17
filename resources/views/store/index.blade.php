@@ -10,7 +10,13 @@
 	        				  :class-name="'float-right ml-auto'"
 	        				  :btn-class="''"
 	        ></purchase-product>
-	        <sale-product :products="{{ json_encode($products) }}"
+	        <ready-sale :vendors="{{ json_encode($vendors) }}"
+                        :url="'{{ route('readysales.store') }}'"
+                        :class-name="'float-right ml-auto ml-4'"
+                        :btn-class="''"
+                ></ready-sale>
+
+	        <sale-product :vendors="{{ json_encode($vendors) }}"
 	        			  :districts="{{ json_encode($districts) }}"
 	        			  :url="'{{ route('sales.store') }}'"
 	        			  :class-name="'float-right ml-auto ml-4'"

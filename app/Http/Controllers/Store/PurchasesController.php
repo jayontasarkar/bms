@@ -35,11 +35,8 @@ class PurchasesController extends Controller
     	$purchase = Purchase::create(
     		$request->only('memo', 'vendor_id', 'total_balance', 'total_discount', 'purchase_date')
     	);
-    	$purchases = $purchase->records()->createMany($request->only('purchases')['purchases']);
-    	foreach($purchases as $purchase) {
-    		$product = Product::find($purchase->product_id);
-    		$product->update(['stock' => $product->stock + $purchase->qty ]);
-    	}
+    	$purchase->createRelationalData($request);
+        
     	session()->flash('flash', $msg = 'Purchase order created successfully');
     	return response()->json(['msg' => $msg]);
     }

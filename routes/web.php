@@ -34,8 +34,28 @@ Route::post('/outlets', 'Outlet\OutletsController@store')->name('outlets.store')
 Route::get('/outlets/{outlet}', 'Outlet\OutletsController@show')->name('outlets.show');
 Route::patch('/outlets/{outlet}', 'Outlet\OutletsController@update')->name('outlets.update');
 Route::delete('/outlets/{outlet}', 'Outlet\OutletsController@destroy')->name('outlets.destroy');
-Route::post('/outlets/{outlet}/opening-balance', 'Outlet\OpeningBalanceController@store')->name('outlets.opening-balance.store');
-Route::patch('/outlets/opening-balance/{sales}', 'Outlet\OpeningBalanceController@update')->name('outlets.opening-balance.update');
+Route::post('/outlets/{outlet}/opening-balance', 'Outlet\OpeningBalanceController@store')
+                ->name('outlets.opening-balance.store');
+Route::patch('/outlets/opening-balance/{sales}', 'Outlet\OpeningBalanceController@update')
+                ->name('outlets.opening-balance.update');
+
+/**
+ * Outlet Collections
+ */
+Route::get('outlet/{outlet}/collections', 'Outlet\CollectionsController@index')->name('outlet.collections.index');
+Route::post('collections', 'Outlet\CollectionsController@store')->name('collections.store');
+Route::get('collections/{transaction}', 'Outlet\CollectionsController@edit')->name('collections.edit');
+Route::patch('collections/{transaction}', 'Outlet\CollectionsController@update')->name('collections.update');
+Route::delete('collections/{transaction}', 'Outlet\CollectionsController@destroy')->name('collections.destroy');
+
+/**
+ * Ready Sale
+ */
+Route::get('readysales', 'ReadySale\ReadySalesController@index')->name('readysales.index');
+Route::get('readysales/{readySale}/edit', 'ReadySale\ReadySalesController@edit')->name('readysales.edit');
+Route::post('readysales', 'ReadySale\ReadySalesController@store')->name('readysales.store');
+Route::patch('readysales/{readySale}', 'ReadySale\ReadySalesController@update')->name('readysales.update');
+Route::delete('readysales/{readySale}', 'ReadySale\ReadySalesController@destroy')->name('readysales.destroy');
 
 /**
  * Vendor Management
