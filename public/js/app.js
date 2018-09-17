@@ -91499,13 +91499,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var moment = __webpack_require__(0);
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['url'],
+	props: ['url', 'vendors'],
 	data: function data() {
 		return {
 			title: '',
+			vendor_id: '',
 			expense_date: moment(new Date()).format('YYYY-MM-DD'),
 			amount: null,
 			loading: false
@@ -91527,6 +91539,7 @@ var moment = __webpack_require__(0);
 				if (result) {
 					var data = {
 						title: _this.title,
+						vendor_id: _this.vendor_id,
 						expense_date: _this.expense_date,
 						amount: _this.amount
 					};
@@ -91631,6 +91644,59 @@ var render = function() {
                     ])
                   : _vm._e()
               ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "vendor" } }, [
+                _vm._v("Select Vendor")
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendor_id,
+                      expression: "vendor_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { id: "" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.vendor_id = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }, [_vm._v("Select")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.vendors, function(vendor) {
+                    return _c("option", { domProps: { value: vendor.id } }, [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(vendor.name) +
+                          "\n                        "
+                      )
+                    ])
+                  })
+                ],
+                2
+              )
             ])
           ]),
           _vm._v(" "),
@@ -91925,13 +91991,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var moment = __webpack_require__(0);
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['url', 'expense'],
+	props: ['url', 'expense', 'vendors'],
 	data: function data() {
 		return {
 			title: this.expense.title,
+			vendor_id: this.expense.vendor_id,
 			expense_date: moment(this.expense.expense_date).format('YYYY-MM-DD'),
 			amount: this.expense.amount,
 			loading: false
@@ -91953,6 +92031,7 @@ var moment = __webpack_require__(0);
 				if (result) {
 					var data = {
 						title: _this.title,
+						vendor_id: _this.vendor_id,
 						expense_date: _this.expense_date,
 						amount: _this.amount
 					};
@@ -92056,6 +92135,59 @@ var render = function() {
                     ])
                   : _vm._e()
               ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "vendor" } }, [
+                _vm._v("Select Vendor " + _vm._s(_vm.vendor_id))
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendor_id,
+                      expression: "vendor_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { id: "" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.vendor_id = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }, [_vm._v("Select")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.vendors, function(vendor) {
+                    return _c("option", { domProps: { value: vendor.id } }, [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(vendor.name) +
+                          "\n                        "
+                      )
+                    ])
+                  })
+                ],
+                2
+              )
             ])
           ]),
           _vm._v(" "),

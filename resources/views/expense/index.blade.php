@@ -7,13 +7,9 @@ Expense Management
 	<div class="col-md-3">
 		<div class="card">
 			<div class="card-header">
-				<create-expense></create-expense>
+				<create-expense :vendors="{{ json_encode($vendors) }}"></create-expense>
 			</div>
 			<div class="card-body">
-				<a href="{{ route('expenses.index') }}" class="btn btn-secondary" style="width: 30%;">Clear</a>
-				<a href="{{ route('expenses.excel', $_GET) }}" style="width: 33%;" class="btn btn-primary">Excel</a>
-				<a href="{{ route('expenses.pdf', $_GET) }}" style="width: 33%;" class="btn btn-danger">PDF</a>
-				<hr>
 				<div class="form-group">
                     <label class="form-label">Search by day(s)</label>
                     <div class="selectgroup w-100">
@@ -74,14 +70,27 @@ Expense Management
 
                 <div class="form-group">
                     <label class="form-label"><strong>Search by date(s)</strong></label>
-                    <form>
+                    <form id="search">
+                    	<div class="form-group">
+                    		<label for="vendor">Select vendor</label>
+                    		<select name="vendor" id="vendor" class="form-control">
+                    			<option value="">All vendors</option>
+                    			@forelse($vendors as $vendor)
+									<option value="{{ $vendor->id }}" {{ request('vendor') == $vendor->id ? 'selected' : '' }}>
+										{{ $vendor->name }}
+									</option>
+									<option value="other">Other Expenses</option>
+                    			@empty
+                    			@endforelse
+                    		</select>
+                    	</div>
                     	<div class="form-group">
 							<label class="selectgroup-item">From Date</label>
-							<input type="date" name="from" required value="{{ request('from', date('Y-m-d')) }}" class="form-control">
+							<input type="date" name="from" value="{{ request('from') }}" class="form-control">
 	                    </div>
 	                    <div class="form-group">
 							<label class="selectgroup-item">To Date</label>
-							<input type="date" name="to" required value="{{ request('to', date('Y-m-d')) }}" class="form-control">
+							<input type="date" name="to" value="{{ request('to') }}" class="form-control">
 	                    </div>
 	                    <div class="form-group text-center">
 	                    	<a href="{{ route('expenses.index') }}" class="btn btn-sm btn-secondary">
@@ -118,7 +127,7 @@ Expense Management
 						</div>
 					</div>
 					<div class="table-responsive">
-						<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
+						<table class="table card-table datatable table-bordered table-vcenter text-nowrap" border="1">
 							<thead>
 								<tr class="bg-gray-dark">
 									<th class="w-1">No.</th>
@@ -153,7 +162,8 @@ Expense Management
 										<ul class="list-inline mt-3">
 											<li class="list-inline-item">
 												<edit-expense :expense="{{ json_encode($expense) }}"
-															  :url="'{{ route('expenses.update', [$expense]) }}'"	
+															  :url="'{{ route('expenses.update', [$expense]) }}'"
+															  :vendors="{{ json_encode($vendors) }}"	
 												></edit-expense>
 											</li>
 											<li class="list-inline-item">
@@ -180,6 +190,11 @@ Expense Management
 </div>
 @stop
 
+@include('layouts.backend.common.datatable', [
+	'title' => search_options(),
+	'columns' => '[1, 2, 3]',
+])
+
 @push('scripts')
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -193,6 +208,11 @@ Expense Management
 				let noOfMonths = $(this).children('input[name=months]').val();
 				window.location.href="{{ route('expenses.index') }}?months=" + noOfMonths;
 			});
+			$("#search").submit(function() {
+		      $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		      $(this).find("select").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		      return true;
+		    });
 		});
 	</script>
 @endpush

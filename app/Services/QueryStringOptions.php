@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Vendor;
 use Carbon\Carbon;
 
 class QueryStringOptions
@@ -25,6 +26,13 @@ class QueryStringOptions
 		if($request->has('from') && $request->has('to')) {
 			$result = '(' . Carbon::parse($request->from)->format('M d, Y') . ' - ' . 
 						Carbon::parse($request->to)->format('M d, Y') . ')';
+		}
+
+		if($request->has('vendor')) {
+			if($request->vendor != 'other')
+				$result .= ' (' . Vendor::find(request('vendor'))->name . ')';
+			else
+				$result .= ' (Other Expenses)';
 		}
 
 		return $result;

@@ -25,7 +25,7 @@ class ExpensesController extends Controller
      */
     public function index(ExpenseFilter $filters)
     {
-        $query = Expense::filter($filters)->latest();
+        $query = Expense::filter($filters)->with('vendor')->latest();
         $counter['total'] = $query->get()->sum('amount');
         $counter['qty'] = $query->count();
         $expenses = Expense::filter($filters)->orderBy('expense_date', 'desc')->paginate(config('bms.items_per_page'));

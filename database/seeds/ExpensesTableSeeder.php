@@ -21,7 +21,8 @@ class ExpensesTableSeeder extends Seeder
         		'description' => $faker->paragraphs(3, true),
         		'amount' => round_balance($faker->numberBetween(1000, 25000)),
         		'expense_date' => now()->subDays($faker->numberBetween(1, 60)),
-        		'user_id'  => $faker->randomElement($users)
+        		'user_id'  => $faker->randomElement($users),
+                'vendor_id' => $faker->numberBetween(1, 2)
         	]);
         }
     }

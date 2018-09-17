@@ -15,7 +15,8 @@ class Expense extends Model
     	'title', 
     	'amount',
     	'user_id',
-    	'deleted_at',
+        'vendor_id',
+        'deleted_at',
     	'description',
     	'expense_date',
     ];
@@ -39,5 +40,10 @@ class Expense extends Model
     public function operator()
     {
     	return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }

@@ -26,7 +26,8 @@ class ViewCompoerServiceProvider extends ServiceProvider
         ], UpozilaComposer::class );
         View::composer([
             'store.index', 'dashboard', 'outlet.edit', 'outlet.show', 'readysale.edit', 'store.report.index',
-            'collections.index', 'collections.edit', 'sales.index', 'layouts.backend.common._sidebarSearch'
+            'collections.index', 'collections.edit', 'sales.index', 'layouts.backend.common._sidebarSearch',
+            'expense.index'
         ], VendorComposer::class );
 
         View::composer([

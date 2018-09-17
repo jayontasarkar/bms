@@ -27,6 +27,17 @@
     				</div>
     			</div>
     		</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="vendor">Select Vendor {{ vendor_id }}</label>
+                    <select v-model="vendor_id" id="" class="form-control">
+                        <option value="">Select</option>
+                        <option v-for="vendor in vendors" :value="vendor.id">
+                            {{ vendor.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
     		<div class="row">
     			<div class="col-md-12">
     				<div class="form-group">
@@ -80,10 +91,11 @@
 <script>
 var moment = require('moment');
 export default {
-	props: [ 'url', 'expense' ],
+	props: [ 'url', 'expense', 'vendors' ],
 	data() {
 		return {
 			title: this.expense.title,
+            vendor_id: this.expense.vendor_id,
 			expense_date: moment(this.expense.expense_date).format('YYYY-MM-DD'),
 			amount: this.expense.amount,
 			loading: false
@@ -104,6 +116,7 @@ export default {
                 if(result) {
                 	let data = {
 						title: this.title,
+                        vendor_id: this.vendor_id,
 						expense_date: this.expense_date,
 						amount: this.amount
 					};

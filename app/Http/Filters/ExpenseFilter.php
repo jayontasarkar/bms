@@ -25,4 +25,12 @@ class ExpenseFilter extends QueryFilter
 	{
 		return $this->builder->where('expense_date', '<=', Carbon::parse($date)->endOfDay());
 	}	
+
+	public function vendor($vendor)
+	{
+		if($vendor == 'other') {
+			return $this->builder->where('vendor_id', null);
+		}
+		return $this->builder->where('vendor_id', $vendor);
+	}
 }

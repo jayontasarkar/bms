@@ -21,6 +21,7 @@ class CreateExpensesTable extends Migration
             $table->timestamp('expense_date')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('vendor_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
