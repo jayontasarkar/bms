@@ -42,7 +42,8 @@ Route::patch('/outlets/opening-balance/{sales}', 'Outlet\OpeningBalanceControlle
 /**
  * Outlet Collections
  */
-Route::get('outlet/{outlet}/collections', 'Outlet\CollectionsController@index')->name('outlet.collections.index');
+Route::get('collections', 'Outlet\CollectionsController@index')->name('collections.index');
+Route::get('outlet/{outlet}/collections', 'Outlet\CollectionsController@show')->name('outlet.collections.index');
 Route::post('collections', 'Outlet\CollectionsController@store')->name('collections.store');
 Route::get('collections/{transaction}', 'Outlet\CollectionsController@edit')->name('collections.edit');
 Route::patch('collections/{transaction}', 'Outlet\CollectionsController@update')->name('collections.update');
@@ -97,6 +98,7 @@ Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.r
  */
 Route::post('transactions/purchase/{purchase}', 'Transaction\PurchasesController@store')->name('purchases.transactions.store');
 Route::post('transactions/sales/{sales}', 'Transaction\SalesController@store')->name('sales.transactions.store');
+Route::delete('transactions/{transaction}', 'Transaction\TransactionsController@destroy')->name('transactions.destroy');
 
 /**
  * Bankings
@@ -104,16 +106,3 @@ Route::post('transactions/sales/{sales}', 'Transaction\SalesController@store')->
 Route::get('bankings', 'Banking\TransactionsController@index')->name('bankings.index');
 Route::post('bankings', 'Banking\TransactionsController@store')->name('bankings.store');
 Route::patch('transactions/{transaction}', 'Banking\TransactionsController@update')->name('transactions.update');
-
-// Route::get('test', function(){
-// 	$sales = App\Models\Sales::whereHas('records', function($inner){
-// 		$inner->whereHas('product', function($query){
-// 			$query->where('vendor_id', 1);
-// 		});
-// 	})->with(['records' => function($query){
-// 		$query->whereHas('product', function($inner){
-// 			$inner->where('vendor_id', 1);
-// 		});
-// 	}])->get();
-// 	dd($sales);
-// });

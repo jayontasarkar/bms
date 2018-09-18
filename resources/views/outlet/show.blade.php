@@ -19,6 +19,9 @@
 			<div class="card">
 				<div class="card-body">
 					@include('outlet.views._overall_balance_report_modal')
+					@if(count($overall['openingResults']))
+						@include('outlet.views._opening_balance_report_modal')
+					@endif
 					<a href="{{ route('outlet.collections.index', [$outlet]) }}" class="btn btn-block btn-gray">Collection Report</a>
 					<hr>
                     <label class="form-label"><strong>Search by vendor & date(s)</strong></label>

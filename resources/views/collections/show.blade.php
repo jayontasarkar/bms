@@ -1,7 +1,10 @@
 @extends('layouts.backend.master')
 @section('content')
 	@component('layouts.backend.common.page-header')
-		<strong>Collection Report</strong>
+		<strong>Collections of Outlet</strong>: {{ $outlet->name }} |  
+		<small>
+			({{ $outlet->address }}, {{ $outlet->thana->name }})
+		</small>
 		@slot('rightContent')
 			<a href="#" onClick="history.go(-1); return false;" class="btn btn-sm btn-gray ml-auto mt-4">
 				<i class="fe fe-corner-down-left mr-1"></i> Back
@@ -14,7 +17,7 @@
 				<div class="card-body">
 					<label class="form-label"><strong>Search by vendor & date(s)</strong></label>
 					@include('layouts.backend.common._sidebarSearch', [
-						'route' => route('collections.index')
+						'route' => route('outlet.collections.index', [$outlet])
 					])
 				</div>
 			</div>
@@ -26,7 +29,7 @@
 						<div class="row">
 							<div class="col-md-12 pt-2">
 								@php 
-									$title = "Collection report"; 
+									$title = "Collection report of " . $outlet->name; 
 									if(request()->has('vendor')) {
 										$title .= ' for ' . App\Models\Vendor::find(request('vendor'))->name;
 									}
@@ -49,8 +52,8 @@
 									<tr class="bg-gray-dark">
 										<th>Collection Date</th>
 										<th>Vendor Name</th>
-										<th>Amount</th>
-										<th>Type</th>
+										<th>Collection Amount</th>
+										<th>Entry Date</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -67,22 +70,12 @@
 												{{ number_format($collection->amount) }}/=
 											</td>
 											<td>
-												@if($collection->transactionable_type == 'App\Models\Outlet')
-													Outlet Collection
-												@else
-													ReadySale Collection
-												@endif
+						                        {{ $collection->created_at->format('M d, Y h:iA') }}
 											</td>
 											<td>
-												@if($collection->transactionable_type == 'App\Models\ReadySale')
-													<a href="{{ route('readysales.edit', ['id' => $collection->transactionable_id]) }}" class="btn btn-xs btn-info">
-														<i class="fa fa-edit mr-1"></i> Edit
-													</a>
-												@else
 												<a href="{{ route('collections.edit', [$collection]) }}" class="btn btn-xs btn-info">
 													<i class="fa fa-edit mr-1"></i> Edit
 												</a>
-												@endif
 											</td>
 										</tr>
 									@endforeach

@@ -15,7 +15,24 @@ class CollectionsController extends Controller
     	$this->middleware(['auth']);
     }
 
-    public function index(Outlet $outlet)
+    public function index(Request $request)
+    {
+        $query = (new Transaction)->newQuery();
+        if(request()->has('vendor')) {
+            $query->where('vendor_id', request('vendor'));
+        }
+        if(request()->has('from') && request()->has('to')) {
+            $from = Carbon::parse(request('from'));
+            $to   = Carbon::parse(request('to'));
+            $query->whereBetween('transaction_date', [$from, $to]);
+        }
+        $collections = $query->whereIn('transactionable_type', ['App\Models\Outlet', 'App\Models\ReadySale'])
+                    ->where('type', false)->with('vendor')->latest()->get();
+
+        return view('collections.index', compact('collections'));            
+    }
+
+    public function show(Outlet $outlet)
     {
     	$outlet->load('thana');
     	$query = (new Transaction)->newQuery();
@@ -30,7 +47,7 @@ class CollectionsController extends Controller
     	$collections = $query->where('transactionable_id', $outlet->id)
     	            ->where('transactionable_type', Outlet::class)
     	            ->where('type', false)->with('vendor')->latest()->get();
-    	return view('collections.index', compact('outlet', 'collections'));
+    	return view('collections.show', compact('outlet', 'collections'));
     }
 
     public function store(Request $request)

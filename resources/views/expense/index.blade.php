@@ -79,9 +79,9 @@ Expense Management
 									<option value="{{ $vendor->id }}" {{ request('vendor') == $vendor->id ? 'selected' : '' }}>
 										{{ $vendor->name }}
 									</option>
-									<option value="other">Other Expenses</option>
                     			@empty
                     			@endforelse
+								<option value="other">Other Expenses</option>
                     		</select>
                     	</div>
                     	<div class="form-group">

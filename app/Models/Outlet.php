@@ -50,6 +50,7 @@ class Outlet extends Model
     {
         $totalToPay = 0;
         $title = 'Overall Financial Report';
+        $openingResults = $this->transactions->where('type', true);
         if(request()->has('vendor')) {
             $totalPaid = $this->transactions->where('type', false)->where('vendor_id', request('vendor'))->sum('amount');
             $opening   = $this->transactions->where('type', true)->where('vendor_id', request('vendor'))->sum('amount');
@@ -72,6 +73,7 @@ class Outlet extends Model
         }
 
         return [
+            'openingResults' => $openingResults->load('vendor'),
             'opening' => $opening,
             'toPay'   => $totalToPay,
             'paid'    => $totalPaid,
