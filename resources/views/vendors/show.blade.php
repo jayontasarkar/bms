@@ -48,7 +48,7 @@
 	<div class="row">
 		<div class="col-md-3">
 			<div class="card">
-				<div class="card-body">
+				<div class="card-header">
 					<div style="width: 48%; margin-right: 2%; float: left;">
 						<create-payment :url="'{{ route('vendor.payments.store', [$result]) }}'"></create-payment>
 					</div>
@@ -57,7 +57,8 @@
 							Show Report
 						</a>
 					</div>
-					<hr>
+				</div>
+				<div class="card-body">
 					<div class="form-group">
 	                    <label class="form-label"><strong>Search by month</strong></label>
 	                    <form>
