@@ -51,7 +51,6 @@
 		                      <th>Discount</th>
 		                      <th>Due Amount</th>
 		                      <th></th>
-		                      <th></th>
 		                    </tr>
 		                  </thead>
 		                  <tbody>
@@ -75,11 +74,6 @@
 		                        </td>
 		                        <td>
 		                          {{ number_format($total - $paid - $discount) }}/=
-		                        </td>
-		                        <td>
-		                          <payment :purchase="{{ json_encode($purchase) }}"
-		                                   :url="'{{ route('purchases.transactions.store', [$purchase]) }}'" 
-		                          ></payment>
 		                        </td>
 		                        <td>
 		                        	@if( !$purchase->type )

@@ -29,8 +29,6 @@ class VendorFormRequest extends FormRequest
         ];
         if($id = $this->segment(2)) {
             $rules['phone'] = 'nullable|unique:vendors,phone,' . $id;
-        }else{
-            $rules['memo']  = 'nullable|unique:purchases,memo';
         }
         return $rules;
     }

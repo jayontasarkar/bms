@@ -71,6 +71,14 @@ Route::delete('/vendors/{vendor}', 'Vendors\VendorsController@destroy')->name('v
 Route::patch('/vendors/opening-balance/{purchase}', 'Vendors\OpeningBalanceController@update')->name('vendors.opening-balance.update');
 
 /**
+ * Vendor Payments
+ */
+Route::get('/vendor/{vendor}/payments', 'Vendors\PaymentsController@index')->name('vendor.payments.index');
+Route::post('/vendor/{vendor}/payments', 'Vendors\PaymentsController@store')->name('vendor.payments.store');
+Route::patch('/vendor/{transaction}/payments', 'Vendors\PaymentsController@update')->name('vendor.payments.update');
+Route::delete('/vendor/{transaction}/payments', 'Vendors\PaymentsController@destroy')->name('vendor.payments.destroy');
+
+/**
  * Product Management
  */
 Route::resource('products', 'Product\ProductsController');

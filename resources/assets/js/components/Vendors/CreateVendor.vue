@@ -67,37 +67,6 @@
                 </div>
             </div>
 
-            <div class="row" v-if="hasOpeningBalance">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="memo">Memo/Opening Balance No.</label>
-                        <input type="text" 
-                               class="form-control" 
-                               v-model="memo"
-                               :class="{ 'is-invalid': errorList.memo }"
-                        >
-                        <div class="invalid-feedback" v-if="errorList.memo">
-                            {{ errorList.memo[0] }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="title">Balance Till</label>
-                        <input type="date" 
-                               name="balance till"  
-                               class="form-control" 
-                               v-model="purchase_date"
-                               v-validate="'required'"
-                               :class="{ 'is-invalid': errors.has('balance till') }"
-                        >
-                        <div class="invalid-feedback" v-if="errors.has('balance till')">
-                            {{ errors.first('balance till') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div slot="modal-footer" class="w-100">
     			<button type="button" 
     				    class="float-right btn btn-primary" 
@@ -124,24 +93,12 @@ export default {
 			phone: '',
             address: '',
             opening_balance: 0,
-            memo: null,
-            purchase_date: moment(new Date()).format('YYYY-MM-DD'),
             errorList: {},
             hasOpeningBalance: false,
 			loading: false
 		}
 	},
-    watch: {
-        opening_balance: function(newVal, oldVal) {
-            if(newVal > 0) {
-                this.hasOpeningBalance = true
-            }else{
-                this.memo = null
-                this.hasOpeningBalance = false
-            }
-        }
-    },
-	methods: {
+    methods: {
         show() {
 			this.$refs.addVendorModal.show();
 		},
@@ -156,12 +113,8 @@ export default {
 						name: this.name,
                         phone: this.phone,
                         address: this.address,
-                        total_balance: this.opening_balance,
-                        memo: this.memo,
-                        type: 1,
-                        purchase_date: this.purchase_date
+                        amount: this.opening_balance
 					};
-                    if(this.hasOpeningBalance) { data.hasOpeningBalance = true }
                     this.loading = true;
 					axios.post('/vendors', data)
 						.then(response => {

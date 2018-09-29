@@ -8,31 +8,38 @@
 		<div class="col-6 col-sm-3 col-lg-3">
 			<div class="card">
 				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($total = $result->purchases->sum('total_balance')) }}/=</div> 
-	              	<div class="text-muted mb-4">Total Amount</div>
+					<div class="h1 m-0">
+						{{ number_format($opening = $result->openingBalances() ? $result->openingBalances()->amount : 0) }}/=
+					</div> 
+	              	<div class="text-muted mb-4">Opening Balances</div>
 	            </div>
 	        </div>
 	    </div>
 	    <div class="col-6 col-sm-3 col-lg-3">
 			<div class="card">
 				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($paid = $result->purchases->sum('total_paid')) }}/=</div> 
-	              	<div class="text-muted mb-4">Paid Amount</div>
+					@php
+						$total = $result->purchases->sum(function($query){ 
+							return $query->total_balance - $query->total_discount;
+						});
+					@endphp
+					<div class="h1 m-0">{{ number_format($total) }}/=</div> 
+	              	<div class="text-muted mb-4">Purchase Amount</div>
 	            </div>
 	        </div>
 	    </div>
 	    <div class="col-6 col-sm-3 col-lg-3">
 			<div class="card">
 				<div class="card-body p-3 text-center">
-					<div class="h1 m-0">{{ number_format($discount = $result->purchases->sum('total_discount')) }}/=</div> 
-	              	<div class="text-muted mb-4">Total Discount</div>
+					<div class="h1 m-0">{{ number_format($paid = $result->payments()->sum('amount')) }}/=</div> 
+	              	<div class="text-muted mb-4">Total Paid</div>
 	            </div>
 	        </div>
 	    </div>
 	    <div class="col-6 col-sm-3 col-lg-3">
 			<div class="card">
 				<div class="card-body p-3 text-center">
-					<div class="h1 m-0 text-center">{{ number_format($total - $paid - $discount) }}/=</div> 
+					<div class="h1 m-0 text-center">{{ number_format($opening + $total - $paid) }}/=</div> 
 	              	<div class="text-muted mb-4 text-center">Amount to Pay</div>
 	            </div>
 	        </div>
@@ -42,13 +49,14 @@
 		<div class="col-md-3">
 			<div class="card">
 				<div class="card-body">
-					<a href="{{ route('vendors.show', [$result]) }}" class="btn btn-secondary" style="width: 30%;">Clear</a>
-					<a href="{{ route('vendors.excel', array_merge($_GET, ['id' => $result->id])) }}" 
-							style="width: 33%;" class="btn btn-primary"
-					>Excel</a>
-					<a href="{{ route('vendors.pdf', array_merge($_GET, ['id' => $result->id])) }}" style="width: 33%;" 
-						class="btn btn-danger"
-					>PDF</a>
+					<div style="width: 48%; margin-right: 2%; float: left;">
+						<create-payment :url="'{{ route('vendor.payments.store', [$result]) }}'"></create-payment>
+					</div>
+					<div style="width: 48%; float: left;">
+						<a href="{{ route('vendor.payments.index', [$result]) }}" class="btn btn-gray btn-block">
+							Show Report
+						</a>
+					</div>
 					<hr>
 					<div class="form-group">
 	                    <label class="form-label"><strong>Search by month</strong></label>
@@ -116,38 +124,51 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="alert alert-success">
-						@if(request()->has('year') && request()->has('month'))
-							<strong>
-								Purchase report of (monthly): 
-								{{ config('bms.months.' . request('month')) . ', ' . request('year') }}
-							</strong>
-						@elseif(request()->has('from') && request()->has('to'))	
-							<strong>
-								Purchase report of (dates): 
-								{{ Carbon\Carbon::parse(request('from'))->format('d M, Y') }} - 
-								{{ Carbon\Carbon::parse(request('to'))->format('d M, Y') }}
-							</strong>
-						@else
-							<strong>All Purchase reports of <em>{{ $result->name }}</em></strong>	
-						@endif
+						<div class="row">
+							<div class="col-md-8 pt-3">
+								@php 
+								$title = ''; 
+								if(request()->has('year') && request()->has('month')) {
+									$title = "Purchase report of (monthly): " . 
+									    config('bms.months.' . request('month')) . ', ' . request('year');
+								}elseif(request()->has('from') && request()->has('to'))	{
+									$title = "Purchase report of (dates): " . 
+										Carbon\Carbon::parse(request('from'))->format('d M, Y') . " - " .
+										Carbon\Carbon::parse(request('to'))->format('d M, Y');
+								}else{
+									$title = "All Purchase reports of <em>" . $result->name . "</em>";	
+								}	
+								@endphp
+								<strong>{!! $title !!}</strong>
+							</div>
+							<div class="col-md-4">
+								<input type="text" class="form-control" placeholder="Search by Purchase Order" id="filter-table">
+							</div>
+						</div>
 					</div> 
 					@if(count($results = $result->purchases->sortByDesc('created_at')))
 						<div class="table-responsive">
-							<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
+							<table class="table card-table table-bordered datatable table-vcenter text-nowrap" border="1">
 								<thead>
 									<tr class="bg-gray-dark">
 										<th class="w-1">No.</th>
 										<th>Memo No.</th>
 										<th>Purchase Date</th>
 										<th>Total Amount</th>
-										<th>Total Paid</th>
 										<th>Discount</th>
-										<th>Total Due</th>
-										<th>&nbsp;</th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
+									@php
+										$totalAmount = 0;
+										$totalDiscount = 0;
+									@endphp
 									@foreach($results as $key => $purchase)
+										@php
+											$totalAmount += $purchase->total_balance;
+											$totalDiscount += $purchase->total_discount;
+										@endphp
 										<tr>
 											<td>
 												<span class="text-muted">
@@ -155,39 +176,37 @@
 												</span>
 											</td>
 											<td>
-												<vendor-memo 
-														:purchase="{{ json_encode($purchase) }}"
-														:records="{{ json_encode($purchase->records) }}"
-														:transactions="{{ json_encode($purchase->transactions) }}"
-												></vendor-memo>
+												<a href="{{ route('purchases.show', [$purchase]) }}">{{ $purchase->memo }}</a>
 											</td>
 											<td>
 												{{ $purchase->purchase_date->format('M d, Y') }}
 											</td>
 											<td>
 												{{ number_format($purchase->total_balance) }}/= &nbsp;
-												{!! $purchase->type ? '&nbsp;<span class="text-danger">(Opening)</span>' : '' !!}
-											</td>
-											<td>
-												{{ number_format($purchase->total_paid) }}/=
 											</td>
 											<td>
 												{{ number_format($purchase->total_discount) }}/=
 											</td>
 											<td>
-												{{ number_format(
-													$purchase->total_balance - 
-													$purchase->total_paid - 
-													$purchase->total_discount
-												) }}/=
-											</td>
-											<td>
-												<payment :purchase="{{ json_encode($purchase) }}"
-													     :url="'{{ route('purchases.transactions.store', [$purchase]) }}'" 
-												></payment>
+												<vendor-memo 
+														:purchase="{{ json_encode($purchase) }}"
+														:title="'show'"
+														:records="{{ json_encode($purchase->records) }}"
+														:transactions="{{ json_encode($purchase->transactions) }}"
+												></vendor-memo>
 											</td>
 										</tr>
 									@endforeach
+									<tfoot>
+										<tr class="bg-gray text-light">
+											<td></td>
+											<td></td>
+											<td>Total Amount:</td>
+											<td>{{ number_format($totalAmount) }}/=</td>
+											<td>{{ number_format($totalDiscount) }}/=</td>
+											<td></td>
+										</tr>
+									</tfoot>
 								</tbody>
 							</table>
 						</div>
@@ -199,6 +218,12 @@
 		</div>
 	</div>
 @stop
+
+@include('layouts.backend.common.datatable', [
+	'title' => $title,
+	'columns' => '[ 1, 2, 3, 4]',
+	'searchCol' => 1
+])
 
 @push('scripts')
 	<script type="text/javascript">

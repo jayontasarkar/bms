@@ -37491,6 +37491,8 @@ Vue.component('update-ready-sales', __webpack_require__(414));
 Vue.component('create-vendor', __webpack_require__(419));
 Vue.component('edit-vendor', __webpack_require__(422));
 Vue.component('vendor-memo', __webpack_require__(425));
+Vue.component('create-payment', __webpack_require__(467));
+Vue.component('update-payment', __webpack_require__(470));
 
 //Products
 Vue.component('create-product', __webpack_require__(428));
@@ -99937,110 +99939,61 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            name: '',
-            phone: '',
-            address: '',
-            opening_balance: 0,
-            memo: null,
-            purchase_date: moment(new Date()).format('YYYY-MM-DD'),
-            errorList: {},
-            hasOpeningBalance: false,
-            loading: false
-        };
-    },
+	data: function data() {
+		return {
+			name: '',
+			phone: '',
+			address: '',
+			opening_balance: 0,
+			errorList: {},
+			hasOpeningBalance: false,
+			loading: false
+		};
+	},
 
-    watch: {
-        opening_balance: function opening_balance(newVal, oldVal) {
-            if (newVal > 0) {
-                this.hasOpeningBalance = true;
-            } else {
-                this.memo = null;
-                this.hasOpeningBalance = false;
-            }
-        }
-    },
-    methods: {
-        show: function show() {
-            this.$refs.addVendorModal.show();
-        },
-        hide: function hide() {
-            this.clearFields();
-            this.$refs.addVendorModal.hide();
-        },
-        submit: function submit() {
-            var _this = this;
+	methods: {
+		show: function show() {
+			this.$refs.addVendorModal.show();
+		},
+		hide: function hide() {
+			this.clearFields();
+			this.$refs.addVendorModal.hide();
+		},
+		submit: function submit() {
+			var _this = this;
 
-            this.$validator.validate().then(function (result) {
-                if (result) {
-                    var data = {
-                        name: _this.name,
-                        phone: _this.phone,
-                        address: _this.address,
-                        total_balance: _this.opening_balance,
-                        memo: _this.memo,
-                        type: 1,
-                        purchase_date: _this.purchase_date
-                    };
-                    if (_this.hasOpeningBalance) {
-                        data.hasOpeningBalance = true;
-                    }
-                    _this.loading = true;
-                    axios.post('/vendors', data).then(function (response) {
-                        _this.loading = false;
-                        location.reload();
-                    }).catch(function (error) {
-                        _this.errorList = error.response.data.errors;
-                        _this.loading = false;
-                        flash('Something wrong. Check your data', 'danger');
-                    });
-                }
-            });
-        },
-        clearFields: function clearFields() {
-            this.name = '';
-            this.phone = '';
-            this.address = '';
-            this.opening_balance = 0;
-            errorList: {}
-        }
-    }
+			this.$validator.validate().then(function (result) {
+				if (result) {
+					var data = {
+						name: _this.name,
+						phone: _this.phone,
+						address: _this.address,
+						amount: _this.opening_balance
+					};
+					_this.loading = true;
+					axios.post('/vendors', data).then(function (response) {
+						_this.loading = false;
+						location.reload();
+					}).catch(function (error) {
+						_this.errorList = error.response.data.errors;
+						_this.loading = false;
+						flash('Something wrong. Check your data', 'danger');
+					});
+				}
+			});
+		},
+		clearFields: function clearFields() {
+			this.name = '';
+			this.phone = '';
+			this.address = '';
+			this.opening_balance = 0;
+			errorList: {}
+		}
+	}
 });
 
 /***/ }),
@@ -100259,98 +100212,6 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm.hasOpeningBalance
-            ? _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "memo" } }, [
-                      _vm._v("Memo/Opening Balance No.")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.memo,
-                          expression: "memo"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: { "is-invalid": _vm.errorList.memo },
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.memo },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.memo = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errorList.memo
-                      ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(_vm.errorList.memo[0]) +
-                              "\n                        "
-                          )
-                        ])
-                      : _vm._e()
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "title" } }, [
-                      _vm._v("Balance Till")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.purchase_date,
-                          expression: "purchase_date"
-                        },
-                        {
-                          name: "validate",
-                          rawName: "v-validate",
-                          value: "required",
-                          expression: "'required'"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: { "is-invalid": _vm.errors.has("balance till") },
-                      attrs: { type: "date", name: "balance till" },
-                      domProps: { value: _vm.purchase_date },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.purchase_date = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.has("balance till")
-                      ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(_vm.errors.first("balance till")) +
-                              "\n                        "
-                          )
-                        ])
-                      : _vm._e()
-                  ])
-                ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
           _c(
             "div",
             {
@@ -100547,13 +100408,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['url', 'vendor'],
+	props: ['url', 'vendor', 'openingBalance'],
 	data: function data() {
 		return {
 			name: this.vendor.name,
 			phone: this.vendor.phone,
 			address: this.vendor.address,
-			opening_balance: this.vendor.opening_balance,
+			amount: 0,
 			errorList: {},
 			loading: false
 		};
@@ -100575,7 +100436,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						name: _this.name,
 						phone: _this.phone,
 						address: _this.address,
-						opening_balance: _this.opening_balance
+						amount: _this.amount
 					};
 					_this.loading = true;
 					axios.put(_this.url, data).then(function (response) {
@@ -100587,6 +100448,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					});
 				}
 			});
+		}
+	},
+	mounted: function mounted() {
+		if (this.openingBalance != null) {
+			this.amount = this.openingBalance.amount;
 		}
 	}
 });
@@ -100761,8 +100627,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.opening_balance,
-                      expression: "opening_balance"
+                      value: _vm.amount,
+                      expression: "amount"
                     },
                     {
                       name: "validate",
@@ -100774,17 +100640,16 @@ var render = function() {
                   staticClass: "form-control",
                   class: {
                     "is-invalid":
-                      _vm.errors.has("opening balance") ||
-                      _vm.errorList.opening_balance
+                      _vm.errors.has("opening balance") || _vm.errorList.amount
                   },
                   attrs: { type: "text", name: "opening balance" },
-                  domProps: { value: _vm.opening_balance },
+                  domProps: { value: _vm.amount },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.opening_balance = $event.target.value
+                      _vm.amount = $event.target.value
                     }
                   }
                 }),
@@ -107986,6 +107851,655 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 466 */,
+/* 467 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(468)
+/* template */
+var __vue_template__ = __webpack_require__(469)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Vendors/CreatePayment.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7e61a9bf", Component.options)
+  } else {
+    hotAPI.reload("data-v-7e61a9bf", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 468 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var moment = __webpack_require__(0);
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['url'],
+	data: function data() {
+		return {
+			loading: false,
+			comment: '',
+			amount: 0,
+			transaction_date: moment(new Date()).format('YYYY-MM-DD')
+		};
+	},
+
+	methods: {
+		show: function show() {
+			this.$refs.vendorPaymentModal.show();
+		},
+		hide: function hide() {
+			this.$refs.vendorPaymentModal.hide();
+		},
+		submit: function submit() {
+			var _this = this;
+
+			this.loading = true;
+			axios.post(this.url, {
+				comment: this.comment,
+				amount: this.amount,
+				transaction_date: this.transaction_date
+			}).then(function (response) {
+				location.reload();
+				_this.loading = false;
+			}).catch(function (error) {
+				_this.loading = false;
+				flash('Something went wrong. try again.');
+			});
+		}
+	}
+});
+
+/***/ }),
+/* 469 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "span",
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-info btn-block",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.show($event)
+            }
+          }
+        },
+        [_vm._v("\n\t\t\tAdd Payments\n\t\t")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          ref: "vendorPaymentModal",
+          attrs: {
+            title: "Create Vendor Payments ",
+            "header-bg-variant": "primary",
+            "header-text-variant": "light",
+            centered: "",
+            size: "sm",
+            "no-close-on-esc": "",
+            "no-close-on-backdrop": ""
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "comment" } }, [
+                _vm._v("Note/Comment")
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.comment,
+                    expression: "comment"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { name: "comment", id: "comment", rows: "3" },
+                domProps: { value: _vm.comment },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.comment = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-2" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "amount" } }, [
+                _vm._v("Payment Amount")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.amount,
+                    expression: "amount"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  id: "amount",
+                  pattern: "^\\d+(?:\\.\\d{1,2})?$"
+                },
+                domProps: { value: _vm.amount },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.amount = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-2" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "transaction_date" } }, [
+                _vm._v("Payment Date")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.transaction_date,
+                    expression: "transaction_date"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "date", id: "transaction_date" },
+                domProps: { value: _vm.transaction_date },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.transaction_date = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "w-100",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "float-right btn btn-info",
+                  class: { "btn-loading": _vm.loading },
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit($event)
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t           Vendor Payment\n\t\t        ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "float-right btn btn-danger mr-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.hide($event)
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t           Close\n\t\t        ")]
+              )
+            ]
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7e61a9bf", module.exports)
+  }
+}
+
+/***/ }),
+/* 470 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(471)
+/* template */
+var __vue_template__ = __webpack_require__(472)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Vendors/UpdatePayment.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0d541fd2", Component.options)
+  } else {
+    hotAPI.reload("data-v-0d541fd2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 471 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var moment = __webpack_require__(0);
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['url', 'transaction'],
+	data: function data() {
+		return {
+			loading: false,
+			comment: this.transaction.comment,
+			amount: this.transaction.amount,
+			transaction_date: moment(this.transaction.transaction_date).format('YYYY-MM-DD')
+		};
+	},
+
+	methods: {
+		show: function show() {
+			this.$refs.vendorPaymentEditModal.show();
+		},
+		hide: function hide() {
+			this.$refs.vendorPaymentEditModal.hide();
+		},
+		submit: function submit() {
+			var _this = this;
+
+			this.loading = true;
+			axios.patch(this.url, {
+				comment: this.comment,
+				amount: this.amount,
+				transaction_date: this.transaction_date
+			}).then(function (response) {
+				location.reload();
+				_this.loading = false;
+			}).catch(function (error) {
+				_this.loading = false;
+				flash('Something went wrong. try again.');
+			});
+		}
+	}
+});
+
+/***/ }),
+/* 472 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "span",
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-xs btn-info",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.show($event)
+            }
+          }
+        },
+        [_c("i", { staticClass: "fa fa-edit" }), _vm._v(" Edit\n\t\t")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          ref: "vendorPaymentEditModal",
+          attrs: {
+            title: "Edit Vendor Payments ",
+            "header-bg-variant": "primary",
+            "header-text-variant": "light",
+            centered: "",
+            size: "sm",
+            "no-close-on-esc": "",
+            "no-close-on-backdrop": ""
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "comment" } }, [
+                _vm._v("Note/Comment")
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.comment,
+                    expression: "comment"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { name: "comment", id: "comment", rows: "3" },
+                domProps: { value: _vm.comment },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.comment = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-2" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "amount" } }, [
+                _vm._v("Payment Amount")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.amount,
+                    expression: "amount"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  id: "amount",
+                  pattern: "^\\d+(?:\\.\\d{1,2})?$"
+                },
+                domProps: { value: _vm.amount },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.amount = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-2" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("label", { attrs: { for: "transaction_date" } }, [
+                _vm._v("Payment Date")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.transaction_date,
+                    expression: "transaction_date"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "date", id: "transaction_date" },
+                domProps: { value: _vm.transaction_date },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.transaction_date = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "w-100",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass: "float-right btn btn-info",
+                  class: { "btn-loading": _vm.loading },
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit($event)
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t           Vendor Payment\n\t\t        ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "float-right btn btn-danger mr-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.hide($event)
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t           Close\n\t\t        ")]
+              )
+            ]
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0d541fd2", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

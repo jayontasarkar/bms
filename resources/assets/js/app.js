@@ -46,6 +46,8 @@ Vue.component('update-ready-sales', require('./components/ReadySale/UpdateReadyS
 Vue.component('create-vendor', require('./components/Vendors/CreateVendor'));
 Vue.component('edit-vendor', require('./components/Vendors/EditVendor'));
 Vue.component('vendor-memo', require('./components/Vendors/VendorMemo'));
+Vue.component('create-payment', require('./components/Vendors/CreatePayment'));
+Vue.component('update-payment', require('./components/Vendors/UpdatePayment'));
 
 //Products
 Vue.component('create-product', require('./components/Product/CreateProduct'));

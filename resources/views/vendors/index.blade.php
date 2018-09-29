@@ -40,23 +40,16 @@
 									<td>
 										{{ $vendor->phone }}
 									</td>
-									@php
-										$sum = $vendor->purchases->sum(function($query){
-											return ($query->total_balance - $query->total_paid - $query->total_discount);
-										});
-									@endphp
 									<td>
-										{{ number_format($sum) }}/=
+										{{ number_format($vendor->openingBalances() ? $vendor->openingBalances()->amount : 0) }}/=
 									</td>
 									<td>
 										<ul class="list-inline mt-3">
 											<li class="list-inline-item">
 												<edit-vendor :url="'{{ route('vendors.update', [$vendor]) }}'"
 															 :vendor="{{ json_encode($vendor) }}"
+															 :opening-balance="{{ json_encode($vendor->openingBalances()) }}"
 												></edit-vendor>
-											</li>
-											<li class="list-inline-item">
-												<remove-btn :url="'{{ route('vendors.destroy', [$vendor]) }}'"></remove-btn>
 											</li>
 										</ul>
 									</td>

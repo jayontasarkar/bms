@@ -56,9 +56,9 @@
                         <input type="text" 
                                name="opening balance"  
                                class="form-control" 
-                               v-model="opening_balance"
+                               v-model="amount"
                                v-validate="'decimal:2'"
-                               :class="{ 'is-invalid': errors.has('opening balance') || errorList.opening_balance }"
+                               :class="{ 'is-invalid': errors.has('opening balance') || errorList.amount }"
                         >
                         <div class="invalid-feedback" v-if="errors.has('opening balance') || errorList.opening_balance">
                             {{ errors.first('opening balance') || errorList.opening_balance[0] }}
@@ -85,13 +85,13 @@
 
 <script>
 export default {
-    props: ['url', 'vendor'],
+    props: ['url', 'vendor', 'openingBalance'],
     data() {
 		return {
             name: this.vendor.name,
 			phone: this.vendor.phone,
             address: this.vendor.address,
-            opening_balance: this.vendor.opening_balance,
+            amount: 0,
             errorList: {},
 			loading: false
 		}
@@ -110,7 +110,7 @@ export default {
 						name: this.name,
                         phone: this.phone,
                         address: this.address,
-                        opening_balance: this.opening_balance
+                        amount: this.amount
 					};
                     this.loading = true;
 					axios.put(this.url, data)
@@ -125,6 +125,11 @@ export default {
                 }
             });
 		}
-	}
+	},
+    mounted() {
+        if(this.openingBalance != null) {
+            this.amount = this.openingBalance.amount;
+        }
+    }
 }
 </script>
