@@ -1,5 +1,16 @@
 @extends('layouts.backend.master')
 
+@push('styles')
+<style type="text/css">
+	.dt-buttons {
+		position: absolute;
+	    right: 0;
+	    margin-right: 25px;
+	    margin-top: -45px;
+	}
+</style>
+@endpush
+
 @section('content')
 	@component('layouts.backend.common.page-header')
 		Banking Management
@@ -51,66 +62,93 @@
 			<div class="card">
 				<div class="card-body">
 					@if(count($bankings))
-						<div class="table-responsive">
-							<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
-								<tbody>
-									@foreach($bankings as $bank)
-										<tr class="bg-gray-dark">
-											<td colspan="6">
-												<strong style="color: #fff;">{{ $bank->name . ', ' . $bank->branch }} ({{ $bank->account_no }})</strong>
-											</td>
+						@foreach($bankings as $bank)
+							<div class="alert alert-info">
+								@php
+									$title = $bank->name . ($bank->branch ? ', ' . $bank->branch : ' ') . 
+											' (A.C: ' . $bank->account_no . ')';
+								@endphp
+								<strong>{{ $title }}</strong>
+							</div>
+							<div class="table-responsive mb-6" style="margin-top: -20px;">
+								<table class="table class-{{ $bank->id }} table-bordered table-vcenter text-nowrap" border="1">
+									<thead>
+										<tr class="bg-dark">
+											<th>S.L</th>
+											<th>Note/Comment</th>
+											<th>Transaction Date</th>
+											<th>Amount</th>
+											<th>Type</th>
+											<th>&nbsp;</th>
 										</tr>
-										@forelse($bank->transactions as $key => $transaction)
-											<tr>
-												<td>{{ $key + 1 }}</td>
-												<td>{{ $transaction->comment ? : ($transaction->type ? 'BALANCE DEPOSITED INTO ACCOUNT' : 'BALANCE WITHDRAWED FROM ACCOUNT') }}</td>
-												<td>{{ $transaction->transaction_date->format('M d, Y') }}</td>
-												<td>
-													{{ number_format($transaction->amount) }}/=
-												</td>
-												<td>
-													<span class="badge badge-{{ $transaction->type ? 'success' : 'danger' }}">
-														{{ $transaction->type ? 'Deposit' : 'Withdraw' }}
-													</span>
-												</td>
-												<td>
-													<edit-bank-transaction 
-															:banks="{{ json_encode($banks) }}"
-															:url="'{{ route('transactions.update', [$transaction]) }}'"
-															:data-info="{{ json_encode($transaction) }}"
-													></edit-bank-transaction>
-												</td>
-											</tr>	
-										@empty
-											<tr>
-												<td colspan="5">
-													<div class="alert alert-danger text-center">
-														No withdraw/deposit was found within the criteria
-													</div>
-												</td>
-											</tr>	
-										@endforelse
-										@if(count($bank->transactions))
-											<tr>
-												@php
-													$deposit = $bank->transactions->where('type', true)->sum('amount');
-													$withdraw = $bank->transactions->where('type', false)->sum('amount');
-												@endphp
-												<td colspan="3">
-													<span>(Total Deposit: {{ number_format($deposit) }}/= & Total Withdraw: {{ number_format($withdraw) }}/=)</span>
-													<strong class="float-right">Balance in Account:</strong>
-												</td>
-												<td>
-													{{ number_format($deposit - $withdraw) }}/=
-												</td>
-												<td colspan="2">
-												</td>
-											</tr>
-										@endif
-									@endforeach
-								</tbody>
-							</table>
-						</div>
+									</thead>
+									<tbody>
+											@forelse($bank->transactions as $key => $transaction)
+												<tr>
+													<td>{{ $key + 1 }}</td>
+													<td>{{ $transaction->comment ? : ($transaction->type ? 'BALANCE DEPOSITED INTO ACCOUNT' : 'BALANCE WITHDRAWED FROM ACCOUNT') }}</td>
+													<td>{{ $transaction->transaction_date->format('M d, Y') }}</td>
+													<td>
+														{{ number_format($transaction->amount) }}/=
+													</td>
+													<td>
+														<span class="badge badge-{{ $transaction->type ? 'success' : 'danger' }}">
+															{{ $transaction->type ? 'Deposit' : 'Withdraw' }}
+														</span>
+													</td>
+													<td>
+														<edit-bank-transaction 
+																:banks="{{ json_encode($banks) }}"
+																:url="'{{ route('transactions.update', [$transaction]) }}'"
+																:data-info="{{ json_encode($transaction) }}"
+														></edit-bank-transaction>
+													</td>
+												</tr>	
+											@empty
+												<tr>
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>	
+													<td colspan="6">
+														<div class="alert alert-danger text-center">
+															No withdraw/deposit was found within the criteria
+														</div>
+													</td>
+												</tr>	
+											@endforelse
+											@if(count($bank->transactions))
+												<tr>
+													@php
+														$deposit = $bank->transactions->where('type', true)->sum('amount');
+														$withdraw = $bank->transactions->where('type', false)->sum('amount');
+													@endphp
+													<td style="display: none;"></td>
+													<td style="display: none;"></td>
+													<td colspan="3">
+														<span>(Deposit: {{ number_format($deposit) }}/= & Withdraw: {{ number_format($withdraw) }}/=)</span>
+														<strong class="ml-5">Remaining Balance:</strong>
+													</td>
+													<td>
+														{{ number_format($deposit - $withdraw) }}/=
+													</td>
+													<td style="display: none;"></td>
+													<td colspan="2">
+													</td>
+												</tr>
+											@endif
+									</tbody>
+								</table>
+							</div>
+							@include('layouts.backend.common.datatable', [
+								'className'    => '.class-' . $bank->id,
+								'title' => $title,
+								'columns' => '[0, 1, 2, 3, 4]',
+								'searchCol' => 0
+							])
+						@endforeach
 					@else
 						<div class="alert alert-danger text-center" role="alert">
 							<strong>No withdraw/deposit was found within the criteria</strong>

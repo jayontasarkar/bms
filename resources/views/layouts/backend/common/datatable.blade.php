@@ -5,7 +5,10 @@
 	<script src="{{ asset('js/datatable.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-    		var table = $('.datatable').DataTable({
+			@php
+				$className = isset($className) ? $className : '.datatable';
+			@endphp
+    		var table = $("{{ $className }}").DataTable({
     			responsive: true,
     			pagingType: "full_numbers",
         		ordering: false,

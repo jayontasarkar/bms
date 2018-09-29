@@ -40,7 +40,7 @@
 							{{ $search }}
 						</div>
 						<div class="table-responsive">
-							<table class="table card-table table-bordered table-vcenter text-nowrap" border="1">
+							<table class="table card-table datatable table-bordered table-vcenter text-nowrap" border="1">
 								<thead>
 									<tr class="bg-gray-dark">
 										<th class="w-1">No.</th>
@@ -103,6 +103,12 @@
 		</div>
 	</div>
 @stop
+
+@include('layouts.backend.common.datatable', [
+	'title' => $search,
+	'columns' => '[ 1, 2, 3, 4 ]',
+	'searchCol' => 1
+])
 
 @push('scripts')
 	<script type="text/javascript">

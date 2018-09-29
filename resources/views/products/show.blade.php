@@ -112,11 +112,12 @@
 	</div>
 @stop
 
-
-@include('layouts.backend.common.datatable', [
-	'title' => $title,
-	'columns' => '[ 0, 1, 2, 3, 4, 5 ]'
-])
+@if(count($results))
+	@include('layouts.backend.common.datatable', [
+		'title' => $title,
+		'columns' => '[ 0, 1, 2, 3, 4, 5 ]'
+	])
+@endif
 
 @push('scripts')
 	<script type="text/javascript">

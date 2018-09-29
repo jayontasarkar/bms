@@ -212,7 +212,7 @@
               amount: this.total,
               total_discount: this.discount,
               ready_sale_date: this.sales_date,
-              sales: this.productList,
+              records: this.productList,
             };
             this.loading = true;
             axios.post(this.url, data)

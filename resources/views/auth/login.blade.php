@@ -45,6 +45,9 @@
           <div class="form-footer">
             <button type="submit" class="btn btn-primary btn-block">Log in</button>
           </div>
+          <div class="text-center mt-4">
+            <a href="http://www.mrigoya.com:2095" target="_blank">Webmail</a>
+          </div>
         </div>
       </form>
     </div>

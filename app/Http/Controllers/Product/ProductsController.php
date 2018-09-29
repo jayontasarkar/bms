@@ -25,7 +25,7 @@ class ProductsController extends Controller
     		$filtered = $vendors->filter(function($value, $key){
     			return $value->id == request('vendor');
     		})->first();
-    		$search = "Products of '" . $filtered->name . "'";
+    		$search = "Products of " . $filtered->name;
     	}else{
     		$search = 'List of all products';
     	}

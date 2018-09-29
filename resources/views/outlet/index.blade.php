@@ -112,7 +112,7 @@ Outlet Management
 @include('layouts.backend.common.datatable', [
 	'title' => "{{ $result }}",
 	'columns' => '[ 0, 1, 2, 3, 4 ]',
-	'searchCol' => 1
+	'searchCol' => 0
 ])
 
 @push('scripts')
