@@ -54,6 +54,12 @@
 		                    </tr>
 		                  </thead>
 		                  <tbody>
+		                  	@php
+		                  		$totalAmount = 0;
+		                  		$totalPaid = 0;
+		                  		$totalDiscount = 0;
+		                  		$totalDue = 0;
+		                  	@endphp
 		                    @foreach($purchases as $purchase)
 		                      <tr>
 		                        <td class="search">
@@ -75,6 +81,12 @@
 		                        <td>
 		                          {{ number_format($total - $paid - $discount) }}/=
 		                        </td>
+		                        @php
+		                        	$totalAmount += $total;
+			                  		$totalPaid += $paid;
+			                  		$totalDiscount += $discount;
+			                  		$totalDue += ($total - $paid - $discount);
+		                        @endphp
 		                        <td>
 		                        	@if( !$purchase->type )
 			                        	<vendor-memo 
@@ -89,6 +101,15 @@
 		                        </td>
 		                      </tr>
 		                    @endforeach
+		                    <tr style="font-weight: bold;">
+		                    	<td></td>
+		                    	<td>Total Amount:</td>
+		                    	<td>{{ number_format($totalAmount) }}/=</td>
+		                    	<td>{{ number_format($totalPaid) }}/=</td>
+		                    	<td>{{ number_format($totalDiscount) }}/=</td>
+		                    	<td>{{ number_format($totalDue) }}/=</td>
+		                    	<td></td>
+		                    </tr>
 		                  </tbody>
 		                </table>
 		              </div>
@@ -105,7 +126,7 @@
 
 @include('layouts.backend.common.datatable', [
 	'title' => $title,
-	'columns' => '[0, 1, 2, 3, 4, 5, 6]',
+	'columns' => '[0, 1, 2, 3, 4, 5]',
 	'searchCol' => 0
 ])
 

@@ -59,7 +59,11 @@ class Outlet extends Model
                     $totalToPay += $record->amoutnInEachSalesOrder();
                     $totalToPay -=$record->total_discount;
                 }
-                $title = 'Overall Financial Report for: ' . $records->first()->vendor->name;
+                if(count($records)) {
+                    $title = 'Overall Financial Report for: ' . $records->first()->vendor->name;
+                }else{
+                    $title = 'Overall Financial Report for: ' . Vendor::find(request('vendor'))->name;
+                }
             }
         }else{
             $totalPaid = $this->transactions->where('type', false)->sum('amount');
