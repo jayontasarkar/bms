@@ -15,11 +15,11 @@ class SalesFilter extends QueryFilter
 	}
 	public function from($date)
 	{
-		return $this->builder->where('purchase_date', '>=', Carbon::parse($date)->startOfDay());
+		return $this->builder->where('sales_date', '>=', Carbon::parse($date)->startOfDay());
 	}
 
 	public function to($date)
 	{
-		return $this->builder->where('purchase_date', '<=', Carbon::parse($date)->endOfDay());
+		return $this->builder->where('sales_date', '<=', Carbon::parse($date)->endOfDay());
 	}	
 }
