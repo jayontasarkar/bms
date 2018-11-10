@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Purchase, Sales};
+use App\Models\{Purchase, Sales, ReadySale};
 use Illuminate\Http\Request;
 
 class StoresController extends Controller
@@ -16,9 +16,13 @@ class StoresController extends Controller
     public function index()
     {
     	$purchases = Purchase::select('id', 'memo', 'created_at')->get();
-    	$sales     = Sales::select('id', 'memo', 'created_at')->get();
-    	$latestSalesAndPurhases = $sales->union($purchases)->sortByDesc('created_at')->take(15);
-    	
+        $sales     = Sales::select('id', 'memo', 'created_at')->get();
+    	$readySales     = ReadySale::select('id', 'memo', 'created_at')->get();
+    	$merged = $sales->merge($purchases ?: collect())->merge($readySales ?: collect());
+        $latestSalesAndPurhases = $merged->sortByDesc(function($obj, $key) {
+            return $obj->created_at;
+        })->take(35);
+
     	return view('store.index', compact('latestSalesAndPurhases'));
     }
 }

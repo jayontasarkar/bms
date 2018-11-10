@@ -14,9 +14,9 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="title">Product Code</label>
-                        <input type="text" 
-                               name="code"  
-                               class="form-control" 
+                        <input type="text"
+                               name="code"
+                               class="form-control"
                                v-model="code"
                                v-validate="'required'"
                                :class="{ 'is-invalid': errorList.code }"
@@ -31,9 +31,9 @@
     			<div class="col-md-12">
     				<div class="form-group">
     					<label for="title">Product Title</label>
-    					<input type="text" 
-    						   name="title"  
-    						   class="form-control" 
+    					<input type="text"
+    						   name="title"
+    						   class="form-control"
     						   v-model="title"
     						   v-validate="'required'"
     						   :class="{ 'is-invalid': errors.has('title') || errorList.title }"
@@ -48,8 +48,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="quantity">Product Stock</label>
-                        <input type="number" class="form-control" 
-                               placeholder="Quantity" v-model="qty" name="quantity" 
+                        <input type="number" class="form-control"
+                               placeholder="Quantity" v-model="qty" name="quantity"
                                min="1"
                                :class="{'is-invalid': errors.has('quantity')}" v-validate="'required'"
                                step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
@@ -63,8 +63,24 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
+                        <label for="quantity">Stock Price</label>
+                        <input type="number" class="form-control"
+                               placeholder="Stock Price" v-model="stock_price" name="stock price"
+                               min="0"
+                               :class="{'is-invalid': errors.has('stock price')}" v-validate="'required'"
+                               step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
+                        >
+                        <div class="invalid-feedback" v-if="errors.has('stock price') || errorList.stock_price ">
+                            {{ errors.first('stock price') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
                         <label for="title">Vendor Name</label>
-                        <select class="form-control" name="vendor name" 
+                        <select class="form-control" name="vendor name"
                                 v-model="vendor_id" v-validate="'required'"
                                 :class="{ 'is-invalid': errors.has('vendor name') }"
                         >
@@ -80,8 +96,8 @@
                 </div>
             </div>
     		<div slot="modal-footer" class="w-100">
-    			<button type="button" 
-    				    class="float-right btn btn-primary" 
+    			<button type="button"
+    				    class="float-right btn btn-primary"
     				    @click.prevent="submit"
     				    :class="{ 'btn-loading': loading }"
     		    >
@@ -104,6 +120,7 @@ export default {
             code: this.product.code,
             vendor_id: this.product.vendor_id,
             qty: this.product.stock,
+            stock_price: this.product.stock_price,
             errorList: {},
 			loading: false
 		}
@@ -122,6 +139,7 @@ export default {
 						title: this.title,
                         code: this.code,
                         vendor_id: this.vendor_id,
+                        stock_price: this.stock_price,
                         stock: this.qty
 					};
 					this.loading = true;

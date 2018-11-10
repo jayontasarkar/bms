@@ -49,7 +49,7 @@ class ReadySalesController extends Controller
     public function update(ReadySaleFormRequest $request, ReadySale $readySale)
     {
     	$readySale->update([
-    		'ready_sale_details' => $request->ready_sale_details, 
+    		'ready_sale_details' => $request->ready_sale_details,
     		'memo' => $request->memo,
     		'vendor_id' => $request->vendor_id,
     		'ready_sale_date' => $request->ready_sale_date,
@@ -57,7 +57,10 @@ class ReadySalesController extends Controller
     	]);
     	if($readySale->records) {
             foreach($readySale->records as $record) {
-                $record->product->update(['stock' => $record->product->stock + $record->qty]);
+                $record->product->update([
+                    'stock' => $record->product->stock + $record->qty,
+                    'stock_price' => $record->product->stock_price + ($record->qty * $record->unit_price)
+                ]);
             }
         }
         $readySale->records()->forceDelete();
@@ -65,7 +68,7 @@ class ReadySalesController extends Controller
         if($request->records && count($request->records)) {
             $readySale->insertRelationalData($request);
         }
-        
+
         session()->flash('flash', $msg = 'Ready Sale order updated');
         return response()->json(['msg' => $msg]);
     }

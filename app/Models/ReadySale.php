@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ReadySale extends Model
 {
 	use SoftDeletes, Filterable;
-	
+
     protected $fillable = [
     	'memo', 'vendor_id', 'ready_sale_details', 'total_discount', 'ready_sale_date'
     ];
@@ -39,7 +39,10 @@ class ReadySale extends Model
     	));
     	$sales = $this->records()->createMany($request->only('records')['records']);
     	foreach($sales as $sale) {
-    		$sale->product->update(['stock' => $sale->product->stock - $sale->qty ]);
+    		$sale->product->update([
+                'stock' => $sale->product->stock - $sale->qty,
+                'stock_price' => $sale->product->stock_price - ($sale->unit_price * $sale->qty)
+            ]);
     	}
     	return $this;
     }

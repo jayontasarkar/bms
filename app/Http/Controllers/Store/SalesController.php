@@ -18,7 +18,7 @@ class SalesController extends Controller
 	public function index(SalesFilter $filter)
 	{
 		$sales = Sales::outletsWithDuePayments($filter);
-    	
+
     	return view('sales.index', compact('sales'));
 	}
 
@@ -44,14 +44,17 @@ class SalesController extends Controller
     {
         if($sales->records) {
             foreach($sales->records as $record) {
-                $record->product->update(['stock' => $record->product->stock + $record->qty]);
+                $record->product->update([
+                    'stock' => $record->product->stock + $record->qty,
+                    'stock_price' => $record->product->stock_price + ($record->qty * $record->unit_price)
+                ]);
             }
         }
         $sales->records()->forceDelete();
         if($request->sales && count($request->sales)) {
             $sales->createRelationalData($request);
         }
-        
+
         session()->flash('flash', $msg = 'Sales order updated');
         return response()->json(['msg' => $msg]);
     }

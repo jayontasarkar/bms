@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
 	use Filterable, SoftDeletes;
-	
+
     protected $fillable = [
-    	'code', 'title', 'vendor_id', 'stock', 'unit'
+    	'code', 'title', 'vendor_id', 'stock', 'unit', 'stock_price'
     ];
 
     public function vendor()

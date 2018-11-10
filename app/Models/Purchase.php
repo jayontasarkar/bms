@@ -61,7 +61,10 @@ class Purchase extends Model
     {
         $purchases = $this->records()->createMany($request->only('purchases')['purchases']);
         foreach($purchases as $purchase) {
-            $purchase->product->update(['stock' => $purchase->product->stock + $purchase->qty ]);
+            $purchase->product->update([
+                'stock' => $purchase->product->stock + $purchase->qty,
+                'stock_price' => $purchase->product->stock_price + ($purchase->unit_price * $purchase->qty)
+            ]);
         }
         return $this;
     }

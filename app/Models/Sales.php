@@ -67,15 +67,18 @@ class Sales extends Model
     {
         $sales = $this->records()->createMany($request->only('sales')['sales']);
         foreach($sales as $sale) {
-            $sale->product->update(['stock' => $sale->product->stock - $sale->qty ]);
+            $sale->product->update([
+                'stock' => $sale->product->stock - $sale->qty,
+                'stock_price' => $sale->product->stock_price - ($sale->unit_price * $sale->qty)
+            ]);
         }
         return $this;
     }
 
     public function amoutnInEachSalesOrder()
     {
-        return $this->records->sum(function($query){ 
-            return  $query->unit_price * $query->qty; 
+        return $this->records->sum(function($query){
+            return  $query->unit_price * $query->qty;
         });
     }
 }

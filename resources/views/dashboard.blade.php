@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="row row-cards row-deck">
-      
+
       {{-- Latest Bank Statements --}}
       <div class="col-sm-8 col-lg-8">
         <div class="card">
@@ -92,9 +92,9 @@
               <table class="table card-table">
                 <thead class="bg-gray-dark">
                   <tr>
-                    <th>Type</th> 
-                    <th>Bank Name</th> 
-                    <th>Transaction Date</th> 
+                    <th>Type</th>
+                    <th>Bank Name</th>
+                    <th>Transaction Date</th>
                     <th>Note</th>
                     <th class="text-right">Amount</th>
                   </tr>
@@ -121,7 +121,7 @@
               <div class="alert alert-danger text-center">
                 <strong>No bank transaction was found</strong>
               </div>
-            @endif  
+            @endif
           </div>
         </div>
       </div>
@@ -137,7 +137,7 @@
                 <manage-bank :url="'{{ route('bankings.store') }}'" :banks="{{ json_encode($banks) }}"></manage-bank>
               </li>
               <li class="list-group-item">
-                <purchase-product :vendors="{{ json_encode($vendors) }}" 
+                <purchase-product :vendors="{{ json_encode($vendors) }}"
                           :products="{{ json_encode($products) }}"
                           :url="'{{ route('purchases.store') }}'"
                           :class-name="'d-block width--100'"
@@ -192,7 +192,6 @@
                       <th>Discount</th>
                       <th>Due Amount</th>
                       <th></th>
-                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -222,13 +221,8 @@
                           {{ number_format($total - $paid - $discount) }}/=
                         </td>
                         <td>
-                          <payment :purchase="{{ json_encode($purchase) }}"
-                                   :url="'{{ route('purchases.transactions.store', [$purchase]) }}'" 
-                          ></payment>
-                        </td>
-                        <td>
                           @if( !$purchase->type )
-                            <vendor-memo 
+                            <vendor-memo
                                 :purchase="{{ json_encode($purchase) }}"
                                 :records="{{ json_encode($purchase->records) }}"
                                 :transactions="{{ json_encode($purchase->transactions) }}"
@@ -236,7 +230,7 @@
                             ></vendor-memo>
                           @else
                             <span class="badge badge-danger"><strong>Opening Balance</strong></span>
-                          @endif  
+                          @endif
                         </td>
                       </tr>
                     @endforeach
@@ -291,8 +285,8 @@
                         </td>
                         <td>
                           @php
-                            $total = $sale->records->sum(function($query){ 
-                              return $query->unit_price * $query->qty; 
+                            $total = $sale->records->sum(function($query){
+                              return $query->unit_price * $query->qty;
                             });
                           @endphp
                           {{ number_format($total) }}/=
@@ -302,14 +296,14 @@
                         </td>
                         <td>
                           @if ( ! $sale->type )
-                            <outlet-memo 
+                            <outlet-memo
                                 :sales="{{ json_encode($sale) }}"
                                 :records="{{ json_encode($sale->records) }}"
                                 :title="'Show'"
                             ></outlet-memo>
                           @else
                             <span class="badge badge-success"><strong>Opening Balance</strong></span>
-                          @endif   
+                          @endif
                         </td>
                       </tr>
                     @endforeach
@@ -325,4 +319,4 @@
         </div>
       </div>
     </div>
-@stop            
+@stop

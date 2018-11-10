@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="memo">Invoice/Purchase Order No.</label>
-                    <input type="text" class="form-control" id="memo" v-model="memo"  name="invoice" 
+                    <input type="text" class="form-control" id="memo" v-model="memo"  name="invoice"
 						   v-validate="'required'" :class="{'is-invalid': errors.has('invoice') || errorList.memo }"
                     >
                     <div class="invalid-feedback" v-if="errors.has('invoice') || errorList.memo">
@@ -39,7 +39,7 @@
             <div class="row mt-3">
             	<div class="col-md-6">
                     <label for="purchase_date">Purchase Receive Date</label>
-                    <input type="date" class="form-control" id="purchase_date" v-model="purchase_date"  name="purchase date" 
+                    <input type="date" class="form-control" id="purchase_date" v-model="purchase_date"  name="purchase date"
 						   v-validate="'required'" :class="{'is-invalid': errors.has('purchase date')}"
                     >
                     <div class="invalid-feedback" v-if="errors.has('purchase date')">
@@ -72,7 +72,7 @@
                       	<tr>
                       		<td></td>
                       		<td>
-                      			<input class="form-control" type="number" v-model="discount" 
+                      			<input class="form-control" type="number" v-model="discount"
                       					placeholder="Discount Amount"
                       					step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
                       			>
@@ -90,8 +90,8 @@
                           	{{ index + 1 }}
                           </td>
                           <td>
-							<select class="form-control" v-model="list.product_id" 
-									:name="'product' + index" v-validate="'required'" 
+							<select class="form-control" v-model="list.product_id"
+									:name="'product' + index" v-validate="'required'"
 								    :class="{'is-invalid': errors.has('product' + index)}"
 							>
 								<option value="">Select Product</option>
@@ -99,26 +99,25 @@
 							</select>
                           </td>
                           <td>
-							<input type="number" style="width: 85px;" class="form-control" 
-							       placeholder="Quantity" v-model="list.qty" :name="'qty' + index" 
+							<input type="number" style="width: 85px;" class="form-control"
+							       placeholder="Quantity" v-model="list.qty" :name="'qty' + index"
 							       :class="{'is-invalid': errors.has('qty' + index)}" v-validate="'required'"
 							       step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
 							>
                           </td>
                           <td>
-							<input type="number" style="width: 90px;" class="form-control" 
+							<input type="number" style="width: 90px;" class="form-control"
 							       placeholder="Unit Price" v-model="list.unit_price" v-validate="'required'"
 							       :name="'unit price' + index" :class="{'is-invalid': errors.has('unit price' + index)}"
-								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$" 	
+								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
 							>
                           </td>
                           <td>
 							<select style="width: 80px;" class="form-control" v-model="list.unit"
-							        :name="'unit' + index" v-validate="'required'" 
-							        :class="{'is-invalid': errors.has('unit' + index)}" 
+							        :name="'unit' + index" v-validate="'required'"
+							        :class="{'is-invalid': errors.has('unit' + index)}"
 							>
-								<option value="">Select</option>
-								<option value="piece">Piece</option>
+								<option value="piece" selected>Piece</option>
 							</select>
                           </td>
                           <td>
@@ -134,8 +133,8 @@
             	</div>
             </div>
     		<div slot="modal-footer" class="w-100">
-    			<button type="button" 
-    				    class="float-right btn btn-primary" 
+    			<button type="button"
+    				    class="float-right btn btn-primary"
     				    @click.prevent="submit"
     				    :class="{ 'btn-loading': loading }"
     				    :disabled="this.productList.length <= 0"
@@ -151,7 +150,7 @@
 </template>
 
 <script>
-	var moment = require('moment'); 
+	var moment = require('moment');
 	export default {
 		props: ['vendors', 'products', 'url', 'className', 'btnClass'],
 		data() {

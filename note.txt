@@ -1,6 +1,0 @@
---- TODOS ---
-  1. Update ReadySale / ready sale memo with products (done)
-  2. Store Reports (check what is needed like (due amounts by outlet)) (done)
-  3. Add another quick link button to make a collection form outlets (done)
-  4. Update collection report (http://bms.test:8080/outlet/112/collections) (done)
-  5. Today's overall reports / actions

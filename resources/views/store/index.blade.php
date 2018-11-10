@@ -4,7 +4,7 @@
 	@component('layouts.backend.common.page-header')
 		Store Management
 		@slot('rightContent')
-	        <purchase-product :vendors="{{ json_encode($vendors) }}" 
+	        <purchase-product :vendors="{{ json_encode($vendors) }}"
 	        				  :products="{{ json_encode($products) }}"
 	        				  :url="'{{ route('purchases.store') }}'"
 	        				  :class-name="'float-right ml-auto'"
@@ -39,16 +39,25 @@
 		                      			<td>
 		                      				@if($history instanceof App\Models\Purchase)
 		                      					<a href="{{ route('purchases.show', [$history]) }}">{{ $history->memo }}</a>
+		                      				@elseif($history instanceof App\Models\ReadySale)
+		                      					<a href="{{ route('readysales.update', [$history]) }}">{{ $history->memo }}</a>
 		                      				@else
 		                      					<a href="{{ route('sales.show', [$history]) }}">{{ $history->memo }}</a>
-		                      				@endif	
+		                      				@endif
 		                      			</td>
-		                      			<td>{{ number_format($history->total_balance) }}/=</td>
+		                      			@php
+		                      				$totalBalance = $history->records->sum(function($query){
+		                      					return $query->unit_price * $query->qty;
+		                      				});
+		                      			@endphp
+		                      			<td>{{ number_format($totalBalance) }}/=</td>
 		                      			<td class="text-right">
 		                      				@if($history instanceof App\Models\Purchase)
-												<span class="badge badge-success">Purchase</span>
+												<span class="badge badge-success">Pur</span>
+											@elseif($history instanceof App\Models\ReadySale)
+												<span class="badge badge-warning">Rsl</span>
 		                      				@else
-												<span class="badge badge-danger">Sales</span>
+												<span class="badge badge-danger">Sal</span>
 		                      				@endif
 		                      			</td>
 		                    		</tr>
@@ -92,7 +101,7 @@
 										<th>Product Title</th>
 										<th>Vendor Name</th>
 										<th>Stock</th>
-										<th>Unit</th>
+										<th>Stock Price</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -104,8 +113,8 @@
 											</td>
 											<td>{{ $product->title }}</td>
 											<td>{{ $product->vendor->name }}</td>
-											<td>{{ $product->stock }}</td>
-											<td>{{ $product->unit }}</td>
+											<td>{{ $product->stock }} {{ strtoupper($product->unit) }}</td>
+											<td>{{ number_format($product->stock_price) }}/=</td>
 										</tr>
 									@endforeach
 								</tbody>

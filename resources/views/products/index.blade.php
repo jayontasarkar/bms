@@ -16,7 +16,7 @@
 							<strong>Search by vendor</strong>
 							<a href="{{ route('products.index') }}" class="float-right btn btn-sm btn-secondary">
 	                    		<i class="fe fe-x-circle"></i> Clear
-	                    	</a> 
+	                    	</a>
 						</label>
 						<select class="form-control" name="vendor" id="select-vendor">
 							<option value="">Select vendor</option>
@@ -43,53 +43,59 @@
 							<table class="table card-table datatable table-bordered table-vcenter text-nowrap" border="1">
 								<thead>
 									<tr class="bg-gray-dark">
-										<th class="w-1">No.</th>
-										<th>Product Code</th>
+										<th>Code</th>
 										<th>Product Title</th>
 										<th>Vendor Name</th>
 										<th>Stock</th>
+										<th>Stock Price</th>
 										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($products as $key => $product)
-									<tr>
-										<td>
-											<span class="text-muted">
-												{{ 
-													$key + 1 
-												}}
-											</span>
-										</td>
-										<td>
-											<a href="{{ route('products.show', [$product]) }}">{{ $product->code }}</a>
-										</td>
-										<td>
-											<a href="{{ route('products.show', [$product]) }}">{{ $product->title }}</a>
-										</td>
-										<td class="text-center">
-											<a href="{{ route('vendors.show', [$product->vendor]) }}">
-												{{ $product->vendor->name }}
-										</a>
-										</td>
-										<td>
-											{{ $product->stock }} PIECE
-										</td>
-										<td>
-											<ul class="list-inline mt-3">
-												<li class="list-inline-item">
-													<edit-product :product="{{ json_encode($product) }}"
-																  :url="'{{ route('products.update', [$product]) }}'"
-																  :vendors="{{ json_encode($vendors) }}"	
-													></edit-product>
-												</li>
-												<li class="list-inline-item">
-													<remove-btn :url="'{{ route('products.destroy', [$product]) }}'"></remove-btn>	
-												</li>
-											</ul>
-										</td>
-									</tr>
+										<tr>
+											<td>
+												<a href="{{ route('products.show', [$product]) }}">{{ $product->code }}</a>
+											</td>
+											<td>
+												<a href="{{ route('products.show', [$product]) }}">{{ $product->title }}</a>
+											</td>
+											<td class="text-center">
+												<a href="{{ route('vendors.show', [$product->vendor]) }}">
+													{{ $product->vendor->name }}
+											</a>
+											</td>
+											<td>
+												{{ $product->stock }} PIECE
+											</td>
+											<td>
+												{{ number_format($product->stock_price) }}/=
+											</td>
+											<td>
+												<ul class="list-inline mt-3">
+													<li class="list-inline-item">
+														<edit-product :product="{{ json_encode($product) }}"
+																	  :url="'{{ route('products.update', [$product]) }}'"
+																	  :vendors="{{ json_encode($vendors) }}"
+														></edit-product>
+													</li>
+													<li class="list-inline-item">
+														<remove-btn :url="'{{ route('products.destroy', [$product]) }}'"></remove-btn>
+													</li>
+												</ul>
+											</td>
+										</tr>
 									@endforeach
+									<tfoot>
+										<tr class="bg-light">
+											<td></td>
+											<td></td>
+											<td><strong>Total Stock Price:</strong></td>
+											<td></td>
+											<td>{{ number_format($products->sum('stock_price')) }}/=</td>
+											<td></td>
+										</tr>
+									</tfoot>
 								</tbody>
 							</table>
 						</div>
@@ -106,7 +112,7 @@
 
 @include('layouts.backend.common.datatable', [
 	'title' => $search,
-	'columns' => '[ 1, 2, 3, 4 ]',
+	'columns' => '[ 0, 1, 2, 3, 4]',
 	'searchCol' => 1
 ])
 

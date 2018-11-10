@@ -21,6 +21,7 @@ class ProductsTableSeeder extends Seeder
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
         			'stock'     => $faker->numberBetween(50, 100),
+                    'stock_price' => 20000,
         			'created_at' => now()
         		],
         		[
@@ -28,6 +29,7 @@ class ProductsTableSeeder extends Seeder
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
         			'stock'     => $faker->numberBetween(50, 100),
+                    'stock_price' => 25000,
         			'created_at' => now()
         		],
         		[
@@ -35,6 +37,7 @@ class ProductsTableSeeder extends Seeder
         			'title' => $faker->unique()->sentence(4),
         			'vendor_id' => $vendor->id,
         			'stock'     => $faker->numberBetween(50, 100),
+                    'stock_price' => 30000,
         			'created_at' => now()
         		]
         	]);
