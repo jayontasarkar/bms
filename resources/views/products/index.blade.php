@@ -5,34 +5,37 @@
 		Products Management
 	@endcomponent
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-12">
 			<div class="card">
-				<div class="card-header">
-					<create-product :vendors="{{ json_encode($vendors) }}"></create-product>
-				</div>
 				<div class="card-body">
-					<div class="form-group">
-						<label for="vendor" style="width: 100%;">
-							<strong>Search by vendor</strong>
-							<a href="{{ route('products.index') }}" class="float-right btn btn-sm btn-secondary">
+					<div class="row">
+						<div class="col-md-4">
+							<create-product :vendors="{{ json_encode($vendors) }}"></create-product>
+						</div>
+						<div class="col-md-6">
+							<select class="form-control" name="vendor" id="select-vendor">
+								<option value="">Select vendor</option>
+								@forelse($vendors as $vendor)
+									<option value="{{ $vendor->id }}" {{ request('vendor') ==  $vendor->id ? 'selected' : ''}}>
+										{{ $vendor->name }}
+									</option>
+								@empty
+
+								@endforelse
+							</select>
+						</div>
+						<div class="col-md-2 text-center">
+							<a href="{{ route('products.index') }}" class="btn btn-sm btn-secondary">
 	                    		<i class="fe fe-x-circle"></i> Clear
 	                    	</a>
-						</label>
-						<select class="form-control" name="vendor" id="select-vendor">
-							<option value="">Select vendor</option>
-							@forelse($vendors as $vendor)
-								<option value="{{ $vendor->id }}" {{ request('vendor') ==  $vendor->id ? 'selected' : ''}}>
-									{{ $vendor->name }}
-								</option>
-							@empty
-
-							@endforelse
-						</select>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-9">
+	</div>
+	<div class="row">
+		<div class="col-md-12">
 			<div class="card">
 				<div class="card-body">
 					@if(count($products))
@@ -47,6 +50,7 @@
 										<th>Product Title</th>
 										<th>Vendor Name</th>
 										<th>Stock</th>
+										<th>Unit Price</th>
 										<th>Stock Price</th>
 										<th>Action</th>
 									</tr>
@@ -63,13 +67,14 @@
 											<td class="text-center">
 												<a href="{{ route('vendors.show', [$product->vendor]) }}">
 													{{ $product->vendor->name }}
-											</a>
+												</a>
 											</td>
 											<td>
 												{{ $product->stock }} PIECE
 											</td>
+											<td>{{ number_format($product->unit_price) }}/=</td>
 											<td>
-												{{ number_format($product->stock_price) }}/=
+												{{ number_format($product->stock * $product->unit_price) }}/=
 											</td>
 											<td>
 												<ul class="list-inline mt-3">
@@ -92,7 +97,13 @@
 											<td></td>
 											<td><strong>Total Stock Price:</strong></td>
 											<td></td>
-											<td>{{ number_format($products->sum('stock_price')) }}/=</td>
+											<td></td>
+											@php
+												$sum = $products->sum(function($query){
+													return $query->unit_price * $query->stock;
+												});
+											@endphp
+											<td>{{ number_format($sum) }}/=</td>
 											<td></td>
 										</tr>
 									</tfoot>
@@ -112,7 +123,7 @@
 
 @include('layouts.backend.common.datatable', [
 	'title' => $search,
-	'columns' => '[ 0, 1, 2, 3, 4]',
+	'columns' => '[ 0, 1, 2, 3, 4, 5]',
 	'searchCol' => 1
 ])
 

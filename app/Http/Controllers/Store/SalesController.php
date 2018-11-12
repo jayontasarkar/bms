@@ -45,8 +45,7 @@ class SalesController extends Controller
         if($sales->records) {
             foreach($sales->records as $record) {
                 $record->product->update([
-                    'stock' => $record->product->stock + $record->qty,
-                    'stock_price' => $record->product->stock_price + ($record->qty * $record->unit_price)
+                    'stock' => $record->product->stock + $record->qty
                 ]);
             }
         }

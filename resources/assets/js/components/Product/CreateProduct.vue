@@ -63,15 +63,15 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="quantity">Stock Price</label>
+                        <label for="quantity">Unit Price (Per Peice)</label>
                         <input type="number" class="form-control"
-                               placeholder="Stock Price" v-model="stock_price" name="stock price"
+                               placeholder="Stock Price" v-model="unit_price" name="unit price"
                                min="0"
-                               :class="{'is-invalid': errors.has('stock price')}" v-validate="'required'"
+                               :class="{'is-invalid': errors.has('unit price')}" v-validate="'required'"
                                step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
                         >
-                        <div class="invalid-feedback" v-if="errors.has('stock price') || errorList.stock_price ">
-                            {{ errors.first('stock price') }}
+                        <div class="invalid-feedback" v-if="errors.has('unit price') || errorList.unit_price ">
+                            {{ errors.first('unit price') }}
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export default {
             code: '',
             vendor_id: '',
             qty: null,
-            stock_price: 0,
+            unit_price: 0,
             errorList: {},
 			loading: false
 		}
@@ -134,7 +134,7 @@ export default {
             this.code = '';
             this.qty = null;
             this.vendor_id = '';
-            this.stock_price = 0;
+            this.unit_price = 0;
 			this.$refs.addProductModal.hide();
 		},
 		submit() {
@@ -144,7 +144,7 @@ export default {
 						title: this.title,
                         code: this.code,
                         vendor_id: this.vendor_id,
-                        stock_price: this.stock_price,
+                        unit_price: this.unit_price,
                         stock: this.qty
 					};
 					this.loading = true;

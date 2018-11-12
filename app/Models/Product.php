@@ -11,7 +11,7 @@ class Product extends Model
 	use Filterable, SoftDeletes;
 
     protected $fillable = [
-    	'code', 'title', 'vendor_id', 'stock', 'unit', 'stock_price'
+    	'code', 'title', 'vendor_id', 'stock', 'unit', 'unit_price'
     ];
 
     public function vendor()

@@ -63,7 +63,7 @@ class Purchase extends Model
         foreach($purchases as $purchase) {
             $purchase->product->update([
                 'stock' => $purchase->product->stock + $purchase->qty,
-                'stock_price' => $purchase->product->stock_price + ($purchase->unit_price * $purchase->qty)
+                'unit_price' => $purchase->unit_price
             ]);
         }
         return $this;

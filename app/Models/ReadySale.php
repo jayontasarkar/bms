@@ -40,8 +40,7 @@ class ReadySale extends Model
     	$sales = $this->records()->createMany($request->only('records')['records']);
     	foreach($sales as $sale) {
     		$sale->product->update([
-                'stock' => $sale->product->stock - $sale->qty,
-                'stock_price' => $sale->product->stock_price - ($sale->unit_price * $sale->qty)
+                'stock' => $sale->product->stock - $sale->qty
             ]);
     	}
     	return $this;

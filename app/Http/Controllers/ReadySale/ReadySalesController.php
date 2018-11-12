@@ -58,8 +58,7 @@ class ReadySalesController extends Controller
     	if($readySale->records) {
             foreach($readySale->records as $record) {
                 $record->product->update([
-                    'stock' => $record->product->stock + $record->qty,
-                    'stock_price' => $record->product->stock_price + ($record->qty * $record->unit_price)
+                    'stock' => $record->product->stock + $record->qty
                 ]);
             }
         }

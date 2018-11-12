@@ -68,8 +68,7 @@ class Sales extends Model
         $sales = $this->records()->createMany($request->only('sales')['sales']);
         foreach($sales as $sale) {
             $sale->product->update([
-                'stock' => $sale->product->stock - $sale->qty,
-                'stock_price' => $sale->product->stock_price - ($sale->unit_price * $sale->qty)
+                'stock' => $sale->product->stock - $sale->qty
             ]);
         }
         return $this;

@@ -47,8 +47,7 @@ class PurchasesController extends Controller
             foreach($purchase->records as $record) {
                 $product = Product::find($record->product_id);
                 $product->update([
-                    'stock' => $product->stock - $record->qty,
-                    'stock_price' => $product->stock_price - ($record->unit_price * $record->qty)
+                    'stock' => $product->stock - $record->qty
                 ]);
             }
         }
@@ -58,7 +57,7 @@ class PurchasesController extends Controller
                 $records = $purchase->records()->create($pur);
                 $records->product->update([
                     'stock' => $records->product->stock + $pur['qty'],
-                    'stock_price' => $records->product->stock_price + ($pur['qty'] * $pur['unit_price'])
+                    'unit_price' => $pur['unit_price']
                 ]);
             }
         }

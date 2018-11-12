@@ -114,7 +114,7 @@
 											<td>{{ $product->title }}</td>
 											<td>{{ $product->vendor->name }}</td>
 											<td>{{ $product->stock }} {{ strtoupper($product->unit) }}</td>
-											<td>{{ number_format($product->stock_price) }}/=</td>
+											<td>{{ number_format($product->unit_price * $product->stock) }}/=</td>
 										</tr>
 									@endforeach
 								</tbody>
