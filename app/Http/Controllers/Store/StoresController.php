@@ -15,9 +15,9 @@ class StoresController extends Controller
 
     public function index()
     {
-    	$purchases = Purchase::select('id', 'memo', 'created_at')->get();
-        $sales     = Sales::select('id', 'memo', 'created_at')->get();
-    	$readySales     = ReadySale::select('id', 'memo', 'created_at')->get();
+    	$purchases = Purchase::with('records')->select('id', 'memo', 'created_at')->get();
+        $sales     = Sales::with('records')->select('id', 'memo', 'created_at')->get();
+    	$readySales     = ReadySale::with('records')->select('id', 'memo', 'created_at')->get();
     	$merged = $sales->merge($purchases ?: collect())->merge($readySales ?: collect());
         $latestSalesAndPurhases = $merged->sortByDesc(function($obj, $key) {
             return $obj->created_at;
