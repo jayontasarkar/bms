@@ -47,7 +47,7 @@ class Sales extends Model
     public static function outletsWithDuePayments($filter)
     {
     	return static::filter($filter)->orderBy('sales_date', 'desc')
-    	        ->with('outlet', 'records.product')->get();
+    	        ->with('outlet', 'records.product', 'vendor')->get();
     }
 
     public static function duePayments()
