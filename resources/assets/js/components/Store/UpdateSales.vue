@@ -1,5 +1,23 @@
 <template>
 	<div>
+		<div class="form-group">
+			<div class="row justify-content-start">
+				<div class="col-md-3 pt-2">
+					<h4>Sales Order Memo:</h4>
+				</div>
+				<div class="col-md-3">
+					<input type="text" v-model="memo" class="form-control"
+							v-validate="'required'" :name="'Memo No.'"
+							:class="{ 'is-invalid': errors.has('Memo No.') || errorList.memo }"
+					>
+				</div>
+				<div class="col-md-6 pt-2" v-if="errors.has('Memo No.') || errorList.memo">
+					<p style="color: darkred;">
+						{{ errors.first('Memo No.') || errorList.memo[0] }}
+					</p>
+				</div>
+			</div>
+		</div>
 		<table class="table card-table table-vcenter">
 		    <thead>
 		        <tr class="bg-gray-dark">
@@ -24,17 +42,17 @@
       			 	</select>
                   </td>
                   <td>
-                  	<input type="number" style="width: 90px;" class="form-control" 
+                  	<input type="number" style="width: 90px;" class="form-control"
 							       placeholder="Unit Price" v-model="list.unit_price" v-validate="'required'"
 							       :name="'unit price' + index" :class="{'is-invalid': errors.has('unit price' + index)}"
-								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$" 	
+								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
 							>
                   </td>
                   <td>
-							<input type="number" style="width: 90px;" class="form-control" 
+							<input type="number" style="width: 90px;" class="form-control"
 							       placeholder="Qty" v-model="list.qty" v-validate="'required'"
 							       :name="'quantity' + index" :class="{'is-invalid': errors.has('quantity' + index)}"
-								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$" 	
+								   step="0.01" pattern="^\d+(?:\.\d{1,2})?$"
 							>
                   </td>
                   <td>
@@ -59,11 +77,11 @@
         			<input type="text" class="form-control" v-model="total_discount" step="0.01" pattern="^\d+(?:\.\d{1,2})?$">
         		</div>
         	</div>
-        	<div class="col-md-4"> 
+        	<div class="col-md-4">
         		<div class="form-group">
         			<label for="">Sales Date</label>
         			<input type="date" class="form-control" v-model="sales_date">
-        		</div>       	
+        		</div>
         	</div>
         	<div class="col-md-4">
         		<div class="form-group mt-6 text-right">
@@ -80,10 +98,12 @@
 		data() {
 			return {
 				sales: this.info.records,
+				memo: this.info.memo,
 				productLists: [],
 				total_discount: this.discount,
 				sales_date: moment(this.info.sales_date).format('YYYY-MM-DD'),
-				loading: false
+				loading: false,
+				errorList: {}
 			}
 		},
 		computed: {
@@ -104,6 +124,7 @@
                 	if(result) {
                 		let data = {
                 			sales: this.sales,
+                			memo: this.memo,
                 			total_discount: this.total_discount,
                 			sales_date: this.sales_date
                 		};

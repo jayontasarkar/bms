@@ -89,6 +89,7 @@ Route::resource('products', 'Product\ProductsController');
 Route::get('store', 'Store\StoresController@index')->name('stores.index');
 Route::get('sales/{sales}', 'Store\SalesController@show')->name('sales.show');
 Route::post('sales', 'Store\SalesController@store')->name('sales.store');
+Route::delete('sales/{sales}', 'Store\SalesController@destroy')->name('sales.destroy');
 Route::patch('sales/{sales}', 'Store\SalesController@update')->name('sales.update');
 Route::get('sales', 'Store\SalesController@index')->name('sales.index');
 Route::patch('sales/{sales}/transactions', 'Sales\SalesTransactionsController@update')->name('sales.transactions.update');
@@ -97,6 +98,7 @@ Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purc
 Route::get('purchases/{purchase}', 'Store\PurchasesController@show')->name('purchases.show');
 Route::post('purchases', 'Store\PurchasesController@store')->name('purchases.store');
 Route::patch('purchases/{purchase}', 'Store\PurchasesController@update')->name('purchases.update');
+Route::delete('purchases/{purchase}', 'Store\PurchasesController@destroy')->name('purchases.destroy');
 Route::patch('purchases/{purchase}/transactions', 'Purchase\PurchaseTransactionsController@update')
        ->name('purchases.transactions.update');
 Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.report.index');

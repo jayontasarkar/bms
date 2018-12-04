@@ -43,6 +43,7 @@ class PurchasesController extends Controller
 
     public function update(Request $request, Purchase $purchase)
     {
+        $request->validate(['memo' => 'required|unique:purchases,memo,' . $purchase->id]);
         if($purchase->records) {
             foreach($purchase->records as $record) {
                 $product = Product::find($record->product_id);
@@ -71,6 +72,23 @@ class PurchasesController extends Controller
         ]);
 
         session()->flash('flash', $msg = 'Purchase order updated');
+        return response()->json(['msg' => $msg]);
+    }
+
+    public function destroy(Purchase $purchase)
+    {
+        if($purchase->records) {
+            foreach($purchase->records as $record) {
+                $product = Product::find($record->product_id);
+                $product->update([
+                    'stock' => $product->stock - $record->qty
+                ]);
+            }
+        }
+        $purchase->records()->forceDelete();
+        $purchase->forceDelete();
+
+        session()->flash('flash', $msg = 'Purchase order of memo #' . $purchase->memo . ' removed');
         return response()->json(['msg' => $msg]);
     }
 }

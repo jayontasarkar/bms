@@ -43,6 +43,16 @@
 					</tr>
 				</tbody>
 			</table>
+			<hr>
+			<p class="p-1">
+				<remove-btn
+					:url="'{{ route('sales.destroy', [$sales]) }}'"
+					:class-name="'btn-lg btn-block'"
+					:title="'Are you sure to remove this sales order?'"
+					:btn-text="'Remove Sales Order?'"
+					:redirect-path="'{{ route('sales.index') }}'"
+				></remove-btn>
+			</p>
 		</div>
 	</div>
 	<div class="col-md-8">

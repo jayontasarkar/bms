@@ -42,6 +42,8 @@ class SalesController extends Controller
 
     public function update(Request $request, Sales $sales)
     {
+        $request->validate(['memo' => 'required|unique:sales,memo,' . $sales->id]);
+        $sales->update(['memo' => $request->memo]);
         if($sales->records) {
             foreach($sales->records as $record) {
                 $record->product->update([
@@ -55,6 +57,22 @@ class SalesController extends Controller
         }
 
         session()->flash('flash', $msg = 'Sales order updated');
+        return response()->json(['msg' => $msg]);
+    }
+
+    public function destroy(Sales $sales)
+    {
+        if($sales->records) {
+            foreach($sales->records as $record) {
+                $record->product->update([
+                    'stock' => $record->product->stock + $record->qty
+                ]);
+            }
+        }
+        $sales->records()->forceDelete();
+        $sales->forceDelete();
+
+        session()->flash('flash', $msg = 'Sales order of memo #'. $sales->memo .' removed');
         return response()->json(['msg' => $msg]);
     }
 }
