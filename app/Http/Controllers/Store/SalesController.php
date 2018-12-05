@@ -44,14 +44,9 @@ class SalesController extends Controller
     {
         $request->validate(['memo' => 'required|unique:sales,memo,' . $sales->id]);
         $sales->update(['memo' => $request->memo]);
-        if($sales->records) {
-            foreach($sales->records as $record) {
-                $record->product->update([
-                    'stock' => $record->product->stock + $record->qty
-                ]);
-            }
+        if ($sales->records) {
+            $sales->truncateSalesOrder();
         }
-        $sales->records()->forceDelete();
         if($request->sales && count($request->sales)) {
             $sales->createRelationalData($request);
         }
@@ -62,14 +57,9 @@ class SalesController extends Controller
 
     public function destroy(Sales $sales)
     {
-        if($sales->records) {
-            foreach($sales->records as $record) {
-                $record->product->update([
-                    'stock' => $record->product->stock + $record->qty
-                ]);
-            }
+        if ($sales->records) {
+            $sales->truncateSalesOrder();
         }
-        $sales->records()->forceDelete();
         $sales->forceDelete();
 
         session()->flash('flash', $msg = 'Sales order of memo #'. $sales->memo .' removed');

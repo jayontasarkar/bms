@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\Eloquent\Filterable;
 use Carbon\Carbon;
+use App\Models\Product;
+use App\Traits\Eloquent\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -67,5 +68,16 @@ class Purchase extends Model
             ]);
         }
         return $this;
+    }
+
+    public function truncatePurchaseOrder()
+    {
+        foreach ($this->records as $record) {
+            $product = Product::find($record->product_id);
+            $product->update([
+                'stock' => $product->stock - $record->qty
+            ]);
+        }
+        return $this->records()->forceDelete();
     }
 }

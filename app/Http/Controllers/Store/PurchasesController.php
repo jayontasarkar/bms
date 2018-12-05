@@ -44,15 +44,9 @@ class PurchasesController extends Controller
     public function update(Request $request, Purchase $purchase)
     {
         $request->validate(['memo' => 'required|unique:purchases,memo,' . $purchase->id]);
-        if($purchase->records) {
-            foreach($purchase->records as $record) {
-                $product = Product::find($record->product_id);
-                $product->update([
-                    'stock' => $product->stock - $record->qty
-                ]);
-            }
+        if ($purchase->records) {
+            $purchase->truncatePurchaseOrder();
         }
-        $purchase->records()->forceDelete();
         if($request->purchases && count($request->purchases)) {
             foreach($request->only('purchases')['purchases'] as $pur) {
                 $records = $purchase->records()->create($pur);
@@ -78,14 +72,8 @@ class PurchasesController extends Controller
     public function destroy(Purchase $purchase)
     {
         if($purchase->records) {
-            foreach($purchase->records as $record) {
-                $product = Product::find($record->product_id);
-                $product->update([
-                    'stock' => $product->stock - $record->qty
-                ]);
-            }
+            $purchase->truncatePurchaseOrder();
         }
-        $purchase->records()->forceDelete();
         $purchase->forceDelete();
 
         session()->flash('flash', $msg = 'Purchase order of memo #' . $purchase->memo . ' removed');

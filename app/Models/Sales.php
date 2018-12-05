@@ -80,4 +80,14 @@ class Sales extends Model
             return  $query->unit_price * $query->qty;
         });
     }
+
+    public function truncateSalesOrder()
+    {
+            foreach ($this->records as $record) {
+                $record->product->update([
+                    'stock' => $record->product->stock + $record->qty
+                ]);
+            }
+            return $this->records()->forceDelete();
+    }
 }
