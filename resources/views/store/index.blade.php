@@ -40,7 +40,7 @@
 		                      				@if($history instanceof App\Models\Purchase)
 		                      					<a href="{{ route('purchases.show', [$history]) }}">{{ $history->memo }}</a>
 		                      				@elseif($history instanceof App\Models\ReadySale)
-		                      					<a href="{{ route('readysales.update', [$history]) }}">{{ $history->memo }}</a>
+		                      					<a href="/readysales/{{ $history->id }}/edit">{{ $history->memo }}</a>
 		                      				@else
 		                      					<a href="{{ route('sales.show', [$history]) }}">{{ $history->memo }}</a>
 		                      				@endif
