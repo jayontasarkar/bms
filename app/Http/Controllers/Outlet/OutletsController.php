@@ -64,7 +64,7 @@ class OutletsController extends Controller
     public function update(OutletFormRequest $request, Outlet $outlet)
     {
         $outlet->update($request->all());
-        $outlet->transactions()->forceDelete();
+        $outlet->transactions()->where('type', 1)->forceDelete();
         if($request->opening_balances && count($request->opening_balances)) {
             foreach($request->only('opening_balances')['opening_balances'] as $balance) {
                 $outlet->transactions()->create($balance);
