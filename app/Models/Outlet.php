@@ -33,9 +33,21 @@ class Outlet extends Model
     public function openingBalances()
     {
         if(request()->has('vendor')) {
-            return $this->transactions->where('vendor_id', request('vendor'))->load('vendor')->where('type', true);
+            $transactions = $this->transactions->where('vendor_id', request('vendor'))->load('vendor');
+        } else {
+            $transactions = $this->transactions->load('vendor'); 
         }
-        return $this->transactions->load('vendor')->where('type', true); 
+        
+        $collection = collect();
+        if($transactions->count() > 0) {
+            foreach($transactions as $transaction) {
+                if($transaction->type == 1) {
+                    $collection->push($transaction);
+                }
+            }
+        }
+        
+        return $collection; 
     }
 
     public function collections()
