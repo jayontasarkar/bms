@@ -61,7 +61,7 @@
 		                        </td>
 		                        <td class="search">
 		                          <a href="{{ route('sales.show', [$sale->vendor]) }}" class="text-inherit">
-		                            {{ $sale->outlet->name }}
+		                            {{ optional($sale->outlet)->name }}
 		                          </a>
 		                        </td>
 		                        <td>
