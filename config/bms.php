@@ -2,7 +2,7 @@
 
 return [
 	'site_title'     => 'Hotel Mrigoya',
-	'items_per_page' => 46,
+	'items_per_page' => 30,
 	'months' => [
 		1 => 'January', 
 		2 => 'February', 
