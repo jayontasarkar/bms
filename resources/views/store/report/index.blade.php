@@ -71,7 +71,7 @@ Store Reporting
                         {{ $result }}
                     </div>
                     <div class="col-md-3">
-                        <input class="form-control" id="filter-table" placeholder="Search by outlet">
+                        <input class="form-control" id="filter-table" value="{{ request('search') }}" placeholder="Search by outlet">
                     </div>
                 </div>
                 @if(count($outlets))
@@ -80,7 +80,6 @@ Store Reporting
                         <thead>
                             <tr class="bg-gray-dark">
                                 <th>Outlet Name</th>
-                                <th>Proprietor Name</th>
                                 <th>Address</th>
                                 <th>Opening</th>
                                 <th>Total Sale</th>
@@ -89,28 +88,17 @@ Store Reporting
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                            $grandCollection = 0;
-                            $grandDue = 0;
-                            @endphp
                             @foreach($outlets as $outlet)
                             @php
                             $vendor = request('vendor') ? : false;
-                            if(request()->has('vendor')) {
-                            $opening = $outlet->transactions->where('type', true)->where('vendor_id', request('vendor'))->sum('amount');
-                            $collections = $outlet->transactions->where('type', false)->where('vendor_id', request('vendor'))->sum('amount');
-                            }else{
                             $opening = $outlet->transactions->where('type', true)->sum('amount');
                             $collections = $outlet->transactions->where('type', false)->sum('amount');
-                            }
-                            @endphp
-                            @if(($opening + $outlet->totalSalesByVendor($vendor) - $collections) > 0)
-                            <tr>
+                            $amount = $opening + $outlet->totalSalesByVendor($vendor) - $collections;
+                            $class_name = $amount > 0 ? 'danger' : ($amount < 0 ? 'primary' : 'success') ; 
+							@endphp 
+							<tr class="table-{{ $class_name }}">
                                 <td>
                                     <a href="{{ route('outlets.show', [$outlet]) }}">{{ $outlet->name }}</a>
-                                </td>
-                                <td>
-                                    {{ $outlet->proprietor }}
                                 </td>
                                 <td>
                                     {{ $outlet->address }}
@@ -125,34 +113,17 @@ Store Reporting
                                     {{ $collections }}/=
                                 </td>
                                 <td>
-                                    {{ number_format($due = $opening + $outlet->totalSalesByVendor($vendor) - $collections) }}/=
+                                    {{ number_format($amount) }}/= &nbsp;
+                                    {{ $amount == 0 ? '(No Due)' : '' }}
+                                    {{ $amount < 0 ? '(Over Paid)' : '' }}
                                 </td>
-                                @php
-                                $grandCollection += $collections;
-                                $grandDue += $due;
-                                @endphp
-                            </tr>
-                            @endif
-                            @endforeach
-                            @if($grandDue > 0)
-                        <tfoot class="bg-gray text-light">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Total:</td>
-                                <td>
-                                    {{ number_format($grandCollection) }}/=
-                                </td>
-                                <td>
-                                    {{ number_format($grandDue) }}/=
-                                </td>
-                            </tr>
-                        </tfoot>
-                        @endif
+                                </tr>
+                                @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="d-flex justify-content-end text-center mt-5">
+                    {{ $outlets->appends(request()->except('page'))->links() }}
                 </div>
                 @endif
             </div>
@@ -164,7 +135,8 @@ Store Reporting
 @include('layouts.backend.common.datatable', [
 'title' => $result . ' on ' . now()->format('m/d/Y'),
 'columns' => '[ 0, 1, 2, 3, 4, 5, 6 ]',
-'searchCol' => 0
+'searchCol' => 0,
+'paging' => false,
 ])
 
 @push('scripts')
@@ -175,6 +147,21 @@ Store Reporting
                 return !this.value;
             }).attr("disabled", "disabled");
             return true;
+        });
+        $("#filter-table").on('keypress', function(e) {
+            const val = $('#filter-table').val();
+            if (e.which === 13) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const vendor = urlParams.get('vendor');
+                const district = urlParams.get('district');
+                let route = "{{ route('stores.report.index') }}?";
+                if (vendor) route += `vendor=${vendor}&`;
+                if (district) route += `district=${district}&`;
+                if (val) route += `search=${val}&`;
+                var strLen = route.length;
+                route = route.slice(0, strLen - 1);
+                window.location.href = route;
+            }
         });
     })
 

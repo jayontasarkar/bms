@@ -25,9 +25,9 @@ class OutletsController extends Controller
     {
     	$outlets = Outlet::filter($filters)->orderBy('name')
                         ->with('thana.district.thanas')
-                        ->get();
+                        ->paginate(config('bms.items_per_page'));
 
-        $result = "List of all outlets (" . count($outlets) . "): ";
+        $result = "List of all outlets (" . $outlets->total() . "): ";
         if(request()->has('thana')) {
             $result .= Thana::find(request('thana'))->name . ' thana, ';
         }

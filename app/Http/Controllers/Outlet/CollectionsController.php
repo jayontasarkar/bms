@@ -27,9 +27,26 @@ class CollectionsController extends Controller
             $query->whereBetween('transaction_date', [$from, $to]);
         }
         $collections = $query->whereIn('transactionable_type', ['App\Models\Outlet', 'App\Models\ReadySale'])
-                    ->where('type', false)->with('vendor')->latest()->get();
+                    ->where('type', false)->with('vendor')
+                    ->latest()
+                    ->paginate(config('bms.items_per_page'));
 
-        return view('collections.index', compact('collections'));            
+        $query2 = (new Transaction)->newQuery();
+        if (request()->has('vendor')) {
+            $query2->where('vendor_id', request('vendor'));
+        }
+        if (request()->has('from') && request()->has('to')) {
+            $from = Carbon::parse(request('from'));
+            $to   = Carbon::parse(request('to'));
+            $query2->whereBetween('transaction_date', [$from, $to]);
+        }
+        $amount = $query2->whereIn('transactionable_type', ['App\Models\Outlet', 'App\Models\ReadySale'])
+            ->where('type', false)->with('vendor')
+            ->sum('amount');
+
+        $count = $collections->total();    
+
+        return view('collections.index', compact('collections', 'amount', 'count'));            
     }
 
     public function show(Outlet $outlet)

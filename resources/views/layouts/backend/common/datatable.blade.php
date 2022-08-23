@@ -9,42 +9,33 @@
         $className = isset($className) ? $className : '.datatable';
         @endphp
         var table = $("{{ $className }}").DataTable({
-            responsive: true
-            , paging: (bool)
-            "{{ isset($paging) && $paging == false ? false : true }}"
-            , pagingType: "full_numbers"
-            , ordering: false
-            , pageLength: 50
-            , bInfo: false
-            , columnDefs: [{
+            responsive: true, 
+			paging: Boolean("{{ isset($paging) && $paging == false ? false : true }}"),
+			pagingType: "full_numbers", 
+			ordering: false, 
+			pageLength: 50, 
+			bInfo: false, 
+			columnDefs: [{
                 targets: 'no-sort'
                 , orderable: false
-            }]
-            , bLengthChange: false
-            , dom: 'Bfrtip'
-            , buttons: [{
-                    extend: 'excel'
-                    , title: "{{ isset($title) ? $title : time() }}"
-                    , exportOptions: {
-                        columns: {
-                            {
-                                $columns
-                            }
-                        }
-                    }
-                    , footer: true
+            }], 
+			bLengthChange: false, 
+			dom: 'Bfrtip', 
+			buttons: [{
+                    extend: 'excel', 
+					title: "{{ isset($title) ? $title : time() }}", 
+					exportOptions: {
+                        columns: {{ $columns }}
+                    }, 
+					footer: true
                 }
                 , {
-                    extend: 'pdf'
-                    , title: "{{ isset($title) ? $title : time() }}"
-                    , exportOptions: {
-                        columns: {
-                            {
-                                $columns
-                            }
-                        }
-                    }
-                    , footer: true
+                    extend: 'pdf', 
+					title: "{{ isset($title) ? $title : time() }}", 
+					exportOptions: {
+                        columns: {{ $columns }}
+                    }, 
+					footer: true
                 }
             ]
         });

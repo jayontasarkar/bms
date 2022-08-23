@@ -14,5 +14,10 @@ class PurchaseFilter extends QueryFilter
 	public function to($date)
 	{
 		return $this->builder->where('purchase_date', '<=', Carbon::parse($date)->endOfDay());
-	}	
+	}
+
+	public function search($value)
+	{
+		return $this->builder->where('memo', 'LIKE', "%$value%");
+	}
 }

@@ -21,5 +21,12 @@ class SalesFilter extends QueryFilter
 	public function to($date)
 	{
 		return $this->builder->where('sales_date', '<=', Carbon::parse($date)->endOfDay());
-	}	
+	}
+
+	public function search($value)
+	{
+		return $this->builder->whereHas('outlet', function($query) use ($value) {
+			$query->where('name', 'LIKE', "%$value%");
+		});
+	}
 }

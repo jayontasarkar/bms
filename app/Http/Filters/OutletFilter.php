@@ -16,5 +16,10 @@ class OutletFilter extends QueryFilter
 	public function thana($id)
 	{
 		return $this->builder->where('thana_id', $id);
-	}	
+	}
+
+	public function search($query)
+	{
+		return $this->builder->where('name', 'LIKE', "%$query%");
+	}
 }

@@ -19,8 +19,8 @@ class PurchasesController extends Controller
     public function index(PurchaseFilter $filter)
     {
     	$purchases = Purchase::vendorsWithDuePayments($filter);
-
-    	return view('purchases.index', compact('purchases'));
+            
+        return view('purchases.index', compact('purchases'));
     }
 
     public function show(Purchase $purchase)

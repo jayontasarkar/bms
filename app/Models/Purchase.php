@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use App\Traits\Eloquent\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,12 +43,10 @@ class Purchase extends Model
 
     public static function vendorsWithDuePayments($filter)
     {
-    	$purchases = static::filter($filter)->orderBy('purchase_date', 'desc')
-    	        ->with('vendor', 'records.product', 'transactions')
-    	        ->get();
-    	return $purchases->filter(function($query){
-    		return ($query->total_balance - $query->total_discount - $query->total_paid) > 0;
-    	});
+    	return static::whereRaw('(total_balance - (total_discount + total_paid)) > ?', [0])
+            ->filter($filter)->orderBy('purchase_date', 'desc')
+            ->with('vendor', 'records.product', 'transactions')
+            ->paginate(config('bms.items_per_page'));
     }
 
     public static function duePayments()
@@ -79,5 +78,17 @@ class Purchase extends Model
             ]);
         }
         return $this->records()->forceDelete();
+    }
+
+    /**
+     * Set the Discount
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setTotalDiscountAttribute($value)
+    {
+        $float_number = floatval($value && $value !== null ? $value : '0.00');
+        return $this->attributes['total_discount'] = $float_number;
     }
 }

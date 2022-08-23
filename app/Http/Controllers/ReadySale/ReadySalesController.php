@@ -25,7 +25,23 @@ class ReadySalesController extends Controller
     		$to   = Carbon::parse(request('to'));
     		$query->whereBetween('ready_sale_date', [$from, $to]);
     	}
-    	$readysales = $query->with('records.product', 'transactions')->latest()->get();
+    	$readysales = $query->with('records.product', 'transactions')
+			->latest()
+			->paginate(config('bms.items_per_page'));
+
+		$query2 = (new ReadySale)->newQuery();
+		if (request()->has('vendor')) {
+			$query2->where('vendor_id', request('vendor'));
+		}
+		if (request()->has('from') && request()->has('to')) {
+			$from = Carbon::parse(request('from'));
+			$to   = Carbon::parse(request('to'));
+			$query2->whereBetween('ready_sale_date', [$from, $to]);
+		}
+		$readysales = $query2->with('records.product', 'transactions')
+		->latest()
+		->paginate(config('bms.items_per_page'));
+
     	return view('readysale.index', compact('readysales'));
     }
 

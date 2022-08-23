@@ -19,9 +19,19 @@ class StoreReportsController extends Controller
 
     public function index(OutletFilter $filters)
     {
+        $vendor = request('vendor', null);
     	$outlets = Outlet::filter($filters)->orderBy('name')
-                        ->with('thana.district.thanas', 'transactions', 'sales.records')
-                        ->get();
+                        ->with([
+                            'thana.district.thanas', 
+                            'transactions' => function($query) use ($vendor) {
+                                if ($vendor) {
+                                    return $query->where('vendor_id', $vendor);
+                                }
+                                return $query;
+                            }, 
+                            'sales.records'
+                        ])
+                        ->paginate(config('bms.items_per_page'));
         $result = '';                
         if(request()->has('vendor')) {
     		$result .= '(' . Vendor::find(request('vendor'))->name . ') ';
@@ -32,8 +42,9 @@ class StoreReportsController extends Controller
         }
         if(request()->has('district')) {
             $result .= District::find(request('district'))->name . ' district';
-        }                
+        }  
+        $result .= " (Total {$outlets->total()} outlets)";              
 
-    	return view('store.report.index', compact('outlets', 'result'));
+        return view('store.report.index', compact('outlets', 'result'));
     }
 }
