@@ -15,13 +15,28 @@ class StoresController extends Controller
 
     public function index()
     {
-    	$purchases = Purchase::with('records')->select('id', 'memo', 'created_at')->get();
-        $sales     = Sales::with('records')->select('id', 'memo', 'created_at')->get();
-    	$readySales     = ReadySale::with('records')->select('id', 'memo', 'created_at')->get();
+    	$purchases = Purchase::where(function($query) {
+            if (request('vendor')) {
+                return $query->where('vendor_id', request('vendor'));
+            }
+            return $query;
+        })->with('records')->select('id', 'memo', 'created_at')->get();
+        $sales     = Sales::where(function($query) {
+            if (request('vendor')) {
+                return $query->where('vendor_id', request('vendor'));
+            }
+            return $query;
+        })->with('records')->select('id', 'memo', 'created_at')->get();
+    	$readySales     = ReadySale::where(function($query) {
+            if (request('vendor')) {
+                return $query->where('vendor_id', request('vendor'));
+            }
+            return $query;
+        })->with('records')->select('id', 'memo', 'created_at')->get();
     	$merged = $sales->merge($purchases ?: collect())->merge($readySales ?: collect());
         $latestSalesAndPurhases = $merged->sortByDesc(function($obj, $key) {
             return $obj->created_at;
-        })->take(35);
+        })->take(25);
 
     	return view('store.index', compact('latestSalesAndPurhases'));
     }
