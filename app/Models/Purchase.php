@@ -49,6 +49,14 @@ class Purchase extends Model
             ->paginate(config('bms.items_per_page'));
     }
 
+    public static function vendorsWithDuePaymentsTotal($filter)
+    {
+        return static::whereRaw('(total_balance - (total_discount + total_paid)) > ?', [0])
+            ->filter($filter)->orderBy('purchase_date', 'desc')
+            ->with('vendor', 'records.product', 'transactions')
+            ->get();     
+    }
+
     public static function duePayments()
     {
     	$purchases = static::orderBy('purchase_date', 'desc')->with('vendor')->get();

@@ -20,4 +20,9 @@ class PurchaseFilter extends QueryFilter
 	{
 		return $this->builder->where('memo', 'LIKE', "%$value%");
 	}
+
+	public function vendor($value)
+	{
+		return $this->builder->where('vendor_id', $value);
+	}
 }

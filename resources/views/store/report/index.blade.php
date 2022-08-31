@@ -94,9 +94,7 @@ Store Reporting
                             $opening = $outlet->transactions->where('type', true)->sum('amount');
                             $collections = $outlet->transactions->where('type', false)->sum('amount');
                             $amount = $opening + $outlet->totalSalesByVendor($vendor) - $collections;
-                            $class_name = $amount > 0 ? 'danger' : ($amount < 0 ? 'primary' : 'success') ; 
-							@endphp 
-							<tr class="table-{{ $class_name }}">
+                            $class_name = $amount > 0 ? 'danger' : ($amount < 0 ? 'primary' : 'success' ) ; @endphp <tr class="table-{{ $class_name }}">
                                 <td>
                                     <a href="{{ route('outlets.show', [$outlet]) }}">{{ $outlet->name }}</a>
                                 </td>
@@ -120,6 +118,17 @@ Store Reporting
                                 </tr>
                                 @endforeach
                         </tbody>
+                        <tfoot class="bg-gray text-white">
+                            <tr>
+                                <td colspan="2" class="text-right">
+                                    <strong>Grand Total:</strong>
+                                </td>
+                                <td>{{ number_format($grandTotalOpening) }}/=</td>
+                                <td>{{ number_format($grandTotalSale) }}/=</td>
+                                <td>{{ number_format($grandTotalPaid) }}/=</td>
+                                <td>{{ number_format($grandTotalDue) }}/=</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end text-center mt-5">

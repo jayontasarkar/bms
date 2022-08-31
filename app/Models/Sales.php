@@ -51,6 +51,13 @@ class Sales extends Model
                 ->paginate(config('bms.items_per_page'));
     }
 
+    public static function outletsWithDuePaymentsTotal($filter)
+    {
+        return static::filter($filter)->orderBy('sales_date', 'desc')
+        ->with('outlet', 'records.product', 'vendor')
+        ->get();
+    }
+
     public static function duePayments()
     {
     	$sales = static::orderBy('sales_date', 'desc')->with('outlet')->get();

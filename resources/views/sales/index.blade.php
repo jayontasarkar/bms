@@ -52,7 +52,6 @@ Outlet Sales by Sales Order
                             </tr>
                         </thead>
                         <tbody>
-                            @php $grandTotal = 0; @endphp
                             @foreach($sales as $sale)
                             <tr>
                                 <td class="search">
@@ -71,7 +70,6 @@ Outlet Sales by Sales Order
                                     $total = $sale->records->sum(function($query){
                                     return $query->unit_price * $query->qty;
                                     });
-                                    $grandTotal += $total;
                                     @endphp
                                     {{ number_format($total) }}/=
                                 </td>
@@ -84,6 +82,14 @@ Outlet Sales by Sales Order
                             </tr>
                             @endforeach
                         </tbody>
+                        <tfoot class="bg-gray text-white">
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                <td>{{ number_format($grandTotal) }}/=</td>
+                                <td>{{ number_format($grandDiscount) }}/=</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end text-center mt-5">

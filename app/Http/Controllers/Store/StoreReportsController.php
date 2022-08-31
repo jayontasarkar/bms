@@ -43,8 +43,45 @@ class StoreReportsController extends Controller
         if(request()->has('district')) {
             $result .= District::find(request('district'))->name . ' district';
         }  
-        $result .= " (Total {$outlets->total()} outlets)";              
+        $result .= " (Total {$outlets->total()} outlets)";
 
-        return view('store.report.index', compact('outlets', 'result'));
+        $totalOutlets = Outlet::filter($filters)->orderBy('name')
+            ->with([
+                'thana.district.thanas',
+                'transactions' => function ($query) use ($vendor) {
+                    if ($vendor) {
+                        return $query->where('vendor_id', $vendor);
+                    }
+                    return $query;
+                },
+                'sales.records'
+            ])
+            ->get();
+
+        $grandTotalOpening = 0;
+        $grandTotalSale = 0;
+        $grandTotalPaid = 0;
+        $grandTotalDue = 0;
+        $totalOutlets->map(function($outlet) use (&$grandTotalOpening, &$grandTotalSale, &$grandTotalPaid, &$grandTotalDue) {
+            $opening = $outlet->transactions->where('type', true)->sum('amount');
+            $collections = $outlet->transactions->where('type', false)->sum('amount');
+            $sale = $outlet->totalSalesByVendor(request('vendor') ?: false);
+            $due = $opening + $sale - $collections;
+            $grandTotalOpening += $opening;
+            $grandTotalSale += $sale;
+            $grandTotalPaid += $collections;
+            $grandTotalDue += $due;
+
+            return $outlet;
+        });
+
+        return view('store.report.index', compact(
+            'outlets', 
+            'result', 
+            'grandTotalOpening', 
+            'grandTotalSale', 
+            'grandTotalPaid',
+            'grandTotalDue'
+        ));
     }
 }

@@ -84,6 +84,32 @@ Incomplete Payment Pruchases
                             </tr>
                             @endforeach
                         </tbody>
+                        <tfoot class="bg-gray text-white">
+                            @php
+                            $totalAmount = $totalPurchases->sum('total_balance');
+                            $totalPaidAmount = $totalPurchases->sum('total_paid');
+                            $totalDiscount = $totalPurchases->sum('total_discount');
+                            $totalDue = $totalAmount - ($totalPaidAmount + $totalDiscount);
+                            @endphp
+                            <tr>
+                                <td colspan="2" class="text-right">
+                                    <strong>Total:</strong>
+                                </td>
+                                <td>
+                                    {{ number_format($totalAmount) }}/=
+                                </td>
+                                <td>
+                                    {{ number_format($totalPaidAmount) }}/=
+                                </td>
+                                <td>
+                                    {{ number_format($totalDiscount) }}/=
+                                </td>
+                                <td>
+                                    {{ number_format($totalDue) }}/=
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end text-center mt-5">

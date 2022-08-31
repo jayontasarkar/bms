@@ -18,8 +18,21 @@ class SalesController extends Controller
 	public function index(SalesFilter $filter)
 	{
 		$sales = Sales::outletsWithDuePayments($filter);
+		$totalSales = Sales::outletsWithDuePaymentsTotal($filter);
 
-    	return view('sales.index', compact('sales'));
+        $grandTotal = 0;
+        $grandDiscount = 0;
+        $totalSales->map(function($sale) use (&$grandTotal, &$grandDiscount) {
+            $total = $sale->records->sum(function ($query) {
+                return $query->unit_price * $query->qty;
+            });
+            $grandTotal += $total;
+            $grandDiscount += $sale->total_discount;
+
+            return $sale;
+        });
+
+    	return view('sales.index', compact('sales', 'grandTotal', 'grandDiscount'));
 	}
 
 	public function show(Sales $sales)
