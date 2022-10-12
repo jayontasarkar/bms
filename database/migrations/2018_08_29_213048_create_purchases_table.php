@@ -17,10 +17,10 @@ class CreatePurchasesTable extends Migration
             $table->increments('id');
             $table->string('memo')->unique();
             $table->unsignedInteger('vendor_id');
-            $table->float('total_balance')->default(0);
+            $table->float('total_balance', 14, 2)->default(0);
             $table->boolean('type')->nullable()->default(false);
-            $table->float('total_paid')->nullable()->default(0);
-            $table->float('total_discount')->nullable()->default(0);
+            $table->float('total_paid', 14, 2)->nullable()->default(0);
+            $table->float('total_discount', 14, 2)->nullable()->default(0);
             $table->timestamp('purchase_date')->nullable();
             $table->timestamps();
             $table->softDeletes();

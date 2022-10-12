@@ -17,7 +17,7 @@ class CreateExpensesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->float('amount')->default(0);
+            $table->float('amount', 14, 2)->default(0);
             $table->timestamp('expense_date')->nullable();
             $table->boolean('status')->default(true);
             $table->unsignedInteger('user_id');

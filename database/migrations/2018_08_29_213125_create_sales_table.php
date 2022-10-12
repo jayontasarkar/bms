@@ -18,7 +18,7 @@ class CreateSalesTable extends Migration
             $table->string('memo')->unique();
             $table->unsignedInteger('outlet_id')->nullable();
             $table->unsignedInteger('vendor_id')->nullable();
-            $table->float('total_discount')->nullable()->default(0);
+            $table->float('total_discount', 14, 2)->nullable()->default(0);
             $table->timestamp('sales_date')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();

@@ -18,7 +18,7 @@ class CreateReadySalesTable extends Migration
             $table->string('memo')->unique();
             $table->unsignedInteger('vendor_id')->nullable();
             $table->text('ready_sale_details')->nullable();
-            $table->float('total_discount')->nullable()->default(0);
+            $table->float('total_discount', 14, 2)->nullable()->default(0);
             $table->timestamp('ready_sale_date')->nullable();
             $table->timestamps();
             $table->softDeletes();

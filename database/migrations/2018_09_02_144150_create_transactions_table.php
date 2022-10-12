@@ -19,7 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedInteger('vendor_id')->nullable();
             $table->string('transactionable_type');
             $table->string('comment')->nullable();
-            $table->float('amount')->nullable()->default(0);
+            $table->float('amount', 14, 2)->nullable()->default(0);
             $table->timestamp('transaction_date')->nullable();
             $table->boolean('type')->default(false);
             $table->timestamps();
