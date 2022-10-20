@@ -75,6 +75,11 @@ Store Reporting
                     </div>
                 </div>
                 @if(count($outlets))
+                <div style="margin-bottom: 10px;">
+                    <a class="btn btn-secondary" href="#" id="export-pdf-table">
+                        <i class="fa fa-file-pdf-o"></i> Export TO PDF
+                    </a>
+                </div>
                 <div class="table-responsive">
                     <table class="table card-table table-bordered table-vcenter text-nowrap datatable">
                         <thead>
@@ -146,6 +151,7 @@ Store Reporting
 'columns' => '[ 0, 1, 2, 3, 4, 5, 6 ]',
 'searchCol' => 0,
 'paging' => false,
+'removeExport' => true,
 ])
 
 @push('scripts')
@@ -163,14 +169,32 @@ Store Reporting
                 const urlParams = new URLSearchParams(window.location.search);
                 const vendor = urlParams.get('vendor');
                 const district = urlParams.get('district');
+                const thana = urlParams.get('thana');
                 let route = "{{ route('stores.report.index') }}?";
                 if (vendor) route += `vendor=${vendor}&`;
                 if (district) route += `district=${district}&`;
+                if (thana) route += `thana=${thana}&`;
                 if (val) route += `search=${val}&`;
                 var strLen = route.length;
                 route = route.slice(0, strLen - 1);
                 window.location.href = route;
             }
+        });
+        $("#export-pdf-table").on('click', function(e) {
+            e.preventDefault();
+            const val = $('#filter-table').val();
+            const urlParams = new URLSearchParams(window.location.search);
+            const vendor = urlParams.get('vendor');
+            const district = urlParams.get('district');
+            const thana = urlParams.get('thana');
+            let route = "{{ route('stores.report.export-pdf.index') }}?";
+            if (vendor) route += `vendor=${vendor}&`;
+            if (district) route += `district=${district}&`;
+            if (thana) route += `thana=${thana}&`;
+            if (val) route += `search=${val}&`;
+            var strLen = route.length;
+            route = route.slice(0, strLen - 1);
+            window.location.href = route;
         });
     })
 

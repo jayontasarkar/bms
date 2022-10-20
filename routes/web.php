@@ -102,6 +102,7 @@ Route::delete('purchases/{purchase}', 'Store\PurchasesController@destroy')->name
 Route::patch('purchases/{purchase}/transactions', 'Purchase\PurchaseTransactionsController@update')
        ->name('purchases.transactions.update');
 Route::get('store-report', 'Store\StoreReportsController@index')->name('stores.report.index');
+Route::get('store-report/export-to-pdf', 'Store\StoreReportsController@exportToPdf')->name('stores.report.export-pdf.index');
 
 /**
  * Transactions (Purchase/Sales)

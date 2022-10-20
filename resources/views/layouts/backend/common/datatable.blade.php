@@ -20,24 +20,25 @@
                 , orderable: false
             }], 
 			bLengthChange: false, 
-			dom: 'Bfrtip', 
-			buttons: [{
-                    extend: 'excel', 
-					title: "{{ isset($title) ? $title : time() }}", 
-					exportOptions: {
-                        columns: {{ $columns }}
-                    }, 
-					footer: true
-                }
-                , {
-                    extend: 'pdf', 
-					title: "{{ isset($title) ? $title : time() }}", 
-					exportOptions: {
-                        columns: {{ $columns }}
-                    }, 
-					footer: true
-                }
-            ]
+			dom: 'Bfrtip',
+            @if (!isset($removeExport))
+            buttons: [{
+                extend: 'excel',
+                title: "{{ isset($title) ? $title : time() }}",
+                exportOptions: {
+                columns: {{ $columns }}
+                },
+                footer: true
+            }
+            , {
+                extend: 'pdf',
+                title: "{{ isset($title) ? $title : time() }}",
+                exportOptions: {
+                columns: {{ $columns }}
+                },
+                footer: true
+            }]
+            @endif 
         });
         $("#filter-table").on('keyup', function() {
             table.columns("{{ isset($searchCol) ? $searchCol : '0' }}").search(this.value).draw();
